@@ -429,20 +429,41 @@ class PVPMatchmaking {
 
     // Show PVP menu for a game
     showPVPMenu(gameType) {
-        console.log('showPVPMenu called with:', gameType);
-        
-        const gameSelection = document.getElementById('gameSelection');
-        const gameContainer = document.getElementById('gameContainer');
-        const gameTitle = document.getElementById('currentGameTitle');
-        const gameContent = document.getElementById('gameContent');
-        
-        if (!gameSelection || !gameContainer || !gameTitle || !gameContent) {
-            console.error('Missing elements in showPVPMenu');
-            return;
-        }
-        
-        gameSelection.style.display = 'none';
-        gameContainer.style.display = 'block';
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('PVP_MENU_SHOW', { gameType, timestamp: Date.now() });
+            }
+            console.log('showPVPMenu called with:', gameType);
+            
+            const gameSelection = document.getElementById('gameSelection');
+            const gameContainer = document.getElementById('gameContainer');
+            const gameTitle = document.getElementById('currentGameTitle');
+            const gameContent = document.getElementById('gameContent');
+            
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.debug('PVP_MENU_ELEMENTS', {
+                    gameSelection: !!gameSelection,
+                    gameContainer: !!gameContainer,
+                    gameTitle: !!gameTitle,
+                    gameContent: !!gameContent
+                });
+            }
+            
+            if (!gameSelection || !gameContainer || !gameTitle || !gameContent) {
+                console.error('Missing elements in showPVPMenu');
+                if (typeof errorLogger !== 'undefined') {
+                    errorLogger.error('PVP_MENU_MISSING_ELEMENTS', {
+                        gameSelection: !!gameSelection,
+                        gameContainer: !!gameContainer,
+                        gameTitle: !!gameTitle,
+                        gameContent: !!gameContent
+                    });
+                }
+                return;
+            }
+            
+            gameSelection.style.display = 'none';
+            gameContainer.style.display = 'block';
         
         gameTitle.textContent = `⚔️ ${gameType.toUpperCase()} - PVP Mode`;
 
@@ -512,6 +533,21 @@ class PVPMatchmaking {
         `;
 
         this.updateRoomsList();
+        
+        if (typeof errorLogger !== 'undefined') {
+            errorLogger.info('PVP_MENU_DISPLAYED', { gameType });
+        }
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('PVP_MENU_ERROR', {
+                    error: error.message,
+                    stack: error.stack,
+                    gameType
+                });
+            }
+            console.error('PVP menu error:', error);
+            alert('Error loading PVP menu. Check debug panel for details.');
+        }
     }
 
     // Create room prompt
@@ -576,3 +612,10 @@ class PVPMatchmaking {
 // Global instance
 const pvpMatchmaking = new PVPMatchmaking();
 window.pvpMatchmaking = pvpMatchmaking;
+// Log PVP system initialization
+if (typeof errorLogger !== 'undefined') {
+    errorLogger.info('PVP_MATCHMAKING_INITIALIZED', {
+        timestamp: Date.now(),
+        available: typeof pvpMatchmaking !== 'undefined'
+    });
+}

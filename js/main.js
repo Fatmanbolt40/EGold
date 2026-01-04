@@ -671,6 +671,35 @@ errorLogger.info('MAIN_JS_LOADED', {
     }
 });
 
+// Test button click handlers
+document.addEventListener('DOMContentLoaded', () => {
+    errorLogger.info('DOM_CONTENT_LOADED', { timestamp: Date.now() });
+    
+    // Add click event logging to all game buttons
+    setTimeout(() => {
+        const allButtons = document.querySelectorAll('.btn-play');
+        errorLogger.info('BUTTON_SCAN', { 
+            buttonCount: allButtons.length,
+            buttons: Array.from(allButtons).map(btn => ({
+                text: btn.textContent,
+                onclick: btn.getAttribute('onclick')
+            }))
+        });
+        
+        allButtons.forEach((btn, index) => {
+            btn.addEventListener('click', function(e) {
+                errorLogger.info('BUTTON_CLICKED', {
+                    index,
+                    text: this.textContent,
+                    onclick: this.getAttribute('onclick'),
+                    target: e.target,
+                    currentTarget: e.currentTarget
+                });
+            });
+        });
+    }, 1000);
+});
+
 // Log game objects availability after page load
 window.addEventListener('load', () => {
     errorLogger.info('PAGE_FULLY_LOADED', {
