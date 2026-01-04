@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game Loading Test</title>
+</head>
+<body>
+    <h1>Casino Game Loading Test</h1>
+    <div id="results"></div>
+
+    <script src="js/effects.js"></script>
+    <script src="js/advanced-effects.js"></script>
+    <script src="js/game-enhancements.js"></script>
+    <script src="js/sound-effects.js"></script>
+    <script src="js/daily-rewards.js"></script>
+    <script src="js/vip-system.js"></script>
+    <script src="js/poker-animations.js"></script>
+    <script src="js/spectator-system.js"></script>
+    <script src="js/pvp-matchmaking.js"></script>
+    <script src="js/wallet.js"></script>
+    <script src="js/poker-engine.js"></script>
+    <script src="js/games/texasholdem.js"></script>
+    <script src="js/games/omaha.js"></script>
+    <script src="js/games/pineapple.js"></script>
+    <script src="js/games/tonk.js"></script>
+    <script src="js/games/chess.js"></script>
+    <script src="js/games/checkers.js"></script>
+    <script src="js/games/roulette.js"></script>
+    <script src="js/games/coinflip.js"></script>
+    <script src="js/games/slots.js"></script>
+    <script src="js/games/scratchoff.js"></script>
+    <script src="js/games/lottery.js"></script>
+    <script src="js/games/diceraffle.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        const results = document.getElementById('results');
+        const tests = [];
+
+        // Test if all required objects are defined
+        function test(name, condition) {
+            tests.push({name, passed: condition});
+        }
+
+        test('EffectsManager exists', typeof effects !== 'undefined');
+        test('sound exists', typeof sound !== 'undefined');
+        test('vipSystem exists', typeof vipSystem !== 'undefined');
+        test('leaderboard exists', typeof leaderboard !== 'undefined');
+        test('dailyRewards exists', typeof dailyRewards !== 'undefined');
+        test('Deck class exists', typeof Deck !== 'undefined');
+        test('Card class exists', typeof Card !== 'undefined');
+        test('HandEvaluator exists', typeof HandEvaluator !== 'undefined');
+        test('AIPlayer exists', typeof AIPlayer !== 'undefined');
+        test('initTexasHoldem exists', typeof initTexasHoldem === 'function');
+        test('initOmaha exists', typeof initOmaha === 'function');
+        test('initPineapple exists', typeof initPineapple === 'function');
+        test('initTonk exists', typeof initTonk === 'function');
+        test('initChess exists', typeof initChess === 'function');
+        test('initCheckers exists', typeof initCheckers === 'function');
+        test('initRoulette exists', typeof initRoulette === 'function');
+        test('initCoinFlip exists', typeof initCoinFlip === 'function');
+        test('initSlots exists', typeof initSlots === 'function');
+        test('initScratchOff exists', typeof initScratchOff === 'function');
+        test('initStandardLottery exists', typeof initStandardLottery === 'function');
+        test('initDiceRaffle exists', typeof initDiceRaffle === 'function');
+
+        let html = '<h2>Test Results:</h2><ul>';
+        tests.forEach(t => {
+            html += `<li style="color: ${t.passed ? 'green' : 'red'}">
+                ${t.passed ? '✓' : '✗'} ${t.name}
+            </li>`;
+        });
+        html += '</ul>';
+
+        const passed = tests.filter(t => t.passed).length;
+        const total = tests.length;
+        html += `<h3>${passed}/${total} tests passed</h3>`;
+
+        if (passed === total) {
+            html += '<p style="color: green; font-size: 20px;">✓ All systems operational!</p>';
+        } else {
+            html += '<p style="color: red; font-size: 20px;">✗ Some systems failed to load!</p>';
+        }
+
+        results.innerHTML = html;
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+models:
+  - title: LM Studio
+    provider: lmstudio
+    model: llama-3.2-8x3b-moe-dark-cat
+    apiBase: http://192.168.1.118:1234/v1
+    contextLength: 131072
+    completionOptions:
+      temperature: 0.2
+      topP: 0.95
+      maxTokens: 8192
+
+tabAutocompleteModel:
+  title: LM Studio Autocomplete
+  provider: lmstudio
+  model: llama-3.2-8x3b-moe-dark-cat
+  apiBase: http://192.168.1.118:1234/v1
+
+embeddingsProvider:
+  provider: transformers.js
+
+allowAnonymousTelemetry: false
+
+# Full VS Code integration permissions
+permissions:
+  - filesystem:read
+  - filesystem:write
+  - terminal:execute
+  - editor:edit
+  - workspace:search
+  - extensions:manage
+
+customCommands:
+  - name: "analyze"
+    description: "Analyze entire workspace"
+    prompt: "Analyze this workspace and provide insights"
+  - name: "debug"
+    description: "Debug the current file"
+    prompt: "Help me debug this code"
+  - name: "optimize"
+    description: "Optimize code"
+    prompt: "Suggest optimizations for this code"
+
+experimental:
+  - modelRoles
+  - contextProviders
+  - quickActions

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal eGold Casino - Premium Gaming Experience</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <h1>💰 Royal eGold Casino</h1>
+                <p class="tagline">Where Fortune Favors the Bold</p>
+            </div>
+            <div class="jackpot-header" style="text-align: center; margin: 0 20px;">
+                <div style="font-size: 0.8rem; color: #d4af37; margin-bottom: 5px;">💎 PROGRESSIVE JACKPOT</div>
+                <div style="font-size: 1.8rem; color: #ffd700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.9); font-weight: bold;">
+                    <span id="progressiveJackpot">5000.00</span> eGold
+                </div>
+            </div>
+            <div class="user-balance">
+                <div id="walletInfo" style="text-align: center; margin-bottom: 10px;"></div>
+                <button id="walletConnectBtn" onclick="phantomWallet.connect()" style="padding: 10px 20px; margin-bottom: 10px; background: linear-gradient(135deg, #667eea, #764ba2); border: none; border-radius: 8px; color: white; cursor: pointer; font-weight: bold;">
+                    🔗 Connect Wallet
+                </button>
+                <div id="vipBadge" style="text-align: center; margin-bottom: 10px; padding: 5px 15px; background: linear-gradient(135deg, rgba(205, 127, 50, 0.3), rgba(205, 127, 50, 0.1)); border-radius: 20px; border: 1px solid #cd7f32;">
+                    <span style="font-size: 0.8rem; color: #cd7f32;">👑 Bronze VIP</span>
+                </div>
+                <div class="balance-display">
+                    <span class="balance-label">Balance:</span>
+                    <span id="userBalance" class="balance-amount">1000.00</span>
+                    <span class="currency">eGold</span>
+                </div>
+                <button id="statsBtn" class="btn-stats" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin-right: 10px;">📊 Stats</button>
+                <button id="depositBtn" class="btn-deposit">Deposit</button>
+                <button id="withdrawBtn" class="btn-withdraw">Withdraw</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-menu">
+                <li><button class="nav-btn active" data-category="all">All Games</button></li>
+                <li><button class="nav-btn" data-category="poker">Poker Games</button></li>
+                <li><button class="nav-btn" data-category="card">Card Games</button></li>
+                <li><button class="nav-btn" data-category="table">Table Games</button></li>
+                <li><button class="nav-btn" data-category="lottery">Lottery & Raffles</button></li>
+                <li><button class="nav-btn" data-category="quick">Quick Games</button></li>
+                <li><button id="liveGamesBtn" class="nav-btn-special" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">📺 Live Games</button></li>
+                <li><button id="dailyRewardBtn" class="nav-btn-special" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">🎁 Daily Reward</button></li>
+                <li><button id="spinWheelBtn" class="nav-btn-special" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">🎡 Spin Wheel</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Game Selection Grid -->
+            <section id="gameSelection" class="game-grid">
+                <!-- Poker Games -->
+                <div class="game-card" data-category="poker" data-game="texasholdem">
+                    <div class="game-icon">🃏</div>
+                    <h3>Texas Hold'em</h3>
+                    <p>Classic poker with community cards</p>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn-play" onclick="pvpMatchmaking.showPVPMenu('texasholdem')" style="flex: 1; background: linear-gradient(135deg, #3498db, #2980b9);">⚔️ PVP</button>
+                        <button class="btn-play" onclick="startGame('texasholdem')" style="flex: 1;">🤖 Solo</button>
+                    </div>
+                </div>
+
+                <div class="game-card" data-category="poker" data-game="omaha">
+                    <div class="game-icon">🂡</div>
+                    <h3>Omaha Poker</h3>
+                    <p>4-card variant with big pots</p>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn-play" onclick="pvpMatchmaking.showPVPMenu('omaha')" style="flex: 1; background: linear-gradient(135deg, #3498db, #2980b9);">⚔️ PVP</button>
+                        <button class="btn-play" onclick="startGame('omaha')" style="flex: 1;">🤖 Solo</button>
+                    </div>
+                </div>
+
+                <div class="game-card" data-category="poker" data-game="pineapple">
+                    <div class="game-icon">🍍</div>
+                    <h3>Pineapple Poker</h3>
+                    <p>Discard strategy poker</p>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn-play" onclick="pvpMatchmaking.showPVPMenu('pineapple')" style="flex: 1; background: linear-gradient(135deg, #3498db, #2980b9);">⚔️ PVP</button>
+                        <button class="btn-play" onclick="startGame('pineapple')" style="flex: 1;">🤖 Solo</button>
+                    </div>
+                </div>
+
+                <!-- Card Games -->
+                <div class="game-card" data-category="card" data-game="tonk">
+                    <div class="game-icon">🎴</div>
+                    <h3>Tonk</h3>
+                    <p>Fast-paced rummy variant</p>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn-play" onclick="pvpMatchmaking.showPVPMenu('tonk')" style="flex: 1; background: linear-gradient(135deg, #3498db, #2980b9);">⚔️ PVP</button>
+                        <button class="btn-play" onclick="startGame('tonk')" style="flex: 1;">🤖 Solo</button>
+                    </div>
+                </div>
+
+                <!-- Table Games -->
+                <div class="game-card" data-category="table" data-game="roulette">
+                    <div class="game-icon">🎡</div>
+                    <h3>Roulette</h3>
+                    <p>European wheel betting</p>
+                    <button class="btn-play" onclick="startGame('roulette')">Play Now</button>
+                </div>
+
+                <div class="game-card" data-category="table" data-game="chess">
+                    <div class="game-icon">♔</div>
+                    <h3>Chess Betting</h3>
+                    <p>Strategic betting chess</p>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn-play" onclick="pvpMatchmaking.showPVPMenu('chess')" style="flex: 1; background: linear-gradient(135deg, #3498db, #2980b9);">⚔️ PVP</button>
+                        <button class="btn-play" onclick="startGame('chess')" style="flex: 1;">🤖 Solo</button>
+                    </div>
+                </div>
+
+                <div class="game-card" data-category="table" data-game="checkers">
+                    <div class="game-icon">⚫</div>
+                    <h3>Checkers Betting</h3>
+                    <p>Classic checkers with stakes</p>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn-play" onclick="pvpMatchmaking.showPVPMenu('checkers')" style="flex: 1; background: linear-gradient(135deg, #3498db, #2980b9);">⚔️ PVP</button>
+                        <button class="btn-play" onclick="startGame('checkers')" style="flex: 1;">🤖 Solo</button>
+                    </div>
+                </div>
+
+                <!-- Quick Games -->
+                <div class="game-card" data-category="quick" data-game="slots">
+                    <div class="game-icon">🎰</div>
+                    <h3>Luxury Slots</h3>
+                    <p>Spin to win big jackpots!</p>
+                    <button class="btn-play" onclick="startGame('slots')">Play Now</button>
+                </div>
+
+                <div class="game-card" data-category="quick" data-game="coinflip">
+                    <div class="game-icon">🪙</div>
+                    <h3>Coin Flip</h3>
+                    <p>50/50 instant win</p>
+                    <button class="btn-play" onclick="startGame('coinflip')">Play Now</button>
+                </div>
+
+                <!-- Lottery Games -->
+                <div class="game-card" data-category="lottery" data-game="scratchoff">
+                    <div class="game-icon">🎫</div>
+                    <h3>Scratch Off</h3>
+                    <p>Instant win tickets</p>
+                    <button class="btn-play" onclick="startGame('scratchoff')">Play Now</button>
+                </div>
+
+                <div class="game-card" data-category="lottery" data-game="standardlottery">
+                    <div class="game-icon">🎱</div>
+                    <h3>Standard Lottery</h3>
+                    <p>Pick your lucky numbers</p>
+                    <button class="btn-play" onclick="startGame('standardlottery')">Play Now</button>
+                </div>
+
+                <div class="game-card" data-category="lottery" data-game="dicerraffle">
+                    <div class="game-icon">🎲</div>
+                    <h3>16-Sided Dice Raffle</h3>
+                    <p>Roll for massive prizes</p>
+                    <button class="btn-play" onclick="startGame('diceraffle')">Play Now</button>
+                </div>
+            </section>
+
+            <!-- Game Container (hidden by default) -->
+            <section id="gameContainer" class="game-container" style="display: none;">
+                <div class="game-header">
+                    <h2 id="currentGameTitle"></h2>
+                    <button id="backToLobby" class="btn-back">← Back to Lobby</button>
+                </div>
+                <div id="gameContent" class="game-content"></div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Deposit/Withdraw Modal -->
+    <div id="walletModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Wallet</h2>
+            <div class="wallet-info">
+                <p>Connect your eGold Network wallet to deposit or withdraw funds</p>
+                <div class="form-group">
+                    <label for="walletAddress">Wallet Address</label>
+                    <input type="text" id="walletAddress" placeholder="Enter eGold Network wallet address">
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount (eGold)</label>
+                    <input type="number" id="amount" placeholder="0.00" step="0.01" min="0">
+                </div>
+                <button id="confirmTransaction" class="btn-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2026 Royal Casino. Play responsibly. Must be 18+ to play.</p>
+            <p class="disclaimer">Powered by eGold Network Blockchain</p>
+        </div>
+    </footer>
+
+    <script src="js/effects.js"></script>
+    <script src="js/phantom-wallet.js"></script>
+    <script src="js/advanced-effects.js"></script>
+    <script src="js/game-enhancements.js"></script>
+    <script src="js/sound-effects.js"></script>
+    <script src="js/daily-rewards.js"></script>
+    <script src="js/vip-system.js"></script>
+    <script src="js/poker-animations.js"></script>
+    <script src="js/spectator-system.js"></script>
+    <script src="js/pvp-matchmaking.js"></script>
+    <script src="js/wallet.js"></script>
+    <script src="js/poker-engine.js"></script>
+    <script src="js/games/texasholdem.js"></script>
+    <script src="js/games/omaha.js"></script>
+    <script src="js/games/pineapple.js"></script>
+    <script src="js/games/tonk.js"></script>
+    <script src="js/games/chess.js"></script>
+    <script src="js/games/checkers.js"></script>
+    <script src="js/games/roulette.js"></script>
+    <script src="js/games/coinflip.js"></script>
+    <script src="js/games/slots.js"></script>
+    <script src="js/games/scratchoff.js"></script>
+    <script src="js/games/lottery.js"></script>
+    <script src="js/games/diceraffle.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Button Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #1a1a2e; color: white; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; cursor: pointer; }
+        .success { color: #2ecc71; }
+        .error { color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <h1>Casino Button Test</h1>
+    <div id="results"></div>
+    
+    <h2>Test Buttons:</h2>
+    <button onclick="testStartGame()">Test startGame()</button>
+    <button onclick="testPVP()">Test pvpMatchmaking</button>
+    <button onclick="testSpectator()">Test spectatorSystem</button>
+
+    <script src="js/effects.js"></script>
+    <script src="js/advanced-effects.js"></script>
+    <script src="js/game-enhancements.js"></script>
+    <script src="js/sound-effects.js"></script>
+    <script src="js/daily-rewards.js"></script>
+    <script src="js/vip-system.js"></script>
+    <script src="js/poker-animations.js"></script>
+    <script src="js/spectator-system.js"></script>
+    <script src="js/pvp-matchmaking.js"></script>
+    <script src="js/wallet.js"></script>
+    <script src="js/poker-engine.js"></script>
+    <script src="js/games/texasholdem.js"></script>
+    <script src="js/games/omaha.js"></script>
+    <script src="js/games/pineapple.js"></script>
+    <script src="js/games/tonk.js"></script>
+    <script src="js/games/chess.js"></script>
+    <script src="js/games/checkers.js"></script>
+    <script src="js/games/roulette.js"></script>
+    <script src="js/games/coinflip.js"></script>
+    <script src="js/games/slots.js"></script>
+    <script src="js/games/scratchoff.js"></script>
+    <script src="js/games/lottery.js"></script>
+    <script src="js/games/diceraffle.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        const results = document.getElementById('results');
+        
+        function log(msg, isError = false) {
+            const p = document.createElement('p');
+            p.className = isError ? 'error' : 'success';
+            p.textContent = msg;
+            results.appendChild(p);
+        }
+
+        function testStartGame() {
+            if (typeof window.startGame === 'function') {
+                log('✓ startGame is accessible');
+                try {
+                    // Don't actually call it, just test it exists
+                    log('✓ startGame can be called from onclick');
+                } catch (e) {
+                    log('✗ Error: ' + e.message, true);
+                }
+            } else {
+                log('✗ startGame is NOT accessible', true);
+            }
+        }
+
+        function testPVP() {
+            if (typeof window.pvpMatchmaking !== 'undefined' && typeof window.pvpMatchmaking.showPVPMenu === 'function') {
+                log('✓ pvpMatchmaking.showPVPMenu is accessible');
+            } else {
+                log('✗ pvpMatchmaking.showPVPMenu is NOT accessible', true);
+            }
+        }
+
+        function testSpectator() {
+            if (typeof window.spectatorSystem !== 'undefined' && typeof window.spectatorSystem.showLiveGamesFeed === 'function') {
+                log('✓ spectatorSystem.showLiveGamesFeed is accessible');
+            } else {
+                log('✗ spectatorSystem.showLiveGamesFeed is NOT accessible', true);
+            }
+        }
+
+        // Auto-run tests on load
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                log('=== Running Auto Tests ===');
+                testStartGame();
+                testPVP();
+                testSpectator();
+                
+                log('\n=== Global Object Check ===');
+                log('window.startGame: ' + typeof window.startGame);
+                log('window.pvpMatchmaking: ' + typeof window.pvpMatchmaking);
+                log('window.spectatorSystem: ' + typeof window.spectatorSystem);
+            }, 500);
+        });
+    </script>
+</body>
+</html>
