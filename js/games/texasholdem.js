@@ -114,6 +114,11 @@ const texasholdemGame = {
         
         updateBalance(-this.ante);
         
+        // Track for VIP, achievements, and leaderboard
+        if (typeof vipSystem !== 'undefined') vipSystem.trackWager(this.ante);
+        if (typeof achievementSystem !== 'undefined') achievementSystem.trackBet(this.ante, 'Royal Texas Hold\'em');
+        if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWager(this.ante, 'Royal Texas Hold\'em');
+        
         // Create deck and shuffle
         const deck = this.createDeck();
         this.shuffleDeck(deck);

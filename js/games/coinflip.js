@@ -76,6 +76,11 @@ const coinflipGame = {
         // Deduct bet
         updateBalance(-bet);
         
+        // Track for VIP and achievements
+        if (typeof achievementSystem !== 'undefined') achievementSystem.trackBet(bet, 'Heads or Tails Royale');
+        if (typeof vipSystem !== 'undefined') vipSystem.trackWager(bet);
+        if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWager(bet, 'Heads or Tails Royale');
+        
         // Track wager for VIP system
         if (typeof vipSystem !== 'undefined') {
             vipSystem.trackWager(bet);
@@ -96,6 +101,8 @@ const coinflipGame = {
             if (result === choice) {
                 const payout = bet * 1.95;
                 updateBalance(payout);
+                
+                if (typeof achievementSystem !== 'undefined') achievementSystem.trackWin(payout);
                 
                 soundManager.playWin();
                 particleSystem.createCoinBurst(window.innerWidth / 2, 300, payout);

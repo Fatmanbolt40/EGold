@@ -65,6 +65,11 @@ const checkersGame = {
         
         updateBalance(-this.bet);
         
+        // Track for VIP, achievements, and leaderboard
+        if (typeof vipSystem !== 'undefined') vipSystem.trackWager(this.bet);
+        if (typeof achievementSystem !== 'undefined') achievementSystem.trackBet(this.bet, 'Royal Checkers');
+        if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWager(this.bet, 'Royal Checkers');
+        
         // Simulate match with house edge (75% loss, 15% win, 10% draw)
         const board = document.getElementById('checkersBoard');
         const pieces = ['🔴', '⚫', '👑'];

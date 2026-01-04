@@ -91,6 +91,9 @@ const rouletteGame = {
         }
         
         updateBalance(-bet);
+        if (typeof vipSystem !== 'undefined') vipSystem.trackWager(bet);
+        if (typeof achievementSystem !== 'undefined') achievementSystem.trackBet(bet, 'Royal Wheel 36');
+        if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWager(bet, 'Royal Wheel 36');
         this.spin(bet, color, null);
     },
     
@@ -116,6 +119,9 @@ const rouletteGame = {
         }
         
         updateBalance(-bet);
+        if (typeof vipSystem !== 'undefined') vipSystem.trackWager(bet);
+        if (typeof achievementSystem !== 'undefined') achievementSystem.trackBet(bet, 'Royal Wheel 36');
+        if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWager(bet, 'Royal Wheel 36');
         this.spin(bet, null, number);
     },
     

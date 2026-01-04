@@ -88,6 +88,11 @@ const tonkGame = {
         
         updateBalance(-this.ante);
         
+        // Track for VIP, achievements, and leaderboard
+        if (typeof vipSystem !== 'undefined') vipSystem.trackWager(this.ante);
+        if (typeof achievementSystem !== 'undefined') achievementSystem.trackBet(this.ante, 'Royal Tonk');
+        if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWager(this.ante, 'Royal Tonk');
+        
         // Deal cards
         const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
         const suits = ['♠', '♥', '♦', '♣'];

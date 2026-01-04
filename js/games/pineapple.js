@@ -85,6 +85,11 @@ const pineappleGame = {
         
         updateBalance(-this.ante);
         
+        // Track for VIP, achievements, and leaderboard
+        if (typeof vipSystem !== 'undefined') vipSystem.trackWager(this.ante);
+        if (typeof achievementSystem !== 'undefined') achievementSystem.trackBet(this.ante, 'Royal Crazy Pineapple');
+        if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWager(this.ante, 'Royal Crazy Pineapple');
+        
         // Simplified - dealer has advantage
         const playerScore = Math.random() * 100;
         const dealerScore = Math.random() * 100 + 5; // House edge

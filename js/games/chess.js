@@ -66,6 +66,11 @@ const chessGame = {
         
         updateBalance(-this.bet);
         
+        // Track for VIP, achievements, and leaderboard
+        if (typeof vipSystem !== 'undefined') vipSystem.trackWager(this.bet);
+        if (typeof achievementSystem !== 'undefined') achievementSystem.trackBet(this.bet, 'Royal Chess Blitz');
+        if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWager(this.bet, 'Royal Chess Blitz');
+        
         // Simulate match with house edge (80% loss, 10% win, 10% draw)
         const board = document.getElementById('chessBoard');
         const pieces = ['♔', '♕', '♖', '♗', '♘', '♙', '♚', '♛', '♜', '♝', '♞', '♟'];

@@ -89,6 +89,11 @@ const omahaGame = {
         
         updateBalance(-this.ante);
         
+        // Track for VIP, achievements, and leaderboard
+        if (typeof vipSystem !== 'undefined') vipSystem.trackWager(this.ante);
+        if (typeof achievementSystem !== 'undefined') achievementSystem.trackBet(this.ante, 'Royal Omaha Hi');
+        if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWager(this.ante, 'Royal Omaha Hi');
+        
         // Simplified - dealer has advantage
         const playerScore = Math.random() * 100;
         const dealerScore = Math.random() * 100 + 5; // House edge

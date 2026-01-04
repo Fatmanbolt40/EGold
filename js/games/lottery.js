@@ -98,6 +98,11 @@ const lotteryGame = {
         
         updateBalance(-this.ticketCost);
         
+        // Track for VIP, achievements, and leaderboard
+        if (typeof vipSystem !== 'undefined') vipSystem.trackWager(this.ticketCost);
+        if (typeof achievementSystem !== 'undefined') achievementSystem.trackBet(this.ticketCost, 'eGold Lotto 6/49');
+        if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWager(this.ticketCost, 'eGold Lotto 6/49');
+        
         const resultDiv = document.getElementById('lotteryResult');
         resultDiv.innerHTML = '<div class="loading-spinner"></div><p style="margin-top: 10px;">Drawing numbers...</p>';
         

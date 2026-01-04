@@ -64,6 +64,11 @@ const diceraffleGame = {
         
         updateBalance(-this.ticketCost);
         
+        // Track for VIP, achievements, and leaderboard
+        if (typeof vipSystem !== 'undefined') vipSystem.trackWager(this.ticketCost);
+        if (typeof achievementSystem !== 'undefined') achievementSystem.trackBet(this.ticketCost, 'HexaRoll 16');
+        if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWager(this.ticketCost, 'HexaRoll 16');
+        
         const dice = document.getElementById('dice');
         const diceNumber = document.getElementById('diceNumber');
         

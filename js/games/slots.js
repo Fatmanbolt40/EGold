@@ -97,10 +97,10 @@ const slotsGame = {
         // Deduct bet
         updateBalance(-bet);
         
-        // Track wager for VIP system
-        if (typeof vipSystem !== 'undefined') {
-            vipSystem.trackWager(bet);
-        }
+        // Track wager for VIP system and achievements
+        if (typeof vipSystem !== 'undefined') vipSystem.trackWager(bet);
+        if (typeof achievementSystem !== 'undefined') achievementSystem.trackBet(bet, 'Royal Triple Spin');
+        if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWager(bet, 'Royal Triple Spin');
         
         // Spin animation
         document.getElementById('slotDisplay').innerHTML = '<div style="color: #FFB800; font-size: 1.5em; animation: pulse 0.5s infinite;">🎰 SPINNING... 🎰</div>';

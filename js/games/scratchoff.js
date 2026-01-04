@@ -66,6 +66,11 @@ const scratchoffGame = {
         
         updateBalance(-this.ticketCost);
         
+        // Track for VIP, achievements, and leaderboard
+        if (typeof vipSystem !== 'undefined') vipSystem.trackWager(this.ticketCost);
+        if (typeof achievementSystem !== 'undefined') achievementSystem.trackBet(this.ticketCost, 'Instant Win Scratchers');
+        if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWager(this.ticketCost, 'Instant Win Scratchers');
+        
         // House edge: 50% more losing tickets
         const outcomes = [
             { symbol: '💎', prize: 500, chance: 0.01 },
