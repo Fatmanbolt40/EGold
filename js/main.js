@@ -79,19 +79,19 @@ function startGame(gameType) {
     
     // Set game title
     const titles = {
-        'slots': '🎰 Slots',
-        'coinflip': '🪙 Coin Flip',
-        'roulette': '🎡 Roulette',
-        'texasholdem': '🃏 Texas Hold\'em',
-        'lottery': '🎟️ Lottery',
-        'scratchoff': '💳 Scratch Off',
-        'diceraffle': '🎲 Dice Raffle',
-        'chess': '♟️ Chess',
-        'checkers': '🔴 Checkers',
-        'omaha': '🎴 Omaha Poker',
-        'pineapple': '🍍 Pineapple Poker',
-        'tonk': '🎯 Tonk',
-        'holdtable': '🎰 Hold\'em Table'
+        'slots': '🎰 Royal Triple Spin',
+        'coinflip': '🪙 Heads or Tails Royale',
+        'roulette': '🎡 Royal Wheel 36',
+        'texasholdem': '🃏 Royal Hold\'em',
+        'lottery': '🎟️ eGold Lotto 6/49',
+        'scratchoff': '💳 Instant Win Scratchers',
+        'diceraffle': '🎲 HexaRoll 16',
+        'chess': '♟️ Wager Chess',
+        'checkers': '🔴 Royal Checkers',
+        'omaha': '🎴 Omaha Royale',
+        'pineapple': '🍍 Pineapple Royale',
+        'tonk': '🎯 Tonk Royale',
+        'holdtable': '🎰 Royal Table Multiplayer'
     };
     
     gameTitle.textContent = titles[gameType] || gameType;

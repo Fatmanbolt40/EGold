@@ -5,7 +5,7 @@ const rouletteGame = {
         content.innerHTML = `
             <div style="text-align: center;">
                 <div class="game-display">
-                    <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 15px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">🎡 ROULETTE ROYALE 🎡</h3>
+                    <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 15px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">🎡 ROYAL WHEEL 36 🎡</h3>
                     <div id="rouletteWheel">${VisualEnhancer.createRouletteWheel()}</div>
                     <div id="rouletteNumber" style="font-size: 2.5em; color: #FFB800; min-height: 60px; margin: 15px 0; font-weight: bold; text-shadow: 0 0 15px rgba(255, 184, 0, 0.6);"></div>
                 </div>
@@ -41,13 +41,36 @@ const rouletteGame = {
                 <div id="rouletteResult" class="game-result"></div>
                 
                 <div class="game-info-box">
-                    <h3>🎯 How to Play</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
-                        <p style="padding: 8px; background: rgba(231, 76, 60, 0.2); border-radius: 5px;">🔴 Red: Numbers 1-18</p>
-                        <p style="padding: 8px; background: rgba(44, 62, 80, 0.2); border-radius: 5px;">⚫ Black: Numbers 19-36</p>
-                        <p style="padding: 8px; background: rgba(39, 174, 96, 0.2); border-radius: 5px; grid-column: 1 / -1;">🟢 Green: Number 0</p>
+                    <h3>👑 Royal Wheel 36</h3>
+                    <p style="font-size: 1.1em; color: #cccccc; margin: 10px 0;">Premium European-style roulette with smooth spin physics and glowing number pockets</p>
+                    <div style="margin-top: 20px;">
+                        <h4 style="color: #FFB800;">🎯 Betting Options</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                            <div style="padding: 10px; background: rgba(231, 76, 60, 0.2); border-radius: 8px;">
+                                <b>🔴 Red (1-18)</b><br><small>Payout: 1.9x</small>
+                            </div>
+                            <div style="padding: 10px; background: rgba(44, 62, 80, 0.2); border-radius: 8px;">
+                                <b>⚫ Black (19-36)</b><br><small>Payout: 1.9x</small>
+                            </div>
+                            <div style="padding: 10px; background: rgba(39, 174, 96, 0.2); border-radius: 8px; grid-column: 1 / -1;">
+                                <b>🟢 Green (0)</b><br><small>Payout: 30x</small>
+                            </div>
+                            <div style="padding: 10px; background: rgba(255, 184, 0, 0.15); border-radius: 8px; grid-column: 1 / -1;">
+                                <b>🎯 Single Number</b><br><small>Pick any 0-36 • Payout: 30x</small>
+                            </div>
+                        </div>
                     </div>
-                    <p style="color: #FFB800; margin-top: 10px; font-weight: bold;">Color bets pay 1.9x • Number bets pay 30x</p>
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(46, 204, 113, 0.1); border-radius: 10px; border: 2px solid #2ecc71;">
+                        <h4 style="color: #2ecc71; margin-bottom: 10px;">📜 Game Rules</h4>
+                        <ul style="text-align: left; max-width: 450px; margin: 0 auto; color: #cccccc; line-height: 1.8;">
+                            <li>Numbers <b>0-36</b> on the wheel</li>
+                            <li>Red: 1-18 • Black: 19-36 • Green: 0</li>
+                            <li>Color bets pay <b style="color: #FFB800;">1.9x</b></li>
+                            <li>Number bets pay <b style="color: #FFB800;">30x</b></li>
+                            <li>Watch the wheel spin with smooth physics</li>
+                            <li>Sparkle effects on winning numbers!</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         `;
