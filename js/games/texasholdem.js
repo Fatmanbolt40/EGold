@@ -19,19 +19,28 @@ const texasholdemGame = {
                     </div>
                 </div>
                 
-                <div style="margin: 30px 0;">
-                    <h4 style="color: #FFB800;">Dealer's Hand</h4>
-                    <div id="dealerHand" style="font-size: 2.5em; margin: 10px 0;">🂠 🂠</div>
-                </div>
-                
-                <div style="margin: 30px 0;">
-                    <h4 style="color: #FFB800;">Community Cards</h4>
-                    <div id="communityCards" style="font-size: 2.5em; margin: 10px 0;">🂠 🂠 🂠 🂠 🂠</div>
-                </div>
-                
-                <div style="margin: 30px 0;">
-                    <h4 style="color: #FFB800;">Your Hand</h4>
-                    <div id="playerHand" style="font-size: 2.5em; margin: 10px 0;">🂠 🂠</div>
+                <!-- Poker Table -->
+                <div style="background: linear-gradient(135deg, #1a5f1a 0%, #0d4a0d 100%); padding: 40px; border-radius: 20px; border: 5px solid #8B4513; box-shadow: 0 10px 40px rgba(0,0,0,0.5); max-width: 900px; margin: 30px auto;">
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: #FFB800; margin-bottom: 10px;">Dealer's Hand</h4>
+                        <div id="dealerHand">${VisualEnhancer.createCard('?', 'spades', true)}${VisualEnhancer.createCard('?', 'spades', true)}</div>
+                    </div>
+                    
+                    <div style="margin: 30px 0;">
+                        <h4 style="color: #FFB800; margin-bottom: 10px;">Community Cards</h4>
+                        <div id="communityCards">
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: #FFB800; margin-bottom: 10px;">Your Hand</h4>
+                        <div id="playerHand">${VisualEnhancer.createCard('?', 'spades', true)}${VisualEnhancer.createCard('?', 'spades', true)}</div>
+                    </div>
                 </div>
                 
                 <button onclick="texasholdemGame.play()" style="padding: 15px 40px; font-size: 1.3em; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer; margin: 20px 0;">
@@ -52,15 +61,7 @@ const texasholdemGame = {
         `;
     },
     
-    play() {
-        if (balance < this.ante) {
-            document.getElementById('pokerResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
-            return;
-        }
-        
-        updateBalance(-this.ante);
-        
-        // Create deck and shuffle
+    createDeck() {
         const suits = ['♠', '♥', '♦', '♣'];
         const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
         const deck = [];
@@ -70,25 +71,42 @@ const texasholdemGame = {
                 deck.push({ value, suit, numValue: values.indexOf(value) + 2 });
             }
         }
-        
-        // Shuffle
+        return deck;
+    },
+    
+    shuffleDeck(deck) {
         for (let i = deck.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [deck[i], deck[j]] = [deck[j], deck[i]];
         }
+    },
+    
+    play() {
+        if (balance < this.ante) {
+            document.getElementById('pokerResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
+            return;
+        }
+        
+        updateBalance(-this.ante);
+        
+        // Create deck and shuffle
+        const deck = this.createDeck();
+        this.shuffleDeck(deck);
         
         // Deal cards
         const playerCards = [deck.pop(), deck.pop()];
         const dealerCards = [deck.pop(), deck.pop()];
         const community = [deck.pop(), deck.pop(), deck.pop(), deck.pop(), deck.pop()];
         
-        // Display
-        document.getElementById('playerHand').textContent = 
-            playerCards.map(c => `${c.value}${c.suit}`).join(' ');
-        document.getElementById('communityCards').textContent = 
-            community.map(c => `${c.value}${c.suit}`).join(' ');
-        document.getElementById('dealerHand').textContent = 
-            dealerCards.map(c => `${c.value}${c.suit}`).join(' ');
+        // Display cards with actual visuals
+        const suitMap = {'♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs'};
+        
+        document.getElementById('playerHand').innerHTML = 
+            playerCards.map(c => VisualEnhancer.createCard(c.value, suitMap[c.suit])).join('');
+        document.getElementById('communityCards').innerHTML = 
+            community.map(c => VisualEnhancer.createCard(c.value, suitMap[c.suit])).join('');
+        document.getElementById('dealerHand').innerHTML = 
+            dealerCards.map(c => VisualEnhancer.createCard(c.value, suitMap[c.suit])).join('');
         
         // Evaluate hands (simplified)
         const playerScore = this.evaluateHand([...playerCards, ...community]);

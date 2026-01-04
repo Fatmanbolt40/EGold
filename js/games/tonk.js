@@ -20,16 +20,31 @@ const tonkGame = {
                     </div>
                 </div>
                 
-                <div style="margin: 30px 0;">
-                    <h4 style="color: #FFB800;">Dealer's Hand</h4>
-                    <div id="dealerHand" style="font-size: 2em; margin: 10px 0;">🂠 🂠 🂠</div>
-                    <div id="dealerScore" style="font-size: 1.5em; color: #FFB800; margin-top: 10px;">Score: ???</div>
-                </div>
-                
-                <div style="margin: 30px 0;">
-                    <h4 style="color: #FFB800;">Your Hand</h4>
-                    <div id="playerHand" style="font-size: 2em; margin: 10px 0;">🂠 🂠 🂠</div>
-                    <div id="playerScore" style="font-size: 1.5em; color: #FFB800; margin-top: 10px;">Score: ???</div>
+                <!-- Card Table -->
+                <div style="background: linear-gradient(135deg, #1a5f1a 0%, #0d4a0d 100%); padding: 40px; border-radius: 20px; border: 5px solid #8B4513; box-shadow: 0 10px 40px rgba(0,0,0,0.5); max-width: 900px; margin: 30px auto;">
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: #FFB800; margin-bottom: 10px;">Dealer's Hand</h4>
+                        <div id="dealerHand">
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                        </div>
+                        <div id="dealerScore" style="font-size: 1.5em; color: #FFB800; margin-top: 10px;">Score: ???</div>
+                    </div>
+                    
+                    <div style="margin: 30px 0; padding: 20px; background: rgba(255, 184, 0, 0.15); border-radius: 12px;">
+                        <h4 style="color: #FFB800;">Target: Get closest to 49 without going over!</h4>
+                    </div>
+                    
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: #FFB800; margin-bottom: 10px;">Your Hand</h4>
+                        <div id="playerHand">
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                        </div>
+                        <div id="playerScore" style="font-size: 1.5em; color: #FFB800; margin-top: 10px;">Score: ???</div>
+                    </div>
                 </div>
                 
                 <button onclick="tonkGame.play()" style="padding: 15px 40px; font-size: 1.3em; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer; margin: 20px 0;">

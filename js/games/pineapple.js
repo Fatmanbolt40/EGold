@@ -20,19 +20,34 @@ const pineappleGame = {
                     </div>
                 </div>
                 
-                <div style="margin: 30px 0;">
-                    <h4 style="color: #FFB800;">Dealer's Hand</h4>
-                    <div id="dealerHand" style="font-size: 2em; margin: 10px 0;">🂠 🂠</div>
-                </div>
-                
-                <div style="margin: 30px 0;">
-                    <h4 style="color: #FFB800;">Community Cards</h4>
-                    <div id="communityCards" style="font-size: 2.5em; margin: 10px 0;">🂠 🂠 🂠 🂠 🂠</div>
-                </div>
-                
-                <div style="margin: 30px 0;">
-                    <h4 style="color: #FFB800;">Your Hand</h4>
-                    <div id="playerHand" style="font-size: 2em; margin: 10px 0;">🂠 🂠</div>
+                <!-- Poker Table -->
+                <div style="background: linear-gradient(135deg, #1a5f1a 0%, #0d4a0d 100%); padding: 40px; border-radius: 20px; border: 5px solid #8B4513; box-shadow: 0 10px 40px rgba(0,0,0,0.5); max-width: 900px; margin: 30px auto;">
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: #FFB800; margin-bottom: 10px;">Dealer's Hand</h4>
+                        <div id="dealerHand">
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 30px 0;">
+                        <h4 style="color: #FFB800; margin-bottom: 10px;">Community Cards</h4>
+                        <div id="communityCards">
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: #FFB800; margin-bottom: 10px;">Your Hand</h4>
+                        <div id="playerHand">
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                        </div>
+                    </div>
                 </div>
                 
                 <button onclick="pineappleGame.play()" style="padding: 15px 40px; font-size: 1.3em; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer; margin: 20px 0;">
@@ -56,10 +71,19 @@ const pineappleGame = {
         const playerScore = Math.random() * 100;
         const dealerScore = Math.random() * 100 + 5; // House edge
         
-        // Show placeholder cards
-        document.getElementById('playerHand').textContent = 'A♠ K♠';
-        document.getElementById('dealerHand').textContent = 'Q♥ J♥';
-        document.getElementById('communityCards').textContent = '10♠ 9♠ 8♠ 7♥ 6♦';
+        // Show actual cards
+        document.getElementById('playerHand').innerHTML = 
+            VisualEnhancer.createCard('A', 'spades') + 
+            VisualEnhancer.createCard('K', 'spades');
+        document.getElementById('dealerHand').innerHTML = 
+            VisualEnhancer.createCard('Q', 'hearts') + 
+            VisualEnhancer.createCard('J', 'hearts');
+        document.getElementById('communityCards').innerHTML = 
+            VisualEnhancer.createCard('10', 'spades') + 
+            VisualEnhancer.createCard('9', 'spades') + 
+            VisualEnhancer.createCard('8', 'spades') + 
+            VisualEnhancer.createCard('7', 'hearts') + 
+            VisualEnhancer.createCard('6', 'diamonds');
         
         if (playerScore > dealerScore) {
             const payout = this.ante * 2;
