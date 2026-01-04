@@ -9,9 +9,25 @@ const pineappleGame = {
     
     initSolo() {
         const content = document.getElementById('gameContent');
+        const vipLevel = typeof vipSystem !== 'undefined' ? vipSystem.getCurrentLevel().level : 0;
+        
         content.innerHTML = `
             <div style="text-align: center;">
-                <h3 style="color: #FFB800; font-size: 1.5em; margin-bottom: 20px;">Pineapple Poker</h3>
+                <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #FFB800; box-shadow: 0 4px 20px rgba(255,184,0,0.3);">
+                    <h3 style="color: #FFB800; font-size: 2em; margin: 0; text-shadow: 0 0 20px rgba(255,184,0,0.6);">🍍 ROYAL CRAZY PINEAPPLE 🍍</h3>
+                    <p style="color: #888; margin: 10px 0 0 0;">3-Card Madness - WPT Style</p>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
+                    <button onclick="pokerEnhancer.showHandHistory()" style="background: linear-gradient(135deg, #3498db, #2980b9); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(52,152,219,0.3);">
+                        📜 Hand History
+                    </button>
+                    <button onclick="pokerEnhancer.showQuickChat()" style="background: linear-gradient(135deg, #9b59b6, #8e44ad); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(155,89,182,0.3);">
+                        💬 Quick Chat
+                    </button>
+                </div>
+                
+                ${pokerEnhancer.createPremiumTable('pineapple')}
                 <p style="color: #cccccc; margin-bottom: 20px;">Start with 3 cards - Discard 1 after flop</p>
                 
                 <div style="margin: 20px 0;">

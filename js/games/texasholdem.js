@@ -1,13 +1,195 @@
 // Texas Hold'em Poker (Simplified)
 const texasholdemGame = {
     ante: 10,
+    gameState: null,
+    aiInterval: null,
+    currentTournament: null,
     
     init() {
-        // Show game mode selector
-        PVPSystem.showGameModeSelector('texasholdem', 'Texas Hold\'em Poker');
+        // Show tournament lobby instead of solo mode
+        TournamentLobby.showLobby();
     },
     
-    initSolo() {
+    initTournamentTable(tournament) {
+        this.currentTournament = tournament;
+        const content = document.getElementById('gameContent');
+        
+        content.innerHTML = `
+            <style>
+                .poker-seat {
+                    position: absolute;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 5px;
+                }
+                .player-avatar {
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 50%;
+                    border: 3px solid #4A90A4;
+                    background: linear-gradient(135deg, #2C5F6F, #1a1a2e);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.8em;
+                    position: relative;
+                }
+                .player-info {
+                    background: rgba(0,0,0,0.85);
+                    padding: 8px 15px;
+                    border-radius: 8px;
+                    border: 1px solid #4A90A4;
+                    min-width: 100px;
+                    text-align: center;
+                }
+                .dealer-button {
+                    position: absolute;
+                    top: -10px;
+                    right: -10px;
+                    width: 28px;
+                    height: 28px;
+                    background: linear-gradient(135deg, #fff, #ddd);
+                    border-radius: 50%;
+                    border: 3px solid #1a1a2e;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    font-size: 0.9em;
+                    color: #000;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+                }
+                .action-buttons {
+                    display: flex;
+                    gap: 10px;
+                    margin-top: 20px;
+                }
+                .poker-btn {
+                    padding: 12px 30px;
+                    font-size: 1.1em;
+                    font-weight: bold;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    text-transform: uppercase;
+                }
+                .fold-btn { background: linear-gradient(135deg, #e74c3c, #c0392b); color: #fff; }
+                .call-btn { background: linear-gradient(135deg, #f39c12, #e67e22); color: #fff; }
+                .raise-btn { background: linear-gradient(135deg, #2ecc71, #27ae60); color: #fff; }
+                .check-btn { background: linear-gradient(135deg, #3498db, #2980b9); color: #fff; }
+                .poker-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+                .poker-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+            </style>
+            
+            <!-- Tournament Header -->
+            <div style="background: linear-gradient(135deg, #2C5F6F, #4A90A4); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #5AA4B8;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="color: #fff; font-weight: bold; font-size: 1.1em;">🏆 ${tournament.name}</div>
+                    <div style="display: flex; gap: 30px; color: #fff;">
+                        <div>Position: <span id="playerPosition" style="color: #FFB800; font-weight: bold;">-</span></div>
+                        <div>Players: <span id="playersRemaining" style="color: #2ecc71; font-weight: bold;">${tournament.players}</span></div>
+                        <div>Blinds: <span id="blindLevel" style="color: #f39c12; font-weight: bold;">5/10</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Poker Table -->
+            <div style="position: relative; margin: 0 auto; max-width: 1000px;">
+                <!-- Oval Table -->
+                <div style="
+                    position: relative;
+                    background: radial-gradient(ellipse at center, #1a5f8f 0%, #0d3a5f 100%);
+                    border-radius: 300px / 200px;
+                    padding: 80px 120px;
+                    border: 12px solid #8B4513;
+                    box-shadow: 
+                        inset 0 0 80px rgba(0,0,0,0.6),
+                        0 20px 60px rgba(0,0,0,0.7);
+                    min-height: 500px;
+                ">
+                    <!-- Table felt texture -->
+                    <div style="
+                        position: absolute;
+                        top: 0; left: 0; right: 0; bottom: 0;
+                        background-image: 
+                            repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.01) 2px, rgba(255,255,255,0.01) 4px),
+                            repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.01) 2px, rgba(255,255,255,0.01) 4px);
+                        border-radius: 300px / 200px;
+                        pointer-events: none;
+                    "></div>
+                    
+                    <!-- Inner rail -->
+                    <div style="
+                        position: absolute;
+                        top: 15px; left: 15px; right: 15px; bottom: 15px;
+                        border: 2px solid rgba(255,255,255,0.1);
+                        border-radius: 285px / 185px;
+                        pointer-events: none;
+                    "></div>
+                    
+                    <!-- Center branding -->
+                    <div style="
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        text-align: center;
+                        pointer-events: none;
+                        z-index: 1;
+                    ">
+                        <div style="color: rgba(255,184,0,0.3); font-size: 2.5em; font-weight: bold; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">♠ Royal eGold ♥</div>
+                        <div id="potAmount" style="color: #FFB800; font-size: 2em; font-weight: bold; margin-top: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Pot: 0</div>
+                        <div id="gamePhaseDisplay" style="color: #fff; font-size: 1.2em; margin-top: 10px; text-transform: uppercase; opacity: 0.7;"></div>
+                    </div>
+                    
+                    <!-- Player seats (8 positions) -->
+                    <div id="playerSeats"></div>
+                    
+                    <!-- Community cards -->
+                    <div id="communityCards" style="
+                        position: absolute;
+                        top: 40%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        display: flex;
+                        gap: 8px;
+                        z-index: 2;
+                    "></div>
+                </div>
+                
+                <!-- Player action area -->
+                <div id="playerActions" style="text-align: center; margin-top: 30px;">
+                    <!-- Your cards display -->
+                    <div style="margin-bottom: 20px;">
+                        <div style="color: #FFB800; font-weight: bold; margin-bottom: 10px; font-size: 1.2em;">Your Hand</div>
+                        <div id="playerCards" style="display: flex; justify-content: center; gap: 10px;"></div>
+                    </div>
+                    
+                    <!-- Action buttons -->
+                    <div class="action-buttons" id="actionButtons" style="justify-content: center;"></div>
+                    
+                    <!-- Raise slider -->
+                    <div id="raiseControls" style="margin-top: 15px; display: none;">
+                        <input type="range" id="raiseSlider" min="10" max="100" value="20" style="width: 300px;">
+                        <div style="color: #FFB800; font-weight: bold; margin-top: 5px;">
+                            Raise: <span id="raiseAmount">20</span> eGold
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat/Stats Panel -->
+                <div style="position: fixed; left: 20px; bottom: 20px; width: 300px; background: rgba(0,0,0,0.9); border-radius: 10px; border: 2px solid #4A90A4; padding: 15px; max-height: 400px; overflow-y: auto;">
+                    <div style="color: #4A90A4; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #4A90A4; padding-bottom: 5px;">💬 TABLE CHAT</div>
+                    <div id="tableChat" style="color: #ccc; font-size: 0.9em; line-height: 1.6;"></div>
+                </div>
+            </div>
+        `;
+        
+        // Start the game
+        this.startGame();
+    },
         const content = document.getElementById('gameContent');
         const vipLevel = typeof vipSystem !== 'undefined' ? vipSystem.getCurrentLevel().level : 0;
         
@@ -131,7 +313,283 @@ const texasholdemGame = {
         `;
     },
     
-    createDeck() {
+    startGame() {
+        // Initialize poker engine
+        PokerEngine.init();
+        PokerEngine.initializeTable(balance);
+        
+        // Start first hand
+        this.startNewHand();
+    },
+    
+    startNewHand() {
+        this.gameState = PokerEngine.startNewHand();
+        this.updateUI();
+        this.addChatMessage('Dealer', 'New hand dealt. Good luck!');
+        
+        // Start AI loop
+        this.processAIActions();
+    },
+    
+    updateUI() {
+        const state = this.gameState;
+        
+        // Update pot
+        document.getElementById('potAmount').textContent = `Pot: ${state.pot} eGold`;
+        document.getElementById('gamePhaseDisplay').textContent = state.gamePhase;
+        document.getElementById('blindLevel').textContent = `${state.smallBlind}/${state.bigBlind}`;
+        
+        // Update player position
+        const activePlayers = state.players.filter(p => !p.folded && !p.sittingOut).length;
+        const playerPos = state.players.filter(p => !p.folded && p.position <= 0).length;
+        document.getElementById('playerPosition').textContent = `${playerPos} of ${activePlayers}`;
+        document.getElementById('playersRemaining').textContent = activePlayers;
+        
+        // Render seats
+        this.renderSeats();
+        
+        // Render community cards
+        this.renderCommunityCards();
+        
+        // Render player cards
+        this.renderPlayerCards();
+        
+        // Update action buttons
+        this.updateActionButtons();
+    },
+    
+    renderSeats() {
+        const seatsContainer = document.getElementById('playerSeats');
+        seatsContainer.innerHTML = '';
+        
+        // 8 seat positions around oval table
+        const positions = [
+            { left: '50%', bottom: '-40px', transform: 'translateX(-50%)' }, // Seat 0 - You (bottom)
+            { left: '15%', bottom: '20%', transform: 'none' }, // Seat 1 - left-bottom
+            { left: '5%', top: '40%', transform: 'none' }, // Seat 2 - left-mid
+            { left: '15%', top: '15%', transform: 'none' }, // Seat 3 - left-top
+            { left: '50%', top: '-40px', transform: 'translateX(-50%)' }, // Seat 4 - top
+            { right: '15%', top: '15%', transform: 'none' }, // Seat 5 - right-top
+            { right: '5%', top: '40%', transform: 'none' }, // Seat 6 - right-mid
+            { right: '15%', bottom: '20%', transform: 'none' } // Seat 7 - right-bottom
+        ];
+        
+        this.gameState.players.forEach((player, index) => {
+            const pos = positions[index];
+            const seat = document.createElement('div');
+            seat.className = 'poker-seat';
+            seat.style.cssText = `
+                ${pos.left ? `left: ${pos.left};` : ''}
+                ${pos.right ? `right: ${pos.right};` : ''}
+                ${pos.top ? `top: ${pos.top};` : ''}
+                ${pos.bottom ? `bottom: ${pos.bottom};` : ''}
+                ${pos.transform ? `transform: ${pos.transform};` : ''}
+            `;
+            
+            const isActive = index === this.gameState.activePosition;
+            const isDealer = index === this.gameState.dealerPosition;
+            
+            seat.innerHTML = `
+                <div class="player-avatar" style="${isActive ? 'border-color: #2ecc71; box-shadow: 0 0 20px #2ecc71;' : ''}">
+                    ${isDealer ? '<div class="dealer-button">D</div>' : ''}
+                    ${player.sittingOut ? '💤' : '🎰'}
+                </div>
+                <div class="player-info">
+                    <div style="color: ${player.isPlayer ? '#FFB800' : '#fff'}; font-weight: bold; font-size: 0.9em;">
+                        ${player.name}
+                    </div>
+                    <div style="color: #2ecc71; font-weight: bold; font-size: 1em;">
+                        ${player.chips} 💰
+                    </div>
+                    ${player.bet > 0 ? `<div style="color: #f39c12; font-size: 0.85em;">Bet: ${player.bet}</div>` : ''}
+                    ${player.lastAction ? `<div style="color: #888; font-size: 0.75em; text-transform: uppercase;">${player.lastAction}</div>` : ''}
+                </div>
+                ${!player.folded && player.cards.length > 0 && !player.sittingOut ? `
+                    <div style="display: flex; gap: 3px; margin-top: 5px;">
+                        ${player.isPlayer ? '' : 
+                            player.cards.map(() => pokerEnhancer.createEnhancedCard('?', '♠', true).replace('70px', '35px').replace('100px', '50px')).join('')
+                        }
+                    </div>
+                ` : ''}
+            `;
+            
+            seatsContainer.appendChild(seat);
+        });
+    },
+    
+    renderCommunityCards() {
+        const container = document.getElementById('communityCards');
+        if (this.gameState.communityCards.length === 0) {
+            container.innerHTML = '';
+            return;
+        }
+        
+        container.innerHTML = this.gameState.communityCards
+            .map(card => pokerEnhancer.createEnhancedCard(card.value, card.suit))
+            .join('');
+    },
+    
+    renderPlayerCards() {
+        const container = document.getElementById('playerCards');
+        const player = this.gameState.players[0]; // You are always position 0
+        
+        if (!player.cards || player.cards.length === 0 || player.folded) {
+            container.innerHTML = '';
+            return;
+        }
+        
+        container.innerHTML = player.cards
+            .map(card => pokerEnhancer.createEnhancedCard(card.value, card.suit))
+            .join('');
+    },
+    
+    updateActionButtons() {
+        const container = document.getElementById('actionButtons');
+        const player = this.gameState.players[0];
+        const isYourTurn = this.gameState.activePosition === 0;
+        const callAmount = this.gameState.currentBet - player.bet;
+        
+        if (!isYourTurn || player.folded || this.gameState.gamePhase === 'complete') {
+            container.innerHTML = '<div style="color: #888; padding: 20px;">Waiting for other players...</div>';
+            document.getElementById('raiseControls').style.display = 'none';
+            return;
+        }
+        
+        let buttons = [];
+        
+        // Fold button
+        buttons.push(`
+            <button class="poker-btn fold-btn" onclick="texasholdemGame.playerAction('fold')">
+                ✕ Fold
+            </button>
+        `);
+        
+        // Check or Call button
+        if (callAmount === 0) {
+            buttons.push(`
+                <button class="poker-btn check-btn" onclick="texasholdemGame.playerAction('check')">
+                    ✓ Check
+                </button>
+            `);
+        } else {
+            buttons.push(`
+                <button class="poker-btn call-btn" onclick="texasholdemGame.playerAction('call')">
+                    Call ${callAmount}
+                </button>
+            `);
+        }
+        
+        // Raise button
+        if (player.chips > callAmount) {
+            buttons.push(`
+                <button class="poker-btn raise-btn" onclick="texasholdemGame.playerAction('raise')">
+                    ↑ Raise
+                </button>
+            `);
+        }
+        
+        container.innerHTML = buttons.join('');
+        
+        // Setup raise slider
+        const raiseSlider = document.getElementById('raiseSlider');
+        const raiseAmount = document.getElementById('raiseAmount');
+        raiseSlider.min = this.gameState.bigBlind;
+        raiseSlider.max = Math.min(player.chips - callAmount, 100);
+        raiseSlider.value = this.gameState.bigBlind * 2;
+        raiseAmount.textContent = raiseSlider.value;
+        
+        raiseSlider.oninput = () => {
+            raiseAmount.textContent = raiseSlider.value;
+        };
+    },
+    
+    playerAction(action) {
+        const player = this.gameState.players[0];
+        
+        if (action === 'fold') {
+            PokerEngine.playerFold(0);
+            this.addChatMessage('You', 'Fold');
+            if (typeof soundManager !== 'undefined') soundManager.playButtonClick();
+        } else if (action === 'call') {
+            PokerEngine.playerCall(0);
+            this.addChatMessage('You', `Call ${this.gameState.currentBet - player.bet}`);
+            if (typeof soundManager !== 'undefined') soundManager.playChipSound();
+        } else if (action === 'check') {
+            PokerEngine.playerCheck(0);
+            this.addChatMessage('You', 'Check');
+            if (typeof soundManager !== 'undefined') soundManager.playButtonClick();
+        } else if (action === 'raise') {
+            const raiseControls = document.getElementById('raiseControls');
+            if (raiseControls.style.display === 'none') {
+                raiseControls.style.display = 'block';
+                return;
+            }
+            const raiseAmount = parseInt(document.getElementById('raiseSlider').value);
+            PokerEngine.playerRaise(0, raiseAmount);
+            this.addChatMessage('You', `Raise ${raiseAmount}`);
+            if (typeof soundManager !== 'undefined') soundManager.playChipSound();
+            raiseControls.style.display = 'none';
+        }
+        
+        this.gameState = PokerEngine.getGameState();
+        this.updateUI();
+        
+        // Continue with AI
+        setTimeout(() => this.processAIActions(), 500);
+    },
+    
+    processAIActions() {
+        if (this.gameState.gamePhase === 'complete') {
+            setTimeout(() => this.startNewHand(), 3000);
+            return;
+        }
+        
+        const activePlayer = this.gameState.players[this.gameState.activePosition];
+        
+        if (activePlayer.isPlayer) {
+            // Player's turn - wait for action
+            return;
+        }
+        
+        // AI action
+        setTimeout(() => {
+            const aiAction = PokerEngine.getAIAction(activePlayer);
+            
+            if (aiAction.action === 'fold') {
+                PokerEngine.playerFold(activePlayer.id);
+                this.addChatMessage(activePlayer.name, 'Fold');
+            } else if (aiAction.action === 'call') {
+                PokerEngine.playerCall(activePlayer.id);
+                this.addChatMessage(activePlayer.name, `Call ${this.gameState.currentBet - activePlayer.bet}`);
+            } else if (aiAction.action === 'check') {
+                PokerEngine.playerCheck(activePlayer.id);
+                this.addChatMessage(activePlayer.name, 'Check');
+            } else if (aiAction.action === 'raise') {
+                PokerEngine.playerRaise(activePlayer.id, aiAction.amount);
+                this.addChatMessage(activePlayer.name, `Raise ${aiAction.amount}`);
+            }
+            
+            this.gameState = PokerEngine.getGameState();
+            this.updateUI();
+            
+            // Continue AI loop
+            this.processAIActions();
+        }, 800 + Math.random() * 1200); // Random delay for realism
+    },
+    
+    addChatMessage(player, message) {
+        const chat = document.getElementById('tableChat');
+        const msg = document.createElement('div');
+        msg.style.marginBottom = '8px';
+        msg.innerHTML = `<span style="color: #4A90A4; font-weight: bold;">${player}:</span> ${message}`;
+        chat.appendChild(msg);
+        chat.scrollTop = chat.scrollHeight;
+        
+        // Keep last 20 messages
+        while (chat.children.length > 20) {
+            chat.removeChild(chat.firstChild);
+        }
+    },
         const suits = ['♠', '♥', '♦', '♣'];
         const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
         const deck = [];
