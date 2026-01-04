@@ -3,101 +3,382 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Royal eGold Casino - Where Fortune Favors the Bold</title>
+    <title>Royal eGold Casino - Global Poker Style</title>
     <link rel="stylesheet" href="styles/main.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .lobby-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Left Sidebar */
+        .sidebar {
+            width: 140px;
+            background: linear-gradient(180deg, #2C5F6F, #1a4050);
+            border-right: 2px solid #4A90A4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+        }
+        
+        .sidebar-logo {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #1a1a2e, #0f0f1a);
+            border-radius: 50%;
+            border: 4px solid #FFB800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 25px rgba(255,184,0,0.5);
+        }
+        
+        .sidebar-menu {
+            width: 100%;
+        }
+        
+        .sidebar-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .sidebar-item:hover, .sidebar-item.active {
+            background: rgba(74,144,164,0.3);
+            border-color: #4A90A4;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            background: linear-gradient(90deg, #2C5F6F, #4A90A4);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #5AA4B8;
+        }
+        
+        .balance-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .balance-box {
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid #FFB800;
+        }
+        
+        /* Filter Panel */
+        .filter-panel {
+            background: rgba(0,0,0,0.3);
+            padding: 25px 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        
+        .filter-section h3 {
+            color: #9CB4BF;
+            font-size: 0.85em;
+            margin-bottom: 12px;
+            font-weight: normal;
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .filter-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        /* Search Bar */
+        .search-bar {
+            background: rgba(0,0,0,0.2);
+            padding: 15px 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.95em;
+        }
+        
+        .search-input::placeholder {
+            color: #666;
+        }
+        
+        /* Games Table */
+        .games-table-container {
+            flex: 1;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .games-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .games-table thead {
+            position: sticky;
+            top: 0;
+            background: #2C5F6F;
+            z-index: 10;
+        }
+        
+        .games-table th {
+            padding: 15px 20px;
+            text-align: left;
+            color: #9CB4BF;
+            font-size: 0.85em;
+            font-weight: 600;
+            border-bottom: 2px solid #4A90A4;
+        }
+        
+        .games-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .games-table tbody tr {
+            transition: background 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .games-table tbody tr:hover {
+            background: rgba(74,144,164,0.2);
+        }
+        
+        .game-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #5A67D8, #7C3AED);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .game-name {
+            color: #fff;
+            font-weight: 500;
+        }
+        
+        .status-btn {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .status-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(243,156,18,0.4);
+        }
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="casino-header">
-        <div class="header-content">
-            <h1>🎰 Royal eGold Casino</h1>
-            <div style="display: flex; align-items: center; gap: 20px;">
-                <button onclick="spectatorSystem.showLiveGamesFeed()" class="category-btn" style="padding: 8px 16px; font-size: 0.9em;">
-                    👁️ Live Games
-                </button>
-                <button onclick="spectatorSystem.showGlobalChat()" class="category-btn" style="padding: 8px 16px; font-size: 0.9em;">
-                    💬 Chat
-                </button>
-                <button onclick="toggleSound()" class="category-btn" id="soundBtn" style="padding: 8px 16px; font-size: 0.9em;">
-                    🔊 Sound ON
-                </button>
-                <div class="balance-display">
-                    <div style="display: flex; flex-direction: column; align-items: flex-end;">
-                        <span style="font-size: 1.2em; font-weight: bold;">Balance: <span id="balance">1000.00</span> eGold</span>
-                        <span id="usdValue" style="font-size: 0.9em; color: #2ecc71;">$100.00 USD</span>
-                    </div>
+    <div class="lobby-container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-logo">🃏</div>
+            <div class="sidebar-menu">
+                <div class="sidebar-item active">
+                    <div style="font-size: 1.5em; margin-bottom: 5px;">🎮</div>
+                    <div style="font-size: 0.75em;">Games</div>
+                </div>
+                <div class="sidebar-item" onclick="TournamentLobby.showLobby()">
+                    <div style="font-size: 1.5em; margin-bottom: 5px;">🏆</div>
+                    <div style="font-size: 0.75em;">Tournaments</div>
+                </div>
+                <div class="sidebar-item" onclick="vipSystem.showPanel()">
+                    <div style="font-size: 1.5em; margin-bottom: 5px;">👑</div>
+                    <div style="font-size: 0.75em;">VIP</div>
+                </div>
+                <div class="sidebar-item" onclick="achievementSystem.showPanel()">
+                    <div style="font-size: 1.5em; margin-bottom: 5px;">🏅</div>
+                    <div style="font-size: 0.75em;">Achievements</div>
+                </div>
+                <div class="sidebar-item" onclick="leaderboardSystem.showPanel()">
+                    <div style="font-size: 1.5em; margin-bottom: 5px;">📊</div>
+                    <div style="font-size: 0.75em;">Leaderboard</div>
                 </div>
             </div>
         </div>
-    </header>
-
-    <!-- Main Container -->
-    <div class="container">
-        <!-- Game Categories -->
-        <div class="categories">
-            <button class="category-btn active" onclick="filterGames('all')">All Games</button>
-            <button class="category-btn" onclick="filterGames('poker')">Poker</button>
-            <button class="category-btn" onclick="filterGames('table')">Table Games</button>
-            <button class="category-btn" onclick="filterGames('quick')">Quick Games</button>
-            <button class="category-btn" onclick="filterGames('lottery')">Lottery</button>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <h2 style="margin: 0; color: #fff;">🎰 Royal eGold Casino</h2>
+                    <button onclick="spectatorSystem.showLiveGamesFeed()" class="status-btn" style="background: linear-gradient(135deg, #3498db, #2980b9); padding: 6px 15px; font-size: 0.85em;">
+                        👁️ Live Games
+                    </button>
+                    <button onclick="spectatorSystem.showGlobalChat()" class="status-btn" style="background: linear-gradient(135deg, #9b59b6, #8e44ad); padding: 6px 15px; font-size: 0.85em;">
+                        💬 Chat
+                    </button>
+                </div>
+                <div class="balance-display">
+                    <button onclick="toggleSound()" class="status-btn" id="soundBtn" style="padding: 6px 15px; font-size: 0.85em;">
+                        🔊 Sound ON
+                    </button>
+                    <div class="balance-box">
+                        <div style="font-size: 1.3em; font-weight: bold;">
+                            <span id="balance">1000.00</span> eGold
+                        </div>
+                        <div id="usdValue" style="font-size: 0.85em; color: #2ecc71;">$100.00 USD</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filter Panel -->
+            <div class="filter-panel">
+                <div class="filter-grid">
+                    <div class="filter-section">
+                        <h3>Games</h3>
+                        <div class="filter-options">
+                            <label class="filter-option">
+                                <input type="checkbox" checked onchange="filterGames()"> Ring Games
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" checked onchange="filterGames()"> Sit & Go's
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" checked onchange="filterGames()"> Tournaments
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h3>Tournament Type</h3>
+                        <div class="filter-options">
+                            <label class="filter-option">
+                                <input type="checkbox" checked onchange="filterGames()"> Regular
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" checked onchange="filterGames()"> Guaranteed
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" onchange="filterGames()"> Satellite
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h3>Format</h3>
+                        <div class="filter-options">
+                            <label class="filter-option">
+                                <input type="checkbox" checked onchange="filterGames()"> Hold'em
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" onchange="filterGames()"> Omaha
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" onchange="filterGames()"> Crazy Pineapple
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h3>Buy-In</h3>
+                        <div class="filter-options">
+                            <label class="filter-option">
+                                <input type="checkbox" checked onchange="filterGames()"> Micro (1-10)
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" checked onchange="filterGames()"> Low (10-25)
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" onchange="filterGames()"> Medium (25-50)
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" onchange="filterGames()"> High (50+)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Begin typing to filter by name" oninput="searchGames(this.value)">
+            </div>
+            
+            <!-- Games Table -->
+            <div class="games-table-container">
+                <table class="games-table">
+                    <thead>
+                        <tr>
+                            <th>Type / Name</th>
+                            <th>Category</th>
+                            <th>Buy-In</th>
+                            <th>Players</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gamesTableBody"></tbody>
+                </table>
+            </div>
         </div>
-
-        <!-- Games Grid -->
-        <div class="games-grid" id="gamesGrid">
-            <!-- QUICK GAMES -->
-            <!-- Slots -->
-            <div class="game-card" data-category="quick">
-                <div class="game-icon">🎰</div>
-                <h3>Royal Triple Spin</h3>
-                <p>3-reel slot machine with jackpot multipliers up to 500x</p>
-                <button class="play-btn" onclick="startGame('slots')">Play Now</button>
-            </div>
-
-            <!-- Coin Flip -->
-            <div class="game-card" data-category="quick">
-                <div class="game-icon">🪙</div>
-                <h3>Heads or Tails Royale</h3>
-                <p>Instant flip with dramatic 3D animation. 2x payout!</p>
-                <button class="play-btn" onclick="startGame('coinflip')">Play Now</button>
-            </div>
-
-            <!-- Dice Raffle -->
-            <div class="game-card" data-category="quick">
-                <div class="game-icon">🎲</div>
-                <h3>HexaRoll 16</h3>
-                <p>Roll a 16-sided die for prizes up to 500 eGold jackpot</p>
-                <button class="play-btn" onclick="startGame('diceraffle')">Play Now</button>
-            </div>
-
-            <!-- POKER GAMES -->
-            <!-- Texas Hold'em -->
-            <div class="game-card" data-category="poker">
-                <div class="game-icon">🃏</div>
-                <h3>Royal Hold'em</h3>
-                <p>Classic 2-card poker with smooth dealing animations</p>
-                <button class="play-btn" onclick="startGame('texasholdem')">Play Now</button>
-            </div>
-
-            <!-- Omaha -->
-            <div class="game-card" data-category="poker">
-                <div class="game-icon">🎴</div>
-                <h3>Omaha Royale</h3>
-                <p>4-card variant with deeper strategy & bigger pots</p>
-                <button class="play-btn" onclick="startGame('omaha')">Play Now</button>
-            </div>
-
-            <!-- Pineapple -->
-            <div class="game-card" data-category="poker">
-                <div class="game-icon">🍍</div>
-                <h3>Pineapple Royale</h3>
-                <p>Fast 3-card poker. Discard after the flop!</p>
-                <button class="play-btn" onclick="startGame('pineapple')">Play Now</button>
-            </div>
-
-            <!-- Hold'em Table -->
-            <div class="game-card" data-category="poker">
-                <div class="game-icon">🎰</div>
-                <h3>Royal Table Multiplayer</h3>
+    </div>
+    
+    <!-- Hidden game content container -->
+    <div id="gameContent" style="display: none;"></div>
                 <p>Full 2-9 player table with customizable blinds</p>
                 <button class="play-btn" onclick="startGame('holdtable')">Play Now</button>
             </div>
