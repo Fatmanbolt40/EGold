@@ -898,61 +898,58 @@
                         <h3><i class="fas fa-dice"></i> Game Types</h3>
                         <div class="filter-options">
                             <label class="filter-option">
-                                <input type="checkbox" checked onchange="filterGames()"> Ring Games
+                                <input type="checkbox" checked onchange="filterGames()"> Slots & Spins
                             </label>
                             <label class="filter-option">
-                                <input type="checkbox" checked onchange="filterGames()"> Sit & Go's
+                                <input type="checkbox" checked onchange="filterGames()"> Card Games
                             </label>
                             <label class="filter-option">
-                                <input type="checkbox" checked onchange="filterGames()"> Tournaments
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-section">
-                        <h3><i class="fas fa-trophy"></i> Tournament Types</h3>
-                        <div class="filter-options">
-                            <label class="filter-option">
-                                <input type="checkbox" checked onchange="filterGames()"> Regular
-                            </label>
-                            <label class="filter-option">
-                                <input type="checkbox" checked onchange="filterGames()"> Guaranteed
-                            </label>
-                            <label class="filter-option">
-                                <input type="checkbox" onchange="filterGames()"> Satellite
+                                <input type="checkbox" checked onchange="filterGames()"> Lottery & Scratch
                             </label>
                         </div>
                     </div>
                     
                     <div class="filter-section">
-                        <h3><i class="fas fa-cards"></i> Game Formats</h3>
+                        <h3><i class="fas fa-bolt"></i> Play Speed</h3>
                         <div class="filter-options">
                             <label class="filter-option">
-                                <input type="checkbox" checked onchange="filterGames()"> Hold'em
+                                <input type="checkbox" checked onchange="filterGames()"> Instant Win
                             </label>
                             <label class="filter-option">
-                                <input type="checkbox" onchange="filterGames()"> Omaha
+                                <input type="checkbox" checked onchange="filterGames()"> Quick Play
                             </label>
                             <label class="filter-option">
-                                <input type="checkbox" onchange="filterGames()"> Crazy Pineapple
+                                <input type="checkbox" onchange="filterGames()"> Extended
                             </label>
                         </div>
                     </div>
                     
                     <div class="filter-section">
-                        <h3><i class="fas fa-coins"></i> Buy-In Levels</h3>
+                        <h3><i class="fas fa-star"></i> Popularity</h3>
                         <div class="filter-options">
                             <label class="filter-option">
-                                <input type="checkbox" checked onchange="filterGames()"> Micro (1-10)
+                                <input type="checkbox" checked onchange="filterGames()"> Hot Games
                             </label>
                             <label class="filter-option">
-                                <input type="checkbox" checked onchange="filterGames()"> Low (10-25)
+                                <input type="checkbox" onchange="filterGames()"> New Releases
                             </label>
                             <label class="filter-option">
-                                <input type="checkbox" onchange="filterGames()"> Medium (25-50)
+                                <input type="checkbox" onchange="filterGames()"> Classic Favorites
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h3><i class="fas fa-coins"></i> Bet Range</h3>
+                        <div class="filter-options">
+                            <label class="filter-option">
+                                <input type="checkbox" checked onchange="filterGames()"> Low Stakes (1-5)
                             </label>
                             <label class="filter-option">
-                                <input type="checkbox" onchange="filterGames()"> High (50+)
+                                <input type="checkbox" checked onchange="filterGames()"> Medium (10-15)
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" onchange="filterGames()"> High Roller (20+)
                             </label>
                         </div>
                     </div>
@@ -972,11 +969,11 @@
                 <table class="games-table fade-in">
                     <thead>
                         <tr>
-                            <th>Type / Name</th>
-                            <th>Category</th>
-                            <th>Buy-In</th>
-                            <th>Players</th>
-                            <th>Status</th>
+                            <th><i class="fas fa-gamepad"></i> Game Name</th>
+                            <th><i class="fas fa-tag"></i> Category</th>
+                            <th><i class="fas fa-coins"></i> Bet Amount</th>
+                            <th><i class="fas fa-users"></i> Mode</th>
+                            <th><i class="fas fa-play-circle"></i> Action</th>
                         </tr>
                     </thead>
                     <tbody id="gamesTableBody"></tbody>

@@ -5,18 +5,21 @@ const eGoldToUSD = 0.10; // 1 eGold = $0.10 USD
 
 // Game database
 const gamesDatabase = [
-    { name: 'Royal Triple Spin', category: 'Slots', buyIn: 1, players: 'Single', badge: 'NEW', type: 'quick', id: 'slots' },
-    { name: 'Heads or Tails Royale', category: 'Coin Flip', buyIn: 5, players: 'Single', badge: 'HOT', type: 'quick', id: 'coinflip' },
-    { name: 'Royal Wheel 36', category: 'Roulette', buyIn: 5, players: 'Single', badge: 'NEW', type: 'table', id: 'roulette' },
-    { name: 'eGold Lotto 6/49', category: 'Lottery', buyIn: 20, players: 'Single', badge: '', type: 'lottery', id: 'lottery' },
-    { name: 'Instant Win Scratchers', category: 'Scratch-off', buyIn: 10, players: 'Single', badge: 'HOT', type: 'lottery', id: 'scratchoff' },
-    { name: 'HexaRoll 16', category: 'Dice', buyIn: 15, players: 'Single', badge: '', type: 'quick', id: 'diceraffle' },
-    { name: 'Royal Texas Hold\'em [Tournament]', category: 'Hold\'em', buyIn: 10, players: '8-max', badge: 'NEW', type: 'poker', id: 'texasholdem' },
-    { name: 'Royal Omaha Hi [Quick Sim]', category: 'Omaha', buyIn: 10, players: 'Single', badge: '', type: 'poker', id: 'omaha' },
-    { name: 'Royal Crazy Pineapple [Quick Sim]', category: 'Pineapple', buyIn: 10, players: 'Single', badge: '', type: 'poker', id: 'pineapple' },
-    { name: 'Royal Tonk Championship', category: 'Card Game', buyIn: 10, players: 'Single', badge: '', type: 'table', id: 'tonk' },
-    { name: 'Royal Chess Blitz [Quick Sim]', category: 'Chess', buyIn: 20, players: 'Single', badge: '', type: 'table', id: 'chess' },
-    { name: 'Royal Checkers Elite [Quick Sim]', category: 'Checkers', buyIn: 15, players: 'Single', badge: '', type: 'table', id: 'checkers' }
+    // Casino Games (playable now)
+    { name: '🎰 Royal Triple Spin', category: 'Slots', buyIn: 1, players: '1 Player', badge: 'HOT', type: 'casino', id: 'slots', icon: '🎰' },
+    { name: '🪙 Heads or Tails Royale', category: 'Coin Flip', buyIn: 5, players: '1 Player', badge: 'NEW', type: 'casino', id: 'coinflip', icon: '🪙' },
+    { name: '🎡 Royal Wheel 36', category: 'Roulette', buyIn: 5, players: '1 Player', badge: 'HOT', type: 'casino', id: 'roulette', icon: '🎡' },
+    { name: '🎫 Instant Win Scratchers', category: 'Scratch Cards', buyIn: 10, players: '1 Player', badge: 'NEW', type: 'casino', id: 'scratchoff', icon: '🎫' },
+    { name: '🎲 HexaRoll 16', category: 'Dice Roll', buyIn: 15, players: '1 Player', badge: '', type: 'casino', id: 'diceraffle', icon: '🎲' },
+    { name: '🎟️ eGold Lotto 6/49', category: 'Lottery', buyIn: 20, players: '1 Player', badge: '', type: 'casino', id: 'lottery', icon: '🎟️' },
+    { name: '🃏 Royal Tonk', category: 'Card Game', buyIn: 10, players: '1 Player', badge: '', type: 'casino', id: 'tonk', icon: '🃏' },
+    
+    // Tournament/Multiplayer Games
+    { name: 'Texas Hold\'em Tournament', category: 'Poker', buyIn: 25, players: '2-8', badge: 'LIVE', type: 'tournament', id: 'texasholdem', icon: '♠️' },
+    { name: 'Omaha Hi Tournament', category: 'Poker', buyIn: 20, players: '2-8', badge: '', type: 'tournament', id: 'omaha', icon: '♥️' },
+    { name: 'Crazy Pineapple Tournament', category: 'Poker', buyIn: 15, players: '2-8', badge: '', type: 'tournament', id: 'pineapple', icon: '♦️' },
+    { name: 'Chess Championship', category: 'Board Game', buyIn: 20, players: '1v1', badge: '', type: 'tournament', id: 'chess', icon: '♟️' },
+    { name: 'Checkers Elite', category: 'Board Game', buyIn: 15, players: '1v1', badge: '', type: 'tournament', id: 'checkers', icon: '⚫' }
 ];
 
 // Update balance display
@@ -51,21 +54,31 @@ function populateGamesTable() {
     const tbody = document.getElementById('gamesTableBody');
     if (!tbody) return;
     
-    tbody.innerHTML = gamesDatabase.map(game => `
-        <tr onclick="startGame('${game.id}')">
-            <td>
+    // Filter to show only casino games in the main lobby
+    const casinoGames = gamesDatabase.filter(game => game.type === 'casino');
+    
+    tbody.innerHTML = casinoGames.map(game => `
+        <tr onclick="startGame('${game.id}')" style="cursor: pointer;">
+            <td class="game-type">
                 ${game.badge ? `<span class="game-badge">${game.badge}</span>` : ''}
-                <span class="game-name">${game.name}</span>
+                <div class="game-name">${game.name}</div>
             </td>
-            <td style="color: #9CB4BF;">${game.category}</td>
-            <td>
-                <div style="color: #2ecc71; font-weight: bold;">${game.buyIn} eGold</div>
-                <div style="color: #888; font-size: 0.85em;">$${(game.buyIn * eGoldToUSD).toFixed(2)}</div>
+            <td class="category-cell">
+                <i class="fas fa-dice category-icon"></i>
+                <span>${game.category}</span>
             </td>
-            <td style="color: #fff; font-weight: 500;">${game.players}</td>
-            <td>
-                <button class="status-btn" onclick="event.stopPropagation(); startGame('${game.id}')">
-                    Play Now
+            <td class="buyin-cell">
+                <div style="font-weight: 600; color: #2ecc71;">${game.buyIn} eGold</div>
+                <div style="color: #888; font-size: 0.85em;">$${(game.buyIn * eGoldToUSD).toFixed(2)} USD</div>
+            </td>
+            <td class="players-cell">
+                <div class="player-count">${game.players}</div>
+                <i class="fas fa-user"></i>
+            </td>
+            <td class="status-cell">
+                <span class="status-indicator"></span>
+                <button class="join-btn" onclick="event.stopPropagation(); startGame('${game.id}')">
+                    <i class="fas fa-play"></i> Play Now
                 </button>
             </td>
         </tr>
@@ -77,27 +90,40 @@ function searchGames(query) {
     const tbody = document.getElementById('gamesTableBody');
     if (!tbody) return;
     
-    const filtered = gamesDatabase.filter(game => 
+    // Filter casino games by search query
+    const casinoGames = gamesDatabase.filter(game => game.type === 'casino');
+    const filtered = casinoGames.filter(game => 
         game.name.toLowerCase().includes(query.toLowerCase()) ||
         game.category.toLowerCase().includes(query.toLowerCase())
     );
     
     tbody.innerHTML = filtered.map(game => `
-        <tr onclick="startGame('${game.id}')">
-            <td>
+        <tr onclick="startGame('${game.id}')" style="cursor: pointer;">
+            <td class="game-type">
                 ${game.badge ? `<span class="game-badge">${game.badge}</span>` : ''}
-                <span class="game-name">${game.name}</span>
+                <div class="game-name">${game.name}</div>
             </td>
-            <td style="color: #9CB4BF;">${game.category}</td>
-            <td>
-                <div style="color: #2ecc71; font-weight: bold;">${game.buyIn} eGold</div>
-                <div style="color: #888; font-size: 0.85em;">$${(game.buyIn * eGoldToUSD).toFixed(2)}</div>
+            <td class="category-cell">
+                <i class="fas fa-dice category-icon"></i>
+                <span>${game.category}</span>
             </td>
-            <td style="color: #fff; font-weight: 500;">${game.players}</td>
-            <td>
-                <button class="status-btn" onclick="event.stopPropagation(); startGame('${game.id}')">
-                    Play Now
+            <td class="buyin-cell">
+                <div style="font-weight: 600; color: #2ecc71;">${game.buyIn} eGold</div>
+                <div style="color: #888; font-size: 0.85em;">$${(game.buyIn * eGoldToUSD).toFixed(2)} USD</div>
+            </td>
+            <td class="players-cell">
+                <div class="player-count">${game.players}</div>
+                <i class="fas fa-user"></i>
+            </td>
+            <td class="status-cell">
+                <span class="status-indicator"></span>
+                <button class="join-btn" onclick="event.stopPropagation(); startGame('${game.id}')">
+                    <i class="fas fa-play"></i> Play Now
                 </button>
+            </td>
+        </tr>
+    `).join('');
+}
             </td>
         </tr>
     `).join('');
