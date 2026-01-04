@@ -69,35 +69,97 @@ const lotteryGame = {
     play() {
         if (this.selected.length !== 6) {
             document.getElementById('lotteryResult').innerHTML = '<span style="color: #e74c3c;">Please select exactly 6 numbers!</span>';
+            soundManager.playButtonClick();
             return;
         }
         
         if (balance < this.ticketCost) {
             document.getElementById('lotteryResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
+            soundManager.playButtonClick();
             return;
         }
         
+        // Play shuffle sound
+        soundManager.playShuffle();
+        
         updateBalance(-this.ticketCost);
         
-        // Draw winning numbers
-        const winning = [];
-        while (winning.length < 6) {
-            const num = Math.floor(Math.random() * 49) + 1;
-            if (!winning.includes(num)) {
-                winning.push(num);
+        const resultDiv = document.getElementById('lotteryResult');
+        resultDiv.innerHTML = '<div class="loading-spinner"></div><p style="margin-top: 10px;">Drawing numbers...</p>';
+        
+        setTimeout(() => {
+            // Draw winning numbers
+            const winning = [];
+            while (winning.length < 6) {
+                const num = Math.floor(Math.random() * 49) + 1;
+                if (!winning.includes(num)) {
+                    winning.push(num);
+                }
             }
-        }
-        winning.sort((a, b) => a - b);
-        
-        // Count matches
-        const matches = this.selected.filter(num => winning.includes(num)).length;
-        
-        // Calculate prize (house edge: reduced payouts)
-        let prize = 0;
-        switch(matches) {
-            case 6: prize = 2000; break;
-            case 5: prize = 200; break;
-            case 4: prize = 40; break;
+            winning.sort((a, b) => a - b);
+            
+            // Count matches
+            const matches = this.selected.filter(num => winning.includes(num)).length;
+            
+            // Calculate prize (house edge: reduced payouts)
+            let prize = 0;
+            switch(matches) {
+                case 6: prize = 2000; break;
+                case 5: prize = 200; break;
+                case 4: prize = 40; break;
+                case 3: prize = 10; break;
+            }
+            
+            // Highlight matching numbers
+            this.selected.forEach(num => {
+                const btn = document.getElementById(`num${num}`);
+                if (winning.includes(num)) {
+                    btn.classList.add('win-effect');
+                }
+            });
+            
+            if (prize > 0) {
+                updateBalance(prize);
+                resultDiv.className = 'game-result win-effect';
+                
+                if (matches >= 5) {
+                    soundManager.playJackpot();
+                    particleSystem.createConfetti(window.innerWidth / 2, window.innerHeight / 2, 150);
+                    resultDiv.classList.add('jackpot-effect');
+                    resultDiv.innerHTML = `<span style="font-size: 2em;">🎊 JACKPOT! 🎊</span><br>
+                        <span style="font-size: 1.3em;">Winning: ${winning.join(', ')}</span><br>
+                        <span style="font-size: 1.3em;">Your picks: ${this.selected.join(', ')}</span><br>
+                        <span style="font-size: 1.6em; color: #2ecc71;">${matches} MATCHES!</span><br>
+                        <span style="font-size: 1.8em; color: #FFB800;">+${prize.toFixed(2)} eGold <small style="color: #2ecc71;">($${(prize * 0.10).toFixed(2)})</small></span>`;
+                } else {
+                    soundManager.playWin();
+                    particleSystem.createCoinBurst(window.innerWidth / 2, window.innerHeight / 2, prize);
+                    resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 WINNER! 🎉</span><br>
+                        <span style="font-size: 1.2em;">Winning: ${winning.join(', ')}</span><br>
+                        <span style="font-size: 1.2em;">Your picks: ${this.selected.join(', ')}</span><br>
+                        <span style="font-size: 1.3em; color: #2ecc71;">${matches} matches!</span><br>
+                        <span style="font-size: 1.5em; color: #FFB800;">+${prize.toFixed(2)} eGold <small style="color: #2ecc71;">($${(prize * 0.10).toFixed(2)})</small></span>`;
+                }
+            } else {
+                soundManager.playLoss();
+                resultDiv.className = 'game-result loss-effect';
+                resultDiv.innerHTML = `<span style="font-size: 1.3em;">Winning: ${winning.join(', ')}</span><br>
+                    <span style="font-size: 1.2em;">Your picks: ${this.selected.join(', ')}</span><br>
+                    <span style="font-size: 1.3em; color: #e74c3c;">${matches} matches</span><br>
+                    <span style="font-size: 1.1em;">💔 Try again!</span>`;
+            }
+            
+            // Clear selection after showing result
+            setTimeout(() => {
+                this.selected.forEach(num => {
+                    const btn = document.getElementById(`num${num}`);
+                    btn.classList.remove('selected', 'win-effect');
+                });
+                this.selected = [];
+                document.getElementById('selectedNumbers').textContent = 'None';
+            }, 5000);
+        }, 1500);
+    }
             case 3: prize = 10; break;
         }
         

@@ -43,8 +43,12 @@ const scratchoffGame = {
     buy() {
         if (balance < this.ticketCost) {
             document.getElementById('scratchResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
+            soundManager.playButtonClick();
             return;
         }
+        
+        // Play chip sound
+        soundManager.playChipSound();
         
         updateBalance(-this.ticketCost);
         
@@ -71,10 +75,13 @@ const scratchoffGame = {
         }
         
         const scratchArea = document.getElementById('scratchArea');
+        
+        // Animate scratching
+        scratchArea.style.transition = 'all 1s ease';
         scratchArea.style.background = result.prize > 0 ? 'linear-gradient(135deg, #2ecc71, #27ae60)' : 'linear-gradient(135deg, #e74c3c, #c0392b)';
         scratchArea.innerHTML = `
-            <div style="font-size: 4em; margin: 10px 0; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));">${result.symbol}</div>
-            <div style="color: white; font-size: 1.8em; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
+            <div class="animate-zoom" style="font-size: 4em; margin: 10px 0; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));">${result.symbol}</div>
+            <div class="animate-bounce" style="color: white; font-size: 1.8em; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
                 ${result.prize > 0 ? result.prize + ' eGold!' : 'Try Again!'}
             </div>
         `;
@@ -82,11 +89,22 @@ const scratchoffGame = {
         if (result.prize > 0) {
             updateBalance(result.prize);
             const resultDiv = document.getElementById('scratchResult');
-            resultDiv.className = 'game-result win';
-            resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 You won ${result.prize} eGold! 🎉</span>`;
+            resultDiv.className = 'game-result win-effect';
+            
+            if (result.prize >= 100) {
+                soundManager.playJackpot();
+                particleSystem.createConfetti(window.innerWidth / 2, window.innerHeight / 2, 120);
+                resultDiv.classList.add('jackpot-effect');
+                resultDiv.innerHTML = `<span style="font-size: 2em;">💫 JACKPOT! 💫</span><br><span style="font-size: 1.6em;">You won ${result.prize} eGold! <small style="color: #2ecc71;">($${(result.prize * 0.10).toFixed(2)})</small></span>`;
+            } else {
+                soundManager.playWin();
+                particleSystem.createCoinBurst(window.innerWidth / 2, window.innerHeight / 2, result.prize);
+                resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 You won ${result.prize} eGold! <small style="color: #2ecc71;">($${(result.prize * 0.10).toFixed(2)})</small></span>`;
+            }
         } else {
+            soundManager.playLoss();
             const resultDiv = document.getElementById('scratchResult');
-            resultDiv.className = 'game-result lose';
+            resultDiv.className = 'game-result loss-effect';
             resultDiv.innerHTML = '<span style="font-size: 1.3em;">💔 Better luck next time!</span>';
         }
         

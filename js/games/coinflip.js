@@ -40,46 +40,52 @@ const coinflipGame = {
         
         if (bet < 5) {
             document.getElementById('coinResult').innerHTML = '<span style="color: #e74c3c;">Minimum bet is 5 eGold!</span>';
+            soundManager.playButtonClick();
             return;
         }
         
         if (bet > balance) {
             document.getElementById('coinResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
+            soundManager.playButtonClick();
             return;
         }
+        
+        // Play coin flip sound
+        soundManager.playCoinFlip();
         
         // Deduct bet
         updateBalance(-bet);
         
         // Flip animation
         const coin = document.getElementById('coin');
-        let flips = 0;
-        const flipInterval = setInterval(() => {
-            coin.textContent = flips % 2 === 0 ? '🟡' : '⚪';
-            flips++;
+        coin.innerHTML = VisualEnhancer.createCoinFlip(null, true);
+        
+        setTimeout(() => {
+            // House edge: 48% player win rate instead of 50%
+            const playerWins = Math.random() < 0.48;
+            const result = playerWins ? choice : (choice === 'heads' ? 'tails' : 'heads');
             
-            if (flips >= 10) {
-                clearInterval(flipInterval);
+            coin.innerHTML = VisualEnhancer.createCoinFlip(result, false);
+            coin.className = 'animate-bounce';
+            
+            if (result === choice) {
+                const payout = bet * 1.95;
+                updateBalance(payout);
                 
-                // House edge: 48% player win rate instead of 50%
-                const playerWins = Math.random() < 0.48;
-                const result = playerWins ? choice : (choice === 'heads' ? 'tails' : 'heads');
+                soundManager.playWin();
+                particleSystem.createCoinBurst(window.innerWidth / 2, 300, payout);
                 
-                coin.textContent = result === 'heads' ? '🟡' : '⚪';
+                const resultDiv = document.getElementById('coinResult');
+                resultDiv.className = 'game-result win-effect';
+                resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 WINNER! 🎉</span><br><span style="font-size: 1.4em;">It's ${result.toUpperCase()}!</span><br><span style="font-size: 1.5em; color: #FFB800;">+${payout.toFixed(2)} eGold <small style="color: #2ecc71;">($${(payout * 0.10).toFixed(2)})</small></span>`;
+            } else {
+                soundManager.playLoss();
                 
-                if (result === choice) {
-                    const payout = bet * 1.95;
-                    updateBalance(payout);
-                    const resultDiv = document.getElementById('coinResult');
-                    resultDiv.className = 'game-result win';
-                    resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 WINNER! 🎉</span><br><span style="font-size: 1.4em;">It's ${result.toUpperCase()}!</span><br><span style="font-size: 1.5em; color: #FFB800;">+${payout.toFixed(2)} eGold</span>`;
-                } else {
-                    const resultDiv = document.getElementById('coinResult');
-                    resultDiv.className = 'game-result lose';
-                    resultDiv.innerHTML = `<span style="font-size: 1.4em;">It's ${result.toUpperCase()}</span><br><span style="font-size: 1.2em;">💔 Better luck next time!</span>`;
-                }
+                const resultDiv = document.getElementById('coinResult');
+                resultDiv.className = 'game-result loss-effect';
+                resultDiv.innerHTML = `<span style="font-size: 1.4em;">It's ${result.toUpperCase()}</span><br><span style="font-size: 1.2em;">💔 Better luck next time!</span>`;
             }
-        }, 150);
+        }, 1500);
     }
 };
 

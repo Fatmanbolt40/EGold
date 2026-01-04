@@ -7,11 +7,27 @@ const eGoldToUSD = 0.10; // 1 eGold = $0.10 USD
 function updateBalance(amount) {
     balance = Math.max(0, balance + amount);
     const usdValue = (balance * eGoldToUSD).toFixed(2);
-    document.getElementById('balance').textContent = balance.toFixed(2);
+    const balanceEl = document.getElementById('balance');
+    balanceEl.textContent = balance.toFixed(2);
+    
+    // Add animation on balance change
+    if (amount > 0) {
+        balanceEl.classList.add('animate-pulse');
+        setTimeout(() => balanceEl.classList.remove('animate-pulse'), 500);
+    }
+    
     if (document.getElementById('usdValue')) {
         document.getElementById('usdValue').textContent = `$${usdValue} USD`;
     }
     localStorage.setItem('balance', balance.toString());
+}
+
+// Toggle sound on/off
+function toggleSound() {
+    const isEnabled = soundManager.toggle();
+    const btn = document.getElementById('soundBtn');
+    btn.textContent = isEnabled ? '🔊 Sound ON' : '🔇 Sound OFF';
+    soundManager.playButtonClick();
 }
 
 // Initialize on page load
@@ -21,6 +37,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('usdValue')) {
         document.getElementById('usdValue').textContent = `$${usdValue} USD`;
     }
+    
+    // Add click sound to all buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.tagName === 'BUTTON' || e.target.classList.contains('play-btn') || e.target.classList.contains('category-btn')) {
+            soundManager.playButtonClick();
+        }
+    });
 });
 
 // Filter games by category

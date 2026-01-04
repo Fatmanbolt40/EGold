@@ -63,13 +63,18 @@ const slotsGame = {
         
         if (bet < 5) {
             document.getElementById('slotsResult').innerHTML = '<span style="color: #e74c3c;">Minimum bet is 5 eGold!</span>';
+            soundManager.playButtonClick();
             return;
         }
         
         if (bet > balance) {
             document.getElementById('slotsResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
+            soundManager.playButtonClick();
             return;
         }
+        
+        // Play spin sound
+        soundManager.playSlotSpin();
         
         // Deduct bet
         updateBalance(-bet);
@@ -77,7 +82,14 @@ const slotsGame = {
         // Spin animation
         document.getElementById('slotDisplay').innerHTML = '<div style="color: #FFB800; font-size: 1.5em; animation: pulse 0.5s infinite;">🎰 SPINNING... 🎰</div>';
         
+        // Add spinning animation to reels
+        const reels = document.querySelectorAll('.reel');
+        reels.forEach(reel => reel.classList.add('reel-spinning'));
+        
         setTimeout(() => {
+            // Stop spinning
+            reels.forEach(reel => reel.classList.remove('reel-spinning'));
+            
             // Final weighted result
             const result1 = this.getWeightedSymbol();
             const result2 = this.getWeightedSymbol();
@@ -90,12 +102,25 @@ const slotsGame = {
                     const payout = bet * this.payouts[result1];
                     updateBalance(payout);
                     const resultDiv = document.getElementById('slotsResult');
-                    resultDiv.className = 'game-result win';
-                    resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 JACKPOT! 🎉</span><br><span style="font-size: 1.5em;">+${payout.toFixed(2)} eGold</span>`;
-                    document.querySelectorAll('.reel').forEach(r => r.classList.add('pulsing'));
+                    resultDiv.className = 'game-result win-effect';
+                    
+                    // Big win effects
+                    if (this.payouts[result1] >= 15) {
+                        soundManager.playJackpot();
+                        particleSystem.createConfetti(window.innerWidth / 2, window.innerHeight / 2, 150);
+                        resultDiv.classList.add('jackpot-effect');
+                        resultDiv.innerHTML = `<span style="font-size: 2em;">💫 MEGA JACKPOT! 💫</span><br><span style="font-size: 1.8em;">+${payout.toFixed(2)} eGold <small style="color: #2ecc71;">($${(payout * 0.10).toFixed(2)})</small></span>`;
+                    } else {
+                        soundManager.playWin(true);
+                        particleSystem.createCoinBurst(window.innerWidth / 2, window.innerHeight / 2, payout);
+                        resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 WINNER! 🎉</span><br><span style="font-size: 1.5em;">+${payout.toFixed(2)} eGold <small style="color: #2ecc71;">($${(payout * 0.10).toFixed(2)})</small></span>`;
+                    }
+                    
+                    document.querySelectorAll('.reel').forEach(r => r.classList.add('animate-glow'));
                 } else {
+                    soundManager.playLoss();
                     const resultDiv = document.getElementById('slotsResult');
-                    resultDiv.className = 'game-result lose';
+                    resultDiv.className = 'game-result loss-effect';
                     resultDiv.innerHTML = '<span style="font-size: 1.3em;">💔 Try again!</span>';
                 }
             }, 1500);

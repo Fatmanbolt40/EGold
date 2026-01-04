@@ -84,8 +84,12 @@ const texasholdemGame = {
     play() {
         if (balance < this.ante) {
             document.getElementById('pokerResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
+            soundManager.playButtonClick();
             return;
         }
+        
+        // Play chip sound
+        soundManager.playChipSound();
         
         updateBalance(-this.ante);
         
@@ -93,34 +97,55 @@ const texasholdemGame = {
         const deck = this.createDeck();
         this.shuffleDeck(deck);
         
+        // Deal cards with animation
+        soundManager.playShuffle();
+        
         // Deal cards
         const playerCards = [deck.pop(), deck.pop()];
         const dealerCards = [deck.pop(), deck.pop()];
         const community = [deck.pop(), deck.pop(), deck.pop(), deck.pop(), deck.pop()];
         
-        // Display cards with actual visuals
+        // Display cards with actual visuals and animation
         const suitMap = {'♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs'};
         
-        document.getElementById('playerHand').innerHTML = 
-            playerCards.map(c => VisualEnhancer.createCard(c.value, suitMap[c.suit])).join('');
-        document.getElementById('communityCards').innerHTML = 
-            community.map(c => VisualEnhancer.createCard(c.value, suitMap[c.suit])).join('');
-        document.getElementById('dealerHand').innerHTML = 
-            dealerCards.map(c => VisualEnhancer.createCard(c.value, suitMap[c.suit])).join('');
+        setTimeout(() => {
+            soundManager.playCardDeal();
+            document.getElementById('playerHand').innerHTML = 
+                playerCards.map(c => `<div class="card-deal">${VisualEnhancer.createCard(c.value, suitMap[c.suit])}</div>`).join('');
+        }, 300);
         
-        // Evaluate hands (simplified)
-        const playerScore = this.evaluateHand([...playerCards, ...community]);
-        const dealerScore = this.evaluateHand([...dealerCards, ...community]) + 0.5; // House edge
+        setTimeout(() => {
+            soundManager.playCardDeal();
+            document.getElementById('communityCards').innerHTML = 
+                community.map((c, i) => `<div class="card-deal" style="animation-delay: ${i * 0.1}s">${VisualEnhancer.createCard(c.value, suitMap[c.suit])}</div>`).join('');
+        }, 600);
         
-        if (playerScore > dealerScore) {
-            const payout = this.ante * 2;
-            updateBalance(payout);
-            document.getElementById('pokerResult').innerHTML = `<span style="color: #2ecc71; font-size: 1.5em;">🎉 YOU WIN! +${payout} eGold</span>`;
-        } else if (playerScore === dealerScore) {
-            document.getElementById('pokerResult').innerHTML = '<span style="color: #FFB800;">Push - Dealer wins ties (house rule)</span>';
-        } else {
-            document.getElementById('pokerResult').innerHTML = '<span style="color: #e74c3c;">Dealer wins. Try again!</span>';
-        }
+        setTimeout(() => {
+            soundManager.playCardDeal();
+            document.getElementById('dealerHand').innerHTML = 
+                dealerCards.map(c => `<div class="card-flip">${VisualEnhancer.createCard(c.value, suitMap[c.suit])}</div>`).join('');
+            
+            // Evaluate hands (simplified)
+            const playerScore = this.evaluateHand([...playerCards, ...community]);
+            const dealerScore = this.evaluateHand([...dealerCards, ...community]) + 0.5; // House edge
+            
+            if (playerScore > dealerScore) {
+                const payout = this.ante * 2;
+                updateBalance(payout);
+                soundManager.playWin();
+                particleSystem.createChipStack(window.innerWidth / 2, window.innerHeight / 2, 10);
+                const resultDiv = document.getElementById('pokerResult');
+                resultDiv.className = 'win-effect';
+                resultDiv.innerHTML = `<span style="color: #2ecc71; font-size: 1.5em;">🎉 YOU WIN! +${payout} eGold <small style="color: #2ecc71;">($${(payout * 0.10).toFixed(2)})</small></span>`;
+            } else if (playerScore === dealerScore) {
+                soundManager.playLoss();
+                document.getElementById('pokerResult').innerHTML = '<span style="color: #FFB800;">Push - Dealer wins ties (house rule)</span>';
+            } else {
+                soundManager.playLoss();
+                document.getElementById('pokerResult').className = 'loss-effect';
+                document.getElementById('pokerResult').innerHTML = '<span style="color: #e74c3c;">Dealer wins. Try again!</span>';
+            }
+        }, 900);
     },
     
     evaluateHand(cards) {

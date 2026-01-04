@@ -41,8 +41,12 @@ const diceraffleGame = {
     roll() {
         if (balance < this.ticketCost) {
             document.getElementById('diceResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
+            soundManager.playButtonClick();
             return;
         }
+        
+        // Play dice roll sound
+        soundManager.playDiceRoll();
         
         updateBalance(-this.ticketCost);
         
@@ -50,8 +54,12 @@ const diceraffleGame = {
         const diceNumber = document.getElementById('diceNumber');
         
         diceNumber.textContent = 'Rolling...';
+        diceNumber.className = 'animate-pulse';
+        dice.className = 'dice-rolling';
         
         setTimeout(() => {
+            dice.className = '';
+            
             // House edge: Weighted toward low numbers
             const weights = [
                 10, 10, 10, 10, 10, 10, 10, 10, 10,  // 1-9: 60% total
@@ -72,17 +80,16 @@ const diceraffleGame = {
                 random -= weights[i];
                 if (random <= 0) {
                     result = i + 1;
-                        break;
-                    }
+                    break;
                 }
-                
-                diceNumber.textContent = result;
             }
             
             // Show result with dice visual  
             const displayNum = result <= 6 ? result : Math.floor(Math.random() * 6) + 1;
             dice.innerHTML = VisualEnhancer.create3DDice(displayNum);
+            dice.className = 'animate-bounce';
             diceNumber.textContent = result;
+            diceNumber.className = 'animate-zoom';
             
             const prizes = {
                 16: 500,
@@ -98,6 +105,34 @@ const diceraffleGame = {
             
             if (prize > 0) {
                 updateBalance(prize);
+                
+                const resultDiv = document.getElementById('diceResult');
+                resultDiv.className = 'game-result win-effect';
+                
+                if (result >= 15) {
+                    soundManager.playJackpot();
+                    particleSystem.createConfetti(window.innerWidth / 2, window.innerHeight / 2, 150);
+                    resultDiv.classList.add('jackpot-effect');
+                    resultDiv.innerHTML = `<span style="font-size: 2em;">💫 MEGA WIN! 💫</span><br><span style="font-size: 1.6em;">Rolled ${result}!</span><br><span style="font-size: 1.8em; color: #FFB800;">+${prize.toFixed(2)} eGold <small style="color: #2ecc71;">($${(prize * 0.10).toFixed(2)})</small></span>`;
+                } else {
+                    soundManager.playWin();
+                    particleSystem.createCoinBurst(window.innerWidth / 2, window.innerHeight / 2, prize);
+                    resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 WINNER! 🎉</span><br><span style="font-size: 1.4em;">Rolled ${result}!</span><br><span style="font-size: 1.5em; color: #FFB800;">+${prize.toFixed(2)} eGold <small style="color: #2ecc71;">($${(prize * 0.10).toFixed(2)})</small></span>`;
+                }
+            } else {
+                soundManager.playLoss();
+                const resultDiv = document.getElementById('diceResult');
+                resultDiv.className = 'game-result loss-effect';
+                resultDiv.innerHTML = `<span style="font-size: 1.4em;">Rolled ${result}</span><br><span style="font-size: 1.2em;">💔 Better luck next time!</span>`;
+            }
+        }, 1000);
+    }
+};
+                } else {
+                    soundManager.playWin();
+                    particleSystem.createCoinBurst(window.innerWidth / 2, window.innerHeight / 2, prize);
+                    resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 WINNER! 🎉</span><br><span style="font-size: 1.4em;">Rolled ${result}!</span><br><span style="font-size: 1.5em; color: #FFB800;">+${prize.toFixed(2)} eGold <small style="color: #2ecc71;">($${(prize * 0.10).toFixed(2)})</small></span>`;
+                }
                 diceNumber.style.color = '#2ecc71';
                 const resultDiv = document.getElementById('diceResult');
                 resultDiv.className = 'game-result win';

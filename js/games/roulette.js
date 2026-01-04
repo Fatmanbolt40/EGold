@@ -100,33 +100,47 @@ const rouletteGame = {
         const wheel = document.getElementById('rouletteWheel');
         const numberDisplay = document.getElementById('rouletteNumber');
         
+        // Play roulette wheel sound
+        soundManager.playRouletteWheel();
+        
         numberDisplay.textContent = 'Spinning...';
+        numberDisplay.className = 'animate-pulse';
+        
+        // Add spinning animation
+        wheel.querySelector('svg').style.animation = 'spin 2s ease-out';
         
         setTimeout(() => {
+            // Stop animation
+            wheel.querySelector('svg').style.animation = '';
+            
             // Generate result
             const result = Math.floor(Math.random() * 37);
             
             let resultColor;
             if (result === 0) {
                 resultColor = 'green';
+                numberDisplay.style.color = '#27ae60';
             } else if (result <= 18) {
-                    resultColor = 'red';
-                    numberDisplay.style.color = '#e74c3c';
-                } else {
-                    resultColor = 'black';
-                    numberDisplay.style.color = '#ffffff';
-                }
-                
+                resultColor = 'red';
+                numberDisplay.style.color = '#e74c3c';
+            } else {
                 resultColor = 'black';
+                numberDisplay.style.color = '#ffffff';
             }
             
             // Update wheel with result
             wheel.innerHTML = VisualEnhancer.createRouletteWheel(result);
             numberDisplay.textContent = `Number: ${result} (${resultColor.toUpperCase()})`;
+            numberDisplay.className = 'animate-bounce';
+            
+            // Create sparkle effect at wheel
+            const wheelRect = wheel.getBoundingClientRect();
+            particleSystem.createSparkles(wheelRect.left + wheelRect.width / 2, wheelRect.top + wheelRect.height / 2, 40);
             
             // Check win
             let won = false;
             let payout = 0;
+            let isJackpot = false;
             
             if (color && resultColor === color) {
                 payout = bet * 1.9; // House edge: 1.9x instead of 2x
@@ -134,16 +148,28 @@ const rouletteGame = {
             } else if (pickedNumber !== null && result === pickedNumber) {
                 payout = bet * 30; // House edge: 30x instead of 36x
                 won = true;
+                isJackpot = true;
             }
             
             if (won) {
                 updateBalance(payout);
                 const resultDiv = document.getElementById('rouletteResult');
-                resultDiv.className = 'game-result win';
-                resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 WINNER! 🎉</span><br><span style="font-size: 1.4em;">Number ${result} (${resultColor})!</span><br><span style="font-size: 1.5em; color: #FFB800;">+${payout.toFixed(2)} eGold</span>`;
+                resultDiv.className = 'game-result win-effect';
+                
+                if (isJackpot) {
+                    soundManager.playJackpot();
+                    particleSystem.createConfetti(window.innerWidth / 2, window.innerHeight / 2, 120);
+                    resultDiv.classList.add('jackpot-effect');
+                    resultDiv.innerHTML = `<span style="font-size: 2em;">💫 JACKPOT! 💫</span><br><span style="font-size: 1.6em;">Number ${result} (${resultColor})!</span><br><span style="font-size: 1.8em; color: #FFB800;">+${payout.toFixed(2)} eGold <small style="color: #2ecc71;">($${(payout * 0.10).toFixed(2)})</small></span>`;
+                } else {
+                    soundManager.playWin();
+                    particleSystem.createCoinBurst(window.innerWidth / 2, window.innerHeight / 2, payout);
+                    resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 WINNER! 🎉</span><br><span style="font-size: 1.4em;">Number ${result} (${resultColor})!</span><br><span style="font-size: 1.5em; color: #FFB800;">+${payout.toFixed(2)} eGold <small style="color: #2ecc71;">($${(payout * 0.10).toFixed(2)})</small></span>`;
+                }
             } else {
+                soundManager.playLoss();
                 const resultDiv = document.getElementById('rouletteResult');
-                resultDiv.className = 'game-result lose';
+                resultDiv.className = 'game-result loss-effect';
                 resultDiv.innerHTML = `<span style="font-size: 1.4em;">Number ${result} (${resultColor})</span><br><span style="font-size: 1.2em;">💔 Try again!</span>`;
             }
         }, 2000);
