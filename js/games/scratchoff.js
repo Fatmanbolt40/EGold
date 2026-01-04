@@ -7,7 +7,7 @@ const scratchoffGame = {
         content.innerHTML = `
             <div style="text-align: center;">
                 <div class="game-display">
-                    <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">💳 SCRATCH & WIN 💳</h3>
+                    <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">🎫 INSTANT WIN SCRATCHERS 🎫</h3>
                     
                     <div id="scratchCard" style="background: linear-gradient(135deg, #FFB800 0%, #d4af37 100%); border-radius: 20px; padding: 40px; max-width: 450px; margin: 20px auto; box-shadow: 0 8px 32px rgba(255, 184, 0, 0.4); position: relative;">
                         <div style="color: #1A2332; font-size: 2.2em; font-weight: bold; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">🎟️ eGold Lottery</div>
@@ -24,16 +24,30 @@ const scratchoffGame = {
                 <div id="scratchResult" class="game-result"></div>
                 
                 <div class="game-info-box">
-                    <h3>💎 Possible Prizes</h3>
+                    <h3>👑 Instant Win Scratchers</h3>
+                    <p style="font-size: 1.1em; color: #cccccc; margin: 10px 0;">Click-to-reveal scratch cards with animated prizes and instant wins</p>
+                    <h4 style="color: #FFB800; margin-top: 20px;">💎 Possible Prizes</h4>
                     <div style="display: grid; gap: 10px; margin-top: 15px;">
                         <div style="padding: 12px; background: linear-gradient(135deg, rgba(255, 184, 0, 0.2), rgba(212, 175, 55, 0.2)); border-radius: 8px; border: 2px solid #FFB800;">
-                            💎 Jackpot: <b style="color: #FFB800; font-size: 1.3em;">500 eGold</b> <small style="color: #2ecc71;">($50 USD)</small>
+                            💎 Jackpot: <b style="color: #FFB800; font-size: 1.3em;">500 eGold</b> <small style="color: #2ecc71;">($50 USD)</small> - <span style="color: #888;">1% chance</span>
                         </div>
-                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">⭐ Big Win: <b>100 eGold</b> <small style="color: #2ecc71;">($10 USD)</small></div>
-                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">🎯 Good Win: <b>50 eGold</b> <small style="color: #2ecc71;">($5 USD)</small></div>
-                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">🎁 Nice: <b>25 eGold</b> <small style="color: #2ecc71;">($2.50 USD)</small></div>
-                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">💰 Win: <b>15 eGold</b> <small style="color: #2ecc71;">($1.50 USD)</small></div>
-                        <div style="padding: 8px; background: rgba(231, 76, 60, 0.1); border-radius: 5px; color: #e74c3c;">😢 Better Luck Next Time</div>
+                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">⭐ Big Win: <b>100 eGold</b> <small style="color: #2ecc71;">($10 USD)</small> - <span style="color: #888;">2% chance</span></div>
+                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">🎯 Good Win: <b>50 eGold</b> <small style="color: #2ecc71;">($5 USD)</small> - <span style="color: #888;">5% chance</span></div>
+                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">🎁 Nice: <b>25 eGold</b> <small style="color: #2ecc71;">($2.50 USD)</small> - <span style="color: #888;">8% chance</span></div>
+                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">💰 Win: <b>15 eGold</b> <small style="color: #2ecc71;">($1.50 USD)</small> - <span style="color: #888;">14% chance</span></div>
+                        <div style="padding: 8px; background: rgba(231, 76, 60, 0.1); border-radius: 5px; color: #e74c3c;">😢 Better Luck Next Time - <span style="color: #888;">70% chance</span></div>
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(46, 204, 113, 0.1); border-radius: 10px; border: 2px solid #2ecc71;">
+                        <h4 style="color: #2ecc71; margin-bottom: 10px;">📜 Game Rules</h4>
+                        <ul style="text-align: left; max-width: 450px; margin: 0 auto; color: #cccccc; line-height: 1.8;">
+                            <li>Purchase a scratch card for <b>10 eGold</b></li>
+                            <li><b>Click</b> the silver area to scratch and reveal</li>
+                            <li>Prize revealed with animations</li>
+                            <li>Win up to <b style="color: #FFB800;">500 eGold!</b></li>
+                            <li>30% overall win rate</li>
+                            <li>Instant payout on wins</li>
+                            <li>Buy another card to play again</li>
+                        </ul>
                     </div>
                 </div>
             </div>

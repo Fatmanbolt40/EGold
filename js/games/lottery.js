@@ -7,7 +7,7 @@ const lotteryGame = {
         content.innerHTML = `
             <div style="text-align: center;">
                 <div class="game-display">
-                    <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">🎟️ MEGA LOTTERY 🎟️</h3>
+                    <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">🎟️ eGOLD LOTTO 6/49 🎟️</h3>
                     <p style="font-size: 1.2em; color: #cccccc; margin-bottom: 20px;">Pick 6 Lucky Numbers (1-49)</p>
                 </div>
                 
@@ -30,7 +30,9 @@ const lotteryGame = {
                 <div id="lotteryResult" class="game-result"></div>
                 
                 <div class="game-info-box">
-                    <h3>💎 Prize Table</h3>
+                    <h3>👑 eGold Lotto 6/49</h3>
+                    <p style="font-size: 1.1em; color: #cccccc; margin: 10px 0;">A classic 6-number lottery with animated number draws and progressive jackpots</p>
+                    <h4 style="color: #FFB800; margin-top: 20px;">💎 Prize Table</h4>
                     <div style="display: grid; gap: 10px; margin-top: 15px;">
                         <div style="padding: 12px; background: linear-gradient(135deg, rgba(255, 184, 0, 0.2), rgba(212, 175, 55, 0.2)); border-radius: 8px; border: 2px solid #FFB800;">
                             <span style="font-size: 1.5em;">🎰</span> 6 matches: <b style="color: #FFB800; font-size: 1.3em;">2000 eGold</b> <small style="color: #2ecc71;">($200 USD)</small>
@@ -38,6 +40,18 @@ const lotteryGame = {
                         <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">⭐ 5 matches: <b>200 eGold</b> <small style="color: #2ecc71;">($20 USD)</small></div>
                         <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">🎯 4 matches: <b>40 eGold</b> <small style="color: #2ecc71;">($4 USD)</small></div>
                         <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">🎁 3 matches: <b>10 eGold</b> <small style="color: #2ecc71;">($1 USD)</small></div>
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(46, 204, 113, 0.1); border-radius: 10px; border: 2px solid #2ecc71;">
+                        <h4 style="color: #2ecc71; margin-bottom: 10px;">📜 Game Rules</h4>
+                        <ul style="text-align: left; max-width: 450px; margin: 0 auto; color: #cccccc; line-height: 1.8;">
+                            <li>Pick <b>6 numbers from 1-49</b></li>
+                            <li>Ticket cost: <b>20 eGold</b></li>
+                            <li>Watch the animated number draw</li>
+                            <li>Match 3+ numbers to win prizes</li>
+                            <li>Match all 6 for <b style="color: #FFB800;">2,000 eGold Jackpot!</b></li>
+                            <li>Winning numbers highlighted in real-time</li>
+                            <li>Instant payout on wins</li>
+                        </ul>
                     </div>
                 </div>
             </div>

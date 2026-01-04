@@ -7,7 +7,7 @@ const diceraffleGame = {
         content.innerHTML = `
             <div style="text-align: center;">
                 <div class="game-display">
-                    <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">🎲 16-SIDED DICE RAFFLE 🎲</h3>
+                    <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">🎲 HEXAROLL 16 🎲</h3>
                     
                     <div id="dice" style="margin: 30px 0;">${VisualEnhancer.create3DDice(1)}</div>
                     <div id="diceNumber" style="font-size: 3.5em; color: #FFB800; min-height: 80px; font-weight: bold; text-shadow: 0 0 20px rgba(255, 184, 0, 0.8);"></div>
@@ -20,7 +20,9 @@ const diceraffleGame = {
                 <div id="diceResult" class="game-result"></div>
                 
                 <div class="game-info-box">
-                    <h3>💎 Prize Table</h3>
+                    <h3>👑 HexaRoll 16</h3>
+                    <p style="font-size: 1.1em; color: #cccccc; margin: 10px 0;">A unique 16-sided die game with glowing dice and randomized prize tiers</p>
+                    <h4 style="color: #FFB800; margin-top: 20px;">💎 Prize Table</h4>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 500px; margin: 15px auto; font-size: 1.1em;">
                         <div style="padding: 12px; background: linear-gradient(135deg, rgba(255, 184, 0, 0.2), rgba(212, 175, 55, 0.2)); border-radius: 8px; border: 2px solid #FFB800; grid-column: 1 / -1;">
                             <span style="font-size: 1.5em;">🎰</span> Roll 16: <b style="color: #FFB800; font-size: 1.4em;">500 eGold</b> <small style="color: #2ecc71;">($50)</small>
@@ -32,6 +34,18 @@ const diceraffleGame = {
                         <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">💰 Roll 11: <b>20 eGold</b> <small style="color: #2ecc71;">($2)</small></div>
                         <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">✨ Roll 10: <b>15 eGold</b> <small style="color: #2ecc71;">($1.50)</small></div>
                         <div style="grid-column: 1 / -1; padding: 10px; background: rgba(231, 76, 60, 0.1); border-radius: 8px; color: #e74c3c;">😢 Roll 1-9: <b>No Prize</b></div>
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(46, 204, 113, 0.1); border-radius: 10px; border: 2px solid #2ecc71;">
+                        <h4 style="color: #2ecc71; margin-bottom: 10px;">📜 Game Rules</h4>
+                        <ul style="text-align: left; max-width: 450px; margin: 0 auto; color: #cccccc; line-height: 1.8;">
+                            <li>Cost per roll: <b>15 eGold</b></li>
+                            <li>Roll a <b>16-sided die (D16)</b></li>
+                            <li>Each number corresponds to a prize tier</li>
+                            <li>Rare numbers (14-16) trigger <b style="color: #FFB800;">bonus multipliers</b></li>
+                            <li>Rolling <b style="color: #FFB800;">16 = 500 eGold Jackpot!</b></li>
+                            <li>3D dice animation with rolling physics</li>
+                            <li>Instant results with particle effects</li>
+                        </ul>
                     </div>
                 </div>
             </div>

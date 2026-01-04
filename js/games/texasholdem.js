@@ -50,11 +50,32 @@ const texasholdemGame = {
                 <div id="pokerResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
                 
                 <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
-                    <h3 style="color: #FFB800; margin-bottom: 10px;">Hand Rankings</h3>
-                    <div style="color: #cccccc; font-size: 0.9em;">
-                        <p>Royal Flush > Straight Flush > Four of a Kind > Full House</p>
-                        <p>Flush > Straight > Three of a Kind > Two Pair > Pair > High Card</p>
-                        <p style="margin-top: 10px; color: #e74c3c;">Note: Dealer has slight advantage</p>
+                    <h3 style="color: #FFB800; margin-bottom: 15px;">👑 Royal Hold'em</h3>
+                    <p style="font-size: 1.1em; color: #cccccc; margin-bottom: 15px;">Classic Texas Hold'em with 5 community cards and dealer showdown</p>
+                    <h4 style="color: #FFB800; margin-bottom: 10px;">🎴 Hand Rankings</h4>
+                    <div style="color: #cccccc; font-size: 0.95em; line-height: 1.6; text-align: left; max-width: 500px; margin: 0 auto;">
+                        <p><b style="color: #FFB800;">Royal Flush:</b> A-K-Q-J-10 same suit (Unbeatable!)</p>
+                        <p><b>Straight Flush:</b> 5 cards in sequence, same suit</p>
+                        <p><b>Four of a Kind:</b> Four cards of same rank</p>
+                        <p><b>Full House:</b> Three of a kind + a pair</p>
+                        <p><b>Flush:</b> 5 cards of same suit</p>
+                        <p><b>Straight:</b> 5 cards in sequence</p>
+                        <p><b>Three of a Kind:</b> Three cards of same rank</p>
+                        <p><b>Two Pair:</b> Two different pairs</p>
+                        <p><b>Pair:</b> Two cards of same rank</p>
+                        <p><b>High Card:</b> Highest single card</p>
+                    </div>
+                    <div style="margin-top: 15px; padding: 15px; background: rgba(46, 204, 113, 0.1); border-radius: 10px; border: 2px solid #2ecc71;">
+                        <h4 style="color: #2ecc71; margin-bottom: 10px;">📜 Game Rules</h4>
+                        <ul style="text-align: left; max-width: 450px; margin: 0 auto; color: #cccccc; line-height: 1.8;">
+                            <li>Pay ante (<b>${this.ante} eGold</b>)</li>
+                            <li>Receive <b>2 hole cards</b></li>
+                            <li><b>5 community cards</b> dealt</li>
+                            <li>Make best 5-card hand from 7 total</li>
+                            <li>Dealer reveals their hand</li>
+                            <li><b>Beat dealer to win!</b></li>
+                            <li>Payout: <b style="color: #FFB800;">2x ante</b></li>
+                        </ul>
                     </div>
                 </div>
             </div>
