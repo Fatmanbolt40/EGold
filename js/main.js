@@ -425,80 +425,185 @@ function showStats() {
 
 // Start a game
 function startGame(gameType) {
+    errorLogger.info('START_GAME_CALLED', { gameType, timestamp: Date.now() });
     console.log('startGame called with:', gameType);
-    currentGame = gameType;
     
-    const gameSelection = document.getElementById('gameSelection');
-    const gameContainer = document.getElementById('gameContainer');
-    const gameContent = document.getElementById('gameContent');
-    const gameTitle = document.getElementById('currentGameTitle');
-    
-    if (!gameSelection || !gameContainer || !gameContent || !gameTitle) {
-        console.error('Missing required elements:', {
+    try {
+        currentGame = gameType;
+        
+        const gameSelection = document.getElementById('gameSelection');
+        const gameContainer = document.getElementById('gameContainer');
+        const gameContent = document.getElementById('gameContent');
+        const gameTitle = document.getElementById('currentGameTitle');
+        
+        errorLogger.debug('CHECKING_ELEMENTS', {
             gameSelection: !!gameSelection,
             gameContainer: !!gameContainer,
             gameContent: !!gameContent,
             gameTitle: !!gameTitle
         });
-        return;
-    }
-    
-    gameSelection.style.display = 'none';
-    gameContainer.style.display = 'block';
-    
-    switch(gameType) {
-        case 'texasholdem':
-            gameTitle.textContent = 'Texas Hold\'em Poker';
-            texasholdemGame.init();
-            break;
-        case 'omaha':
-            gameTitle.textContent = 'Omaha Poker';
-            omahaGame.init();
-            break;
-        case 'pineapple':
-            gameTitle.textContent = 'Pineapple Poker';
-            pineappleGame.init();
-            break;
-        case 'tonk':
-            gameTitle.textContent = 'Tonk';
-            tonkGame.init();
-            break;
-        case 'chess':
-            gameTitle.textContent = 'Chess Betting';
-            chessGame.init();
-            break;
-        case 'checkers':
-            gameTitle.textContent = 'Checkers Betting';
-            checkersGame.init();
-            break;
-        case 'coinflip':
-            gameTitle.textContent = 'Coin Flip';
-            coinflipGame.init();
-            break;
-        case 'roulette':
-            gameTitle.textContent = 'European Roulette';
-            rouletteGame.init();
-            break;
-        case 'slots':
-            gameTitle.textContent = 'Luxury Slots';
-            slotsGame.init();
-            break;
-        case 'scratchoff':
-            gameTitle.textContent = 'Scratch Off';
-            scratchoffGame.init();
-            break;
-        case 'standardlottery':
-            gameTitle.textContent = 'Standard Lottery';
-            lotteryGame.init();
-            break;
-        case 'diceraffle':
-            gameTitle.textContent = '16-Sided Dice Raffle';
-            diceraffleGame.init();
-            break;
-        case 'spinwheel':
-            gameTitle.textContent = '🎡 Spin the Wheel';
-            gameContent.innerHTML = spinWheel.createWheelHTML();
-            break;
+        
+        if (!gameSelection || !gameContainer || !gameContent || !gameTitle) {
+            errorLogger.error('MISSING_REQUIRED_ELEMENTS', {
+                gameSelection: !!gameSelection,
+                gameContainer: !!gameContainer,
+                gameContent: !!gameContent,
+                gameTitle: !!gameTitle
+            });
+            return;
+        }
+        
+        errorLogger.info('HIDING_GAME_SELECTION', { gameType });
+        gameSelection.style.display = 'none';
+        gameContainer.style.display = 'block';
+        
+        errorLogger.info('INITIALIZING_GAME', { gameType });
+        
+        switch(gameType) {
+            case 'texasholdem':
+                gameTitle.textContent = 'Texas Hold\'em Poker';
+                errorLogger.debug('GAME_OBJECT_CHECK', { exists: typeof texasholdemGame !== 'undefined' });
+                if (typeof texasholdemGame !== 'undefined') {
+                    texasholdemGame.init();
+                    errorLogger.info('GAME_INITIALIZED', { gameType: 'texasholdem' });
+                } else {
+                    errorLogger.error('GAME_OBJECT_MISSING', { gameType: 'texasholdem' });
+                }
+                break;
+            case 'omaha':
+                gameTitle.textContent = 'Omaha Poker';
+                errorLogger.debug('GAME_OBJECT_CHECK', { exists: typeof omahaGame !== 'undefined' });
+                if (typeof omahaGame !== 'undefined') {
+                    omahaGame.init();
+                    errorLogger.info('GAME_INITIALIZED', { gameType: 'omaha' });
+                } else {
+                    errorLogger.error('GAME_OBJECT_MISSING', { gameType: 'omaha' });
+                }
+                break;
+            case 'pineapple':
+                gameTitle.textContent = 'Pineapple Poker';
+                errorLogger.debug('GAME_OBJECT_CHECK', { exists: typeof pineappleGame !== 'undefined' });
+                if (typeof pineappleGame !== 'undefined') {
+                    pineappleGame.init();
+                    errorLogger.info('GAME_INITIALIZED', { gameType: 'pineapple' });
+                } else {
+                    errorLogger.error('GAME_OBJECT_MISSING', { gameType: 'pineapple' });
+                }
+                break;
+            case 'tonk':
+                gameTitle.textContent = 'Tonk';
+                errorLogger.debug('GAME_OBJECT_CHECK', { exists: typeof tonkGame !== 'undefined' });
+                if (typeof tonkGame !== 'undefined') {
+                    tonkGame.init();
+                    errorLogger.info('GAME_INITIALIZED', { gameType: 'tonk' });
+                } else {
+                    errorLogger.error('GAME_OBJECT_MISSING', { gameType: 'tonk' });
+                }
+                break;
+            case 'chess':
+                gameTitle.textContent = 'Chess Betting';
+                errorLogger.debug('GAME_OBJECT_CHECK', { exists: typeof chessGame !== 'undefined' });
+                if (typeof chessGame !== 'undefined') {
+                    chessGame.init();
+                    errorLogger.info('GAME_INITIALIZED', { gameType: 'chess' });
+                } else {
+                    errorLogger.error('GAME_OBJECT_MISSING', { gameType: 'chess' });
+                }
+                break;
+            case 'checkers':
+                gameTitle.textContent = 'Checkers Betting';
+                errorLogger.debug('GAME_OBJECT_CHECK', { exists: typeof checkersGame !== 'undefined' });
+                if (typeof checkersGame !== 'undefined') {
+                    checkersGame.init();
+                    errorLogger.info('GAME_INITIALIZED', { gameType: 'checkers' });
+                } else {
+                    errorLogger.error('GAME_OBJECT_MISSING', { gameType: 'checkers' });
+                }
+                break;
+            case 'coinflip':
+                gameTitle.textContent = 'Coin Flip';
+                errorLogger.debug('GAME_OBJECT_CHECK', { exists: typeof coinflipGame !== 'undefined' });
+                if (typeof coinflipGame !== 'undefined') {
+                    coinflipGame.init();
+                    errorLogger.info('GAME_INITIALIZED', { gameType: 'coinflip' });
+                } else {
+                    errorLogger.error('GAME_OBJECT_MISSING', { gameType: 'coinflip' });
+                }
+                break;
+            case 'roulette':
+                gameTitle.textContent = 'European Roulette';
+                errorLogger.debug('GAME_OBJECT_CHECK', { exists: typeof rouletteGame !== 'undefined' });
+                if (typeof rouletteGame !== 'undefined') {
+                    rouletteGame.init();
+                    errorLogger.info('GAME_INITIALIZED', { gameType: 'roulette' });
+                } else {
+                    errorLogger.error('GAME_OBJECT_MISSING', { gameType: 'roulette' });
+                }
+                break;
+            case 'slots':
+                gameTitle.textContent = 'Luxury Slots';
+                errorLogger.debug('GAME_OBJECT_CHECK', { exists: typeof slotsGame !== 'undefined' });
+                if (typeof slotsGame !== 'undefined') {
+                    slotsGame.init();
+                    errorLogger.info('GAME_INITIALIZED', { gameType: 'slots' });
+                } else {
+                    errorLogger.error('GAME_OBJECT_MISSING', { gameType: 'slots' });
+                }
+                break;
+            case 'scratchoff':
+                gameTitle.textContent = 'Scratch Off';
+                errorLogger.debug('GAME_OBJECT_CHECK', { exists: typeof scratchoffGame !== 'undefined' });
+                if (typeof scratchoffGame !== 'undefined') {
+                    scratchoffGame.init();
+                    errorLogger.info('GAME_INITIALIZED', { gameType: 'scratchoff' });
+                } else {
+                    errorLogger.error('GAME_OBJECT_MISSING', { gameType: 'scratchoff' });
+                }
+                break;
+            case 'standardlottery':
+                gameTitle.textContent = 'Standard Lottery';
+                errorLogger.debug('GAME_OBJECT_CHECK', { exists: typeof lotteryGame !== 'undefined' });
+                if (typeof lotteryGame !== 'undefined') {
+                    lotteryGame.init();
+                    errorLogger.info('GAME_INITIALIZED', { gameType: 'standardlottery' });
+                } else {
+                    errorLogger.error('GAME_OBJECT_MISSING', { gameType: 'standardlottery' });
+                }
+                break;
+            case 'diceraffle':
+                gameTitle.textContent = '16-Sided Dice Raffle';
+                errorLogger.debug('GAME_OBJECT_CHECK', { exists: typeof diceraffleGame !== 'undefined' });
+                if (typeof diceraffleGame !== 'undefined') {
+                    diceraffleGame.init();
+                    errorLogger.info('GAME_INITIALIZED', { gameType: 'diceraffle' });
+                } else {
+                    errorLogger.error('GAME_OBJECT_MISSING', { gameType: 'diceraffle' });
+                }
+                break;
+            case 'spinwheel':
+                gameTitle.textContent = '🎡 Spin the Wheel';
+                if (typeof spinWheel !== 'undefined') {
+                    gameContent.innerHTML = spinWheel.createWheelHTML();
+                    errorLogger.info('GAME_INITIALIZED', { gameType: 'spinwheel' });
+                } else {
+                    errorLogger.error('GAME_OBJECT_MISSING', { gameType: 'spinwheel' });
+                }
+                break;
+            default:
+                errorLogger.error('UNKNOWN_GAME_TYPE', { gameType });
+        }
+        
+        errorLogger.info('START_GAME_COMPLETED', { gameType });
+        
+    } catch (error) {
+        errorLogger.error('START_GAME_EXCEPTION', {
+            gameType,
+            error: error.message,
+            stack: error.stack
+        });
+        
+        // Show user-friendly error
+        alert(`Error starting game: ${error.message}\n\nCheck console (F12) for details or click the error notification to view logs.`);
     }
 }
 
@@ -542,3 +647,38 @@ window.claimDaily = claimDaily;
 window.showStats = showStats;
 window.showDailyReward = showDailyReward;
 
+// Log when main.js is loaded
+errorLogger.info('MAIN_JS_LOADED', {
+    timestamp: Date.now(),
+    functions: {
+        startGame: typeof startGame !== 'undefined',
+        updateBalance: typeof updateBalance !== 'undefined',
+        showStats: typeof showStats !== 'undefined'
+    }
+});
+
+// Log game objects availability after page load
+window.addEventListener('load', () => {
+    errorLogger.info('PAGE_FULLY_LOADED', {
+        gameObjects: {
+            texasholdemGame: typeof texasholdemGame !== 'undefined',
+            omahaGame: typeof omahaGame !== 'undefined',
+            pineappleGame: typeof pineappleGame !== 'undefined',
+            tonkGame: typeof tonkGame !== 'undefined',
+            chessGame: typeof chessGame !== 'undefined',
+            checkersGame: typeof checkersGame !== 'undefined',
+            coinflipGame: typeof coinflipGame !== 'undefined',
+            rouletteGame: typeof rouletteGame !== 'undefined',
+            slotsGame: typeof slotsGame !== 'undefined',
+            scratchoffGame: typeof scratchoffGame !== 'undefined',
+            lotteryGame: typeof lotteryGame !== 'undefined',
+            diceraffleGame: typeof diceraffleGame !== 'undefined'
+        },
+        domElements: {
+            gameSelection: !!document.getElementById('gameSelection'),
+            gameContainer: !!document.getElementById('gameContainer'),
+            gameContent: !!document.getElementById('gameContent'),
+            currentGameTitle: !!document.getElementById('currentGameTitle')
+        }
+    });
+});

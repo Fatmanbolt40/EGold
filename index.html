@@ -33,6 +33,7 @@
                     <span class="currency">eGold</span>
                 </div>
                 <button id="statsBtn" class="btn-stats" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin-right: 10px;">📊 Stats</button>
+                <button id="debugBtn" class="btn-debug" onclick="errorLogger.showLogViewer()" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); margin-right: 10px;">🔍 Debug</button>
                 <button id="depositBtn" class="btn-deposit">Deposit</button>
                 <button id="withdrawBtn" class="btn-withdraw">Withdraw</button>
             </div>
@@ -205,6 +206,7 @@
         </div>
     </footer>
 
+    <script src="js/error-logger.js"></script>
     <script src="js/effects.js"></script>
     <script src="js/phantom-wallet.js"></script>
     <script src="js/advanced-effects.js"></script>
