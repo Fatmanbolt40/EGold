@@ -320,6 +320,9 @@ const PokerEngine = {
     },
     
     evaluateHandStrength(holeCards, communityCards) {
+        // Safety check
+        if (!holeCards || holeCards.length < 2) return 0.1;
+        
         if (communityCards.length === 0) {
             // Pre-flop hand strength
             const card1 = holeCards[0].numValue;

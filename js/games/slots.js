@@ -119,7 +119,8 @@ const slotsGame = {
             const result3 = this.getWeightedSymbol();
             
             document.getElementById('slotDisplay').innerHTML = VisualEnhancer.createSlotMachine([result1, result2, result3]);
-                
+            
+            setTimeout(() => {
                 // Check win
                 if (result1 === result2 && result2 === result3) {
                     const payout = bet * this.payouts[result1];
