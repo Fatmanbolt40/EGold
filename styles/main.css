@@ -520,3 +520,36 @@ body {
         max-width: 300px;
     }
 }
+
+/* PVP Styles */
+.game-button.secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    border: 2px solid #6c757d;
+}
+
+.game-button.secondary:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+    box-shadow: 0 5px 20px rgba(108, 117, 125, 0.3);
+}
+
+.game-info-box {
+    margin-top: 30px;
+    padding: 25px;
+    background: rgba(255, 184, 0, 0.1);
+    border-radius: 12px;
+    border: 2px solid #FFB800;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.game-info-box h3 {
+    color: #FFB800;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.game-info-box p {
+    color: #cccccc;
+    line-height: 1.6;
+}
