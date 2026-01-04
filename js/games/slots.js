@@ -17,30 +17,33 @@ const slotsGame = {
         const content = document.getElementById('gameContent');
         content.innerHTML = `
             <div style="text-align: center;">
-                <div style="display: flex; justify-content: center; gap: 20px; margin: 30px 0;">
-                    <div id="reel1" style="font-size: 5em; background: #2A3544; padding: 20px; border-radius: 10px; border: 3px solid #FFB800;">🍒</div>
-                    <div id="reel2" style="font-size: 5em; background: #2A3544; padding: 20px; border-radius: 10px; border: 3px solid #FFB800;">🍒</div>
-                    <div id="reel3" style="font-size: 5em; background: #2A3544; padding: 20px; border-radius: 10px; border: 3px solid #FFB800;">🍒</div>
+                <div class="game-display" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 4px solid #FFB800; box-shadow: 0 0 30px rgba(255, 184, 0, 0.3);">
+                    <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">🎰 LUCKY SLOTS 🎰</h3>
+                    <div class="reel-container">
+                        <div id="reel1" class="reel glowing">🍒</div>
+                        <div id="reel2" class="reel glowing">🍒</div>
+                        <div id="reel3" class="reel glowing">🍒</div>
+                    </div>
                 </div>
-                <div style="margin: 20px 0;">
-                    <label style="font-size: 1.2em;">Bet Amount: </label>
-                    <input type="number" id="slotsBet" value="5" min="5" max="100" style="padding: 10px; font-size: 1.1em; border-radius: 5px; border: 2px solid #FFB800; background: #2A3544; color: #FFB800; width: 100px;">
-                    <span style="color: #FFB800;"> eGold</span>
+                <div class="game-controls">
+                    <label style="font-size: 1.3em; color: #FFB800;">💰 Bet:</label>
+                    <input type="number" id="slotsBet" value="5" min="5" max="100" class="game-input" style="width: 120px;">
+                    <span style="color: #FFB800; font-size: 1.2em;">eGold</span>
                 </div>
-                <button onclick="slotsGame.spin()" style="padding: 15px 40px; font-size: 1.3em; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer; margin-top: 10px;">
-                    SPIN
+                <button onclick="slotsGame.spin()" class="game-button" style="font-size: 1.4em; padding: 18px 50px;">
+                    🎲 SPIN NOW 🎲
                 </button>
-                <div id="slotsResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
-                <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
-                    <h3 style="color: #FFB800; margin-bottom: 10px;">Payouts</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 300px; margin: 0 auto;">
-                        <div>🍒 Cherry: 1.5x</div>
-                        <div>🍋 Lemon: 2x</div>
-                        <div>🍊 Orange: 3x</div>
-                        <div>🍇 Grape: 4x</div>
-                        <div>💎 Diamond: 8x</div>
-                        <div>7️⃣ Seven: 15x</div>
-                        <div style="grid-column: 1 / -1;">⭐ Star: 30x (JACKPOT!)</div>
+                <div id="slotsResult" class="game-result"></div>
+                <div class="game-info-box">
+                    <h3>💎 Payouts</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 400px; margin: 0 auto; font-size: 1.1em;">
+                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">🍒 Cherry: <b>1.5x</b></div>
+                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">🍋 Lemon: <b>2x</b></div>
+                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">🍊 Orange: <b>3x</b></div>
+                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">🍇 Grape: <b>4x</b></div>
+                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">💎 Diamond: <b>8x</b></div>
+                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">7️⃣ Seven: <b>15x</b></div>
+                        <div style="grid-column: 1 / -1; padding: 12px; background: linear-gradient(135deg, rgba(255, 184, 0, 0.2), rgba(212, 175, 55, 0.2)); border-radius: 8px; border: 2px solid #FFB800;">⭐ Star: <b style="font-size: 1.3em; color: #FFB800;">30x JACKPOT!</b></div>
                     </div>
                 </div>
             </div>
@@ -105,9 +108,15 @@ const slotsGame = {
                 if (result1 === result2 && result2 === result3) {
                     const payout = bet * this.payouts[result1];
                     updateBalance(payout);
-                    document.getElementById('slotsResult').innerHTML = `<span style="color: #2ecc71; font-size: 1.5em;">🎉 WIN! +${payout.toFixed(2)} eGold</span>`;
+                    const resultDiv = document.getElementById('slotsResult');
+                    resultDiv.className = 'game-result win';
+                    resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 JACKPOT! 🎉</span><br><span style="font-size: 1.5em;">+${payout.toFixed(2)} eGold</span>`;
+                    document.querySelectorAll('.reel').forEach(r => r.classList.add('pulsing'));
                 } else {
-                    document.getElementById('slotsResult').innerHTML = '<span style="color: #e74c3c;">Try again!</span>';
+                    const resultDiv = document.getElementById('slotsResult');
+                    resultDiv.className = 'game-result lose';
+                    resultDiv.innerHTML = '<span style="font-size: 1.3em;">💔 Try again!</span>';
+                    document.querySelectorAll('.reel').forEach(r => r.classList.remove('pulsing'));
                 }
             }
         }, 100);

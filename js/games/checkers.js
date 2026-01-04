@@ -6,31 +6,37 @@ const checkersGame = {
         const content = document.getElementById('gameContent');
         content.innerHTML = `
             <div style="text-align: center;">
-                <h3 style="color: #FFB800; font-size: 1.5em; margin-bottom: 20px;">Checkers Betting</h3>
-                <p style="color: #cccccc; margin-bottom: 20px;">Bet on a simulated checkers match</p>
-                
-                <div style="margin: 30px auto; max-width: 400px; aspect-ratio: 1; background: repeating-conic-gradient(#e74c3c 0% 25%, #2c3e50 0% 50%) 50% / 50px 50px; border: 3px solid #FFB800; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                    <div id="checkersBoard" style="font-size: 8em;">🔴</div>
+                <div class="game-display">
+                    <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">🔴 CHECKERS BETTING 🔴</h3>
+                    <p style="font-size: 1.2em; color: #cccccc; margin-bottom: 20px;">Bet on a simulated checkers match</p>
                 </div>
                 
-                <div style="margin: 20px 0;">
-                    <div style="background: rgba(255, 184, 0, 0.1); padding: 15px; border-radius: 10px; display: inline-block;">
-                        <p style="color: #FFB800; font-size: 1.2em;">Bet: ${this.bet} eGold</p>
-                    </div>
+                <div class="game-board" style="background: repeating-conic-gradient(#e74c3c 0% 25%, #2c3e50 0% 50%) 50% / 50px 50px;">
+                    <div id="checkersBoard" class="game-piece">🔴</div>
                 </div>
                 
-                <button onclick="checkersGame.play()" style="padding: 15px 40px; font-size: 1.3em; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer; margin: 20px 0;">
-                    Play Match (${this.bet} eGold)
+                <div style="margin: 25px 0; padding: 15px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
+                    <p style="color: #FFB800; font-size: 1.4em; font-weight: bold;">💰 Bet: ${this.bet} eGold</p>
+                </div>
+                
+                <button onclick="checkersGame.play()" class="game-button" style="font-size: 1.4em; padding: 18px 50px;">
+                    🏁 Play Match (${this.bet} eGold)
                 </button>
                 
-                <div id="checkersResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
+                <div id="checkersResult" class="game-result"></div>
                 
-                <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
-                    <h3 style="color: #FFB800; margin-bottom: 10px;">Outcomes</h3>
-                    <div style="color: #cccccc;">
-                        <p style="color: #2ecc71;">Win: 45 eGold (15% chance)</p>
-                        <p style="color: #FFB800;">Draw: 15 eGold (10% chance)</p>
-                        <p style="color: #e74c3c;">Lose: 0 eGold (75% chance)</p>
+                <div class="game-info-box">
+                    <h3>📊 Outcomes</h3>
+                    <div style="display: grid; gap: 10px; margin-top: 15px;">
+                        <div style="padding: 12px; background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(39, 174, 96, 0.2)); border-radius: 8px; border: 2px solid #2ecc71;">
+                            <span style="font-size: 1.3em;">👑</span> Win: <b style="color: #2ecc71; font-size: 1.3em;">45 eGold</b> <small style="color: #cccccc;">(15% chance)</small>
+                        </div>
+                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">
+                            ⚖️ Draw: <b style="color: #FFB800;">15 eGold</b> <small style="color: #cccccc;">(10% chance)</small>
+                        </div>
+                        <div style="padding: 10px; background: rgba(231, 76, 60, 0.1); border-radius: 8px;">
+                            💔 Lose: <b style="color: #e74c3c;">0 eGold</b> <small style="color: #cccccc;">(75% chance)</small>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -65,16 +71,25 @@ const checkersGame = {
                     const payout = this.bet * 3;
                     updateBalance(payout);
                     board.textContent = '👑';
-                    result = `<span style="color: #2ecc71; font-size: 1.5em;">🎉 KING ME! YOU WIN! +${payout} eGold</span>`;
+                    const resultDiv = document.getElementById('checkersResult');
+                    resultDiv.className = 'game-result win';
+                    resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 KING ME! 🎉</span><br><span style="font-size: 1.4em;">YOU WIN!</span><br><span style="font-size: 1.5em; color: #FFB800;">+${payout} eGold</span>`;
                 } else if (random < 25) {
                     // Draw (10%)
                     updateBalance(this.bet);
                     board.textContent = '🔴';
-                    result = '<span style="color: #FFB800;">DRAW - Bet returned</span>';
+                    const resultDiv = document.getElementById('checkersResult');
+                    resultDiv.className = 'game-result';
+                    resultDiv.style.background = 'linear-gradient(135deg, rgba(255, 184, 0, 0.2), rgba(212, 175, 55, 0.2))';
+                    resultDiv.style.borderColor = '#FFB800';
+                    resultDiv.style.color = '#FFB800';
+                    resultDiv.innerHTML = '<span style="font-size: 1.5em;">⚖️ DRAW</span><br><span style="font-size: 1.2em;">Bet returned</span>';
                 } else {
                     // Lose (75%)
                     board.textContent = '⚫';
-                    result = '<span style="color: #e74c3c;">You lose! Try again.</span>';
+                    const resultDiv = document.getElementById('checkersResult');
+                    resultDiv.className = 'game-result lose';
+                    resultDiv.innerHTML = '<span style="font-size: 1.5em;">⚫ Captured!</span><br><span style="font-size: 1.2em;">💔 You lose!</span>';
                 }
                 
                 document.getElementById('checkersResult').innerHTML = result;

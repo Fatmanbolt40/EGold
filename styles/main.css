@@ -223,3 +223,300 @@ body {
         padding: 0 10px;
     }
 }
+
+/* Enhanced Game Styles */
+.game-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.game-input {
+    padding: 12px 20px;
+    font-size: 1.2em;
+    border-radius: 8px;
+    border: 2px solid #FFB800;
+    background: #2A3544;
+    color: #FFB800;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.game-input:focus {
+    outline: none;
+    border-color: #d4af37;
+    box-shadow: 0 0 15px rgba(255, 184, 0, 0.5);
+}
+
+.game-button {
+    padding: 15px 35px;
+    font-size: 1.2em;
+    background: linear-gradient(135deg, #FFB800 0%, #d4af37 100%);
+    border: none;
+    border-radius: 10px;
+    color: #1A2332;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 184, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.game-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 184, 0, 0.5);
+}
+
+.game-button:active {
+    transform: translateY(-1px);
+}
+
+.game-button.secondary {
+    background: linear-gradient(135deg, #7B68EE 0%, #6a5acd 100%);
+    color: white;
+}
+
+.game-display {
+    background: linear-gradient(135deg, rgba(26, 35, 50, 0.8) 0%, rgba(42, 53, 68, 0.8) 100%);
+    border: 3px solid #FFB800;
+    border-radius: 15px;
+    padding: 30px;
+    margin: 20px 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 30px rgba(255, 184, 0, 0.1);
+}
+
+.game-result {
+    margin-top: 25px;
+    font-size: 1.4em;
+    min-height: 40px;
+    padding: 15px;
+    border-radius: 10px;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.game-result.win {
+    background: linear-gradient(135deg, rgba(46, 204, 113, 0.2) 0%, rgba(39, 174, 96, 0.2) 100%);
+    border: 2px solid #2ecc71;
+    color: #2ecc71;
+}
+
+.game-result.lose {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.2) 0%, rgba(192, 57, 43, 0.2) 100%);
+    border: 2px solid #e74c3c;
+    color: #e74c3c;
+}
+
+.game-info-box {
+    background: rgba(255, 184, 0, 0.1);
+    border: 2px solid #FFB800;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    backdrop-filter: blur(10px);
+}
+
+.game-info-box h3 {
+    color: #FFB800;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.game-info-box p {
+    color: #cccccc;
+    line-height: 1.6;
+}
+
+/* Reel/Wheel Animations */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 184, 0, 0.5); }
+    50% { box-shadow: 0 0 40px rgba(255, 184, 0, 0.8); }
+}
+
+.spinning {
+    animation: spin 0.5s linear infinite;
+}
+
+.pulsing {
+    animation: pulse 1s ease infinite;
+}
+
+.glowing {
+    animation: glow 2s ease infinite;
+}
+
+/* Number Grid Styles */
+.number-grid {
+    display: grid;
+    gap: 8px;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.number-btn {
+    padding: 15px;
+    background: linear-gradient(135deg, #2A3544 0%, #1A2332 100%);
+    color: #FFB800;
+    border: 2px solid #FFB800;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.number-btn:hover {
+    background: linear-gradient(135deg, #FFB800 0%, #d4af37 100%);
+    color: #1A2332;
+    transform: scale(1.05);
+}
+
+.number-btn.selected {
+    background: linear-gradient(135deg, #FFB800 0%, #d4af37 100%);
+    color: #1A2332;
+    box-shadow: 0 0 20px rgba(255, 184, 0, 0.6);
+}
+
+/* Card Display Styles */
+.card-display {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.card {
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 15px 12px;
+    font-size: 1.8em;
+    min-width: 60px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Board Game Styles */
+.game-board {
+    margin: 30px auto;
+    max-width: 400px;
+    aspect-ratio: 1;
+    border: 4px solid #FFB800;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.game-board::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 184, 0, 0.1), transparent);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.game-piece {
+    font-size: 8em;
+    z-index: 1;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+
+/* Slot Machine Reel */
+.reel-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.reel {
+    font-size: 5em;
+    background: linear-gradient(135deg, #2A3544 0%, #1A2332 100%);
+    padding: 25px;
+    border-radius: 15px;
+    border: 4px solid #FFB800;
+    min-width: 120px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(255, 184, 0, 0.1);
+    position: relative;
+}
+
+.reel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(0, 0, 0, 0.2) 100%);
+    border-radius: 11px;
+    pointer-events: none;
+}
+
+/* Responsive Game Elements */
+@media (max-width: 768px) {
+    .reel {
+        font-size: 3.5em;
+        padding: 20px;
+        min-width: 90px;
+    }
+    
+    .game-piece {
+        font-size: 6em;
+    }
+    
+    .card {
+        font-size: 1.5em;
+        min-width: 50px;
+        padding: 12px 10px;
+    }
+    
+    .game-board {
+        max-width: 300px;
+    }
+}

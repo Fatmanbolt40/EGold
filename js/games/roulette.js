@@ -4,41 +4,50 @@ const rouletteGame = {
         const content = document.getElementById('gameContent');
         content.innerHTML = `
             <div style="text-align: center;">
-                <div id="rouletteWheel" style="font-size: 6em; margin: 20px 0;">🎡</div>
-                <div id="rouletteNumber" style="font-size: 2em; color: #FFB800; min-height: 50px; margin: 10px 0;"></div>
-                
-                <div style="margin: 20px 0;">
-                    <label style="font-size: 1.2em;">Bet Amount: </label>
-                    <input type="number" id="rouletteBet" value="10" min="5" max="500" style="padding: 10px; font-size: 1.1em; border-radius: 5px; border: 2px solid #FFB800; background: #2A3544; color: #FFB800; width: 100px;">
-                    <span style="color: #FFB800;"> eGold</span>
+                <div class="game-display">
+                    <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 15px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">🎡 ROULETTE ROYALE 🎡</h3>
+                    <div id="rouletteWheel" style="font-size: 8em; margin: 20px 0; filter: drop-shadow(0 8px 16px rgba(255, 184, 0, 0.4));">🎡</div>
+                    <div id="rouletteNumber" style="font-size: 2.5em; color: #FFB800; min-height: 60px; margin: 15px 0; font-weight: bold; text-shadow: 0 0 15px rgba(255, 184, 0, 0.6);"></div>
                 </div>
                 
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 500px; margin: 20px auto;">
-                    <button onclick="rouletteGame.bet('red')" style="padding: 15px; background: #e74c3c; color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer;">
-                        RED (1.9x)
-                    </button>
-                    <button onclick="rouletteGame.bet('black')" style="padding: 15px; background: #2c3e50; color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer;">
-                        BLACK (1.9x)
-                    </button>
-                    <button onclick="rouletteGame.bet('green')" style="padding: 15px; background: #27ae60; color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer;">
-                        GREEN (30x)
-                    </button>
+                <div class="game-controls">
+                    <label style="font-size: 1.3em; color: #FFB800;">💰 Bet:</label>
+                    <input type="number" id="rouletteBet" value="10" min="5" max="500" class="game-input" style="width: 120px;">
+                    <span style="color: #FFB800; font-size: 1.2em;">eGold</span>
                 </div>
                 
-                <div style="margin-top: 20px;">
-                    <label style="font-size: 1.1em; margin-right: 10px;">Or pick a number (0-36):</label>
-                    <input type="number" id="rouletteNumberPick" min="0" max="36" placeholder="0-36" style="padding: 10px; font-size: 1.1em; border-radius: 5px; border: 2px solid #FFB800; background: #2A3544; color: #FFB800; width: 80px;">
-                    <button onclick="rouletteGame.betNumber()" style="padding: 10px 20px; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer; margin-left: 10px;">
-                        Bet Number (30x)
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 600px; margin: 25px auto;">
+                    <button onclick="rouletteGame.bet('red')" class="game-button" style="background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; padding: 18px;">
+                        🔴 RED<br><small style="font-size: 0.8em;">(1.9x)</small>
+                    </button>
+                    <button onclick="rouletteGame.bet('black')" class="game-button" style="background: linear-gradient(135deg, #2c3e50, #1a252f); color: white; padding: 18px;">
+                        ⚫ BLACK<br><small style="font-size: 0.8em;">(1.9x)</small>
+                    </button>
+                    <button onclick="rouletteGame.bet('green')" class="game-button" style="background: linear-gradient(135deg, #27ae60, #229954); color: white; padding: 18px;">
+                        🟢 GREEN<br><small style="font-size: 0.8em;">(30x)</small>
                     </button>
                 </div>
                 
-                <div id="rouletteResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
+                <div style="margin: 25px 0;">
+                    <label style="font-size: 1.2em; color: #FFB800; margin-right: 10px;">Or pick a number (0-36):</label><br>
+                    <div style="margin-top: 10px;">
+                        <input type="number" id="rouletteNumberPick" min="0" max="36" placeholder="0-36" class="game-input" style="width: 100px;">
+                        <button onclick="rouletteGame.betNumber()" class="game-button secondary" style="padding: 12px 25px; margin-left: 10px;">
+                            Bet Number (30x)
+                        </button>
+                    </div>
+                </div>
                 
-                <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
-                    <h3 style="color: #FFB800;">How to Play</h3>
-                    <p style="color: #cccccc; margin-top: 10px;">Red: Numbers 1-18 | Black: Numbers 19-36 | Green: 0</p>
-                    <p style="color: #cccccc; margin-top: 5px;">Color bets pay 1.9x • Number bets pay 30x</p>
+                <div id="rouletteResult" class="game-result"></div>
+                
+                <div class="game-info-box">
+                    <h3>🎯 How to Play</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                        <p style="padding: 8px; background: rgba(231, 76, 60, 0.2); border-radius: 5px;">🔴 Red: Numbers 1-18</p>
+                        <p style="padding: 8px; background: rgba(44, 62, 80, 0.2); border-radius: 5px;">⚫ Black: Numbers 19-36</p>
+                        <p style="padding: 8px; background: rgba(39, 174, 96, 0.2); border-radius: 5px; grid-column: 1 / -1;">🟢 Green: Number 0</p>
+                    </div>
+                    <p style="color: #FFB800; margin-top: 10px; font-weight: bold;">Color bets pay 1.9x • Number bets pay 30x</p>
                 </div>
             </div>
         `;
@@ -130,9 +139,13 @@ const rouletteGame = {
                 
                 if (won) {
                     updateBalance(payout);
-                    document.getElementById('rouletteResult').innerHTML = `<span style="color: #2ecc71; font-size: 1.5em;">🎉 WIN! Number ${result} (${resultColor})! +${payout.toFixed(2)} eGold</span>`;
+                    const resultDiv = document.getElementById('rouletteResult');
+                    resultDiv.className = 'game-result win';
+                    resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 WINNER! 🎉</span><br><span style="font-size: 1.4em;">Number ${result} (${resultColor})!</span><br><span style="font-size: 1.5em; color: #FFB800;">+${payout.toFixed(2)} eGold</span>`;
                 } else {
-                    document.getElementById('rouletteResult').innerHTML = `<span style="color: #e74c3c;">Number ${result} (${resultColor}). Try again!</span>`;
+                    const resultDiv = document.getElementById('rouletteResult');
+                    resultDiv.className = 'game-result lose';
+                    resultDiv.innerHTML = `<span style="font-size: 1.4em;">Number ${result} (${resultColor})</span><br><span style="font-size: 1.2em;">💔 Try again!</span>`;
                 }
             }
         }, 100);
