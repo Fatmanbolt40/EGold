@@ -3,15 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Royal eGold Casino - Global Poker Style</title>
+    <title>Royal eGold Casino - Premium Poker Experience</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles/main.css">
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            color: #fff;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a1929 0%, #0d1b2a 100%);
+            color: #e6e6e6;
+            min-height: 100vh;
             overflow-x: hidden;
         }
         
@@ -21,49 +27,77 @@
             overflow: hidden;
         }
         
-        /* Left Sidebar */
+        /* Left Navigation Sidebar */
         .sidebar {
-            width: 140px;
-            background: linear-gradient(180deg, #2C5F6F, #1a4050);
-            border-right: 2px solid #4A90A4;
+            width: 80px;
+            background: linear-gradient(180deg, #0f2e4a, #153d5c);
+            border-right: 1px solid rgba(74, 144, 164, 0.3);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 30px 20px;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        .sidebar:hover {
+            width: 220px;
         }
         
         .sidebar-logo {
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle, #1a1a2e, #0f0f1a);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #1a3a4d, #0f1e2b);
             border-radius: 50%;
-            border: 4px solid #FFB800;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3em;
+            font-size: 2.5em;
             margin-bottom: 30px;
-            box-shadow: 0 6px 25px rgba(255,184,0,0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            border: 2px solid #ffcd00;
         }
         
         .sidebar-menu {
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .sidebar-item {
-            background: rgba(255,255,255,0.1);
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 18px 0;
+            margin-bottom: 8px;
+            border-radius: 6px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 1px solid transparent;
+            width: 70%;
+            position: relative;
+            overflow: hidden;
+            border-left: 3px solid transparent;
         }
         
         .sidebar-item:hover, .sidebar-item.active {
-            background: rgba(74,144,164,0.3);
-            border-color: #4A90A4;
+            background: rgba(124, 58, 237, 0.2);
+            border-left: 3px solid #ffcd00;
+        }
+        
+        .sidebar-item i {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            color: #ffcd00;
+        }
+        
+        .sidebar-item span {
+            display: none;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        
+        .sidebar:hover .sidebar-item span {
+            display: block;
         }
         
         /* Main Content */
@@ -72,190 +106,404 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            background: linear-gradient(rgba(15, 30, 48, 0.9), rgba(10, 20, 35, 0.9));
         }
         
         /* Top Bar */
         .top-bar {
-            background: linear-gradient(90deg, #2C5F6F, #4A90A4);
-            padding: 15px 30px;
+            background: linear-gradient(90deg, #0f2e4a, #153d5c);
+            padding: 18px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #5AA4B8;
+            border-bottom: 1px solid rgba(74, 144, 164, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-text {
+            font-size: 1.8em;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffcd00, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+        
+        .logo-icon {
+            color: #ffcd00;
+            font-size: 2.2em;
+        }
+        
+        .status-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .status-btn {
+            background: linear-gradient(135deg, #4a90a4, #2c5f6f);
+            border: none;
+            padding: 10px 22px;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .status-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74, 144, 164, 0.4);
         }
         
         .balance-display {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 25px;
         }
         
         .balance-box {
-            background: rgba(0,0,0,0.3);
-            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 25px;
             border-radius: 8px;
-            border: 1px solid #FFB800;
+            border: 1px solid #4a90a4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .balance-amount {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #ffd700;
+        }
+        
+        .balance-usd {
+            font-size: 0.9em;
+            color: #2ecc71;
+            margin-top: 3px;
         }
         
         /* Filter Panel */
         .filter-panel {
-            background: rgba(0,0,0,0.3);
+            background: rgba(15, 30, 48, 0.7);
             padding: 25px 30px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(74, 144, 164, 0.2);
         }
         
         .filter-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
         }
         
         .filter-section h3 {
-            color: #9CB4BF;
-            font-size: 0.85em;
-            margin-bottom: 12px;
-            font-weight: normal;
+            color: #9cb4bf;
+            font-size: 1em;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .filter-options {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
         }
         
         .filter-option {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+        
+        .filter-option:hover {
+            background: rgba(74, 144, 164, 0.2);
         }
         
         .filter-option input[type="checkbox"] {
             width: 18px;
             height: 18px;
             cursor: pointer;
+            accent-color: #ffcd00;
         }
         
         /* Search Bar */
         .search-bar {
-            background: rgba(0,0,0,0.2);
-            padding: 15px 30px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(15, 30, 48, 0.7);
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(74, 144, 164, 0.2);
+        }
+        
+        .search-container {
+            position: relative;
+            max-width: 500px;
         }
         
         .search-input {
             width: 100%;
-            padding: 12px 20px;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 6px;
+            padding: 14px 20px 14px 50px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #4a90a4;
+            border-radius: 30px;
             color: #fff;
-            font-size: 0.95em;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #ffcd00;
+            box-shadow: 0 0 0 2px rgba(255, 205, 0, 0.3);
         }
         
         .search-input::placeholder {
             color: #666;
         }
         
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4a90a4;
+        }
+        
         /* Games Table */
         .games-table-container {
             flex: 1;
             overflow-y: auto;
-            background: rgba(0,0,0,0.2);
+            padding: 20px;
         }
         
         .games-table {
             width: 100%;
             border-collapse: collapse;
+            background: rgba(15, 30, 48, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
         
         .games-table thead {
             position: sticky;
             top: 0;
-            background: #2C5F6F;
+            background: linear-gradient(to bottom, #1a3d5c, #153048);
             z-index: 10;
+            border-bottom: 1px solid rgba(74, 144, 164, 0.3);
         }
         
         .games-table th {
-            padding: 15px 20px;
+            padding: 18px 20px;
             text-align: left;
-            color: #9CB4BF;
-            font-size: 0.85em;
+            color: #9cb4bf;
+            font-size: 0.95em;
             font-weight: 600;
-            border-bottom: 2px solid #4A90A4;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .games-table td {
-            padding: 18px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 20px;
+            border-bottom: 1px solid rgba(74, 144, 164, 0.1);
         }
         
         .games-table tbody tr {
-            transition: background 0.2s ease;
-            cursor: pointer;
+            transition: background 0.3s ease;
         }
         
         .games-table tbody tr:hover {
-            background: rgba(74,144,164,0.2);
+            background: rgba(74, 144, 164, 0.15);
+        }
+        
+        .game-type {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .game-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #5A67D8, #7C3AED);
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 0.7em;
-            font-weight: bold;
-            margin-right: 8px;
+            background: linear-gradient(135deg, #7c3aed, #5a67d8);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
         }
         
         .game-name {
-            color: #fff;
-            font-weight: 500;
+            color: #ffd700;
+            font-weight: 600;
         }
         
-        .status-btn {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
+        .category-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .category-icon {
+            color: #4a90a4;
+            font-size: 1.2em;
+        }
+        
+        .buyin-cell {
+            font-weight: 600;
+            color: #2ecc71;
+        }
+        
+        .players-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .player-count {
+            background: rgba(74, 144, 164, 0.3);
+            padding: 2px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+        
+        .status-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #2ecc71;
+        }
+        
+        .status-indicator.waiting {
+            background-color: #f39c12;
+        }
+        
+        .status-indicator.full {
+            background-color: #e74c3c;
+        }
+        
+        .join-btn {
+            background: linear-gradient(135deg, #ffcd00, #ffd700);
+            color: #0a1929;
             border: none;
             padding: 8px 20px;
-            border-radius: 6px;
-            color: #fff;
-            font-weight: bold;
+            border-radius: 30px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 205, 0, 0.3);
         }
         
-        .status-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(243,156,18,0.4);
+        .join-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 205, 0, 0.4);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1100px) {
+            .filter-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar:hover {
+                width: 70px;
+            }
+            
+            .sidebar-item span {
+                display: none !important;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-bar {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .status-buttons {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .top-bar {
+                padding: 12px 15px;
+            }
+            
+            .logo-text {
+                font-size: 1.3em;
+            }
+            
+            .status-btn {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
         }
     </style>
 </head>
 <body>
     <div class="lobby-container">
-        <!-- Left Sidebar -->
+        <!-- Left Navigation Sidebar -->
         <div class="sidebar">
             <div class="sidebar-logo">🃏</div>
             <div class="sidebar-menu">
                 <div class="sidebar-item active">
-                    <div style="font-size: 1.5em; margin-bottom: 5px;">🎮</div>
-                    <div style="font-size: 0.75em;">Games</div>
+                    <i class="fas fa-gamepad"></i>
+                    <span>Games</span>
                 </div>
                 <div class="sidebar-item" onclick="TournamentLobby.showLobby()">
-                    <div style="font-size: 1.5em; margin-bottom: 5px;">🏆</div>
-                    <div style="font-size: 0.75em;">Tournaments</div>
+                    <i class="fas fa-trophy"></i>
+                    <span>Tournaments</span>
                 </div>
                 <div class="sidebar-item" onclick="vipSystem.showPanel()">
-                    <div style="font-size: 1.5em; margin-bottom: 5px;">👑</div>
-                    <div style="font-size: 0.75em;">VIP</div>
+                    <i class="fas fa-crown"></i>
+                    <span>VIP Lounge</span>
                 </div>
                 <div class="sidebar-item" onclick="achievementSystem.showPanel()">
-                    <div style="font-size: 1.5em; margin-bottom: 5px;">🏅</div>
-                    <div style="font-size: 0.75em;">Achievements</div>
+                    <i class="fas fa-medal"></i>
+                    <span>Achievements</span>
                 </div>
                 <div class="sidebar-item" onclick="leaderboardSystem.showPanel()">
-                    <div style="font-size: 1.5em; margin-bottom: 5px;">📊</div>
-                    <div style="font-size: 0.75em;">Leaderboard</div>
+                    <i class="fas fa-chart-line"></i>
+                    <span>Leaderboard</span>
                 </div>
             </div>
         </div>
@@ -263,25 +511,28 @@
         <!-- Main Content -->
         <div class="main-content">
             <!-- Top Bar -->
-            <div class="top-bar">
-                <div style="display: flex; align-items: center; gap: 20px;">
-                    <h2 style="margin: 0; color: #fff;">🎰 Royal eGold Casino</h2>
-                    <button onclick="spectatorSystem.showLiveGamesFeed()" class="status-btn" style="background: linear-gradient(135deg, #3498db, #2980b9); padding: 6px 15px; font-size: 0.85em;">
-                        👁️ Live Games
+            <div class="top-bar fade-in">
+                <div class="logo-container">
+                    <i class="fas fa-dice logo-icon"></i>
+                    <h1 class="logo-text">Royal eGold Casino</h1>
+                </div>
+                
+                <div class="status-buttons">
+                    <button onclick="spectatorSystem.showLiveGamesFeed()" class="status-btn">
+                        <i class="fas fa-eye"></i> Live Games
                     </button>
-                    <button onclick="spectatorSystem.showGlobalChat()" class="status-btn" style="background: linear-gradient(135deg, #9b59b6, #8e44ad); padding: 6px 15px; font-size: 0.85em;">
-                        💬 Chat
+                    <button onclick="spectatorSystem.showGlobalChat()" class="status-btn">
+                        <i class="fas fa-comments"></i> Chat
                     </button>
                 </div>
+                
                 <div class="balance-display">
-                    <button onclick="toggleSound()" class="status-btn" id="soundBtn" style="padding: 6px 15px; font-size: 0.85em;">
-                        🔊 Sound ON
+                    <button onclick="toggleSound()" class="status-btn" id="soundBtn">
+                        <i class="fas fa-volume-up"></i> Sound ON
                     </button>
                     <div class="balance-box">
-                        <div style="font-size: 1.3em; font-weight: bold;">
-                            <span id="balance">1000.00</span> eGold
-                        </div>
-                        <div id="usdValue" style="font-size: 0.85em; color: #2ecc71;">$100.00 USD</div>
+                        <span class="balance-amount"><span id="balance">1000.00</span> eGold</span>
+                        <span class="balance-usd" id="usdValue">$100.00 USD</span>
                     </div>
                 </div>
             </div>
@@ -290,7 +541,7 @@
             <div class="filter-panel">
                 <div class="filter-grid">
                     <div class="filter-section">
-                        <h3>Games</h3>
+                        <h3><i class="fas fa-dice"></i> Game Types</h3>
                         <div class="filter-options">
                             <label class="filter-option">
                                 <input type="checkbox" checked onchange="filterGames()"> Ring Games
@@ -305,7 +556,7 @@
                     </div>
                     
                     <div class="filter-section">
-                        <h3>Tournament Type</h3>
+                        <h3><i class="fas fa-trophy"></i> Tournament Types</h3>
                         <div class="filter-options">
                             <label class="filter-option">
                                 <input type="checkbox" checked onchange="filterGames()"> Regular
@@ -320,7 +571,7 @@
                     </div>
                     
                     <div class="filter-section">
-                        <h3>Format</h3>
+                        <h3><i class="fas fa-cards"></i> Game Formats</h3>
                         <div class="filter-options">
                             <label class="filter-option">
                                 <input type="checkbox" checked onchange="filterGames()"> Hold'em
@@ -335,7 +586,7 @@
                     </div>
                     
                     <div class="filter-section">
-                        <h3>Buy-In</h3>
+                        <h3><i class="fas fa-coins"></i> Buy-In Levels</h3>
                         <div class="filter-options">
                             <label class="filter-option">
                                 <input type="checkbox" checked onchange="filterGames()"> Micro (1-10)
@@ -356,12 +607,15 @@
             
             <!-- Search Bar -->
             <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Begin typing to filter by name" oninput="searchGames(this.value)">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search games by name or category..." oninput="searchGames(this.value)">
+                </div>
             </div>
             
             <!-- Games Table -->
             <div class="games-table-container">
-                <table class="games-table">
+                <table class="games-table fade-in">
                     <thead>
                         <tr>
                             <th>Type / Name</th>
