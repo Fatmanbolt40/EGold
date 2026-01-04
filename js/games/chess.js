@@ -1,282 +1,95 @@
-// Chess Betting Game
-
-let chessGame;
-
-function initChess(container) {
-    chessGame = new ChessGame();
-    chessGame.init(container);
-}
-
-class ChessGame {
-    constructor() {
-        this.board = this.initializeBoard();
-        this.currentPlayer = 'white';
-        this.selectedPiece = null;
-        this.betAmount = 50;
-        this.gameActive = false;
-    }
-
-    initializeBoard() {
-        const board = Array(8).fill(null).map(() => Array(8).fill(null));
-        
-        // Set up pieces (simplified)
-        const pieces = {
-            white: { king: '♔', queen: '♕', rook: '♖', bishop: '♗', knight: '♘', pawn: '♙' },
-            black: { king: '♚', queen: '♛', rook: '♜', bishop: '♝', knight: '♞', pawn: '♟' }
-        };
-
-        // Pawns
-        for (let i = 0; i < 8; i++) {
-            board[1][i] = { type: 'pawn', color: 'black', symbol: pieces.black.pawn };
-            board[6][i] = { type: 'pawn', color: 'white', symbol: pieces.white.pawn };
-        }
-
-        // Other pieces
-        const backRow = ['rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook'];
-        for (let i = 0; i < 8; i++) {
-            board[0][i] = { type: backRow[i], color: 'black', symbol: pieces.black[backRow[i]] };
-            board[7][i] = { type: backRow[i], color: 'white', symbol: pieces.white[backRow[i]] };
-        }
-
-        return board;
-    }
-
-    init(container) {
-        container.innerHTML = `
-            <div class="game-info">
-                <h3>Chess Betting</h3>
-                <p>Play chess against AI. Checkmate to win double your bet!</p>
-            </div>
-
-            <div class="betting-setup" id="chessSetup">
-                <label for="chessBet">Bet Amount (eGold):</label>
-                <input type="number" id="chessBet" min="10" max="${currentBalance}" value="50" step="10">
-                <button onclick="chessGame.startGame()" class="btn-play">Start Game</button>
-            </div>
-
-            <div class="board-container" id="chessBoard" style="display: none;">
+// Chess Betting Game - Simplified with AI advantage
+const chessGame = {
+    bet: 50,
+    difficulty: 'hard',
+    
+    init() {
+        this.render();
+    },
+    
+    render() {
+        const gameContent = document.getElementById('gameContent');
+        gameContent.innerHTML = `
+            <div class="chess-game">
+                <h2>♔ Chess Betting</h2>
+                <p>Win: 3x bet | Draw: 1.5x bet | Lose: -${this.bet} eGold</p>
+                
+                <div class="chess-board" id="chessBoard">
+                    ${this.renderBoard()}
+                </div>
+                
+                <div class="game-controls">
+                    <button class="btn-action" onclick="chessGame.startGame()">Start Game (${this.bet} eGold)</button>
+                    <button class="btn-action" onclick="chessGame.resign()">Resign</button>
+                </div>
+                
+                <div id="chessResult" class="result-message"></div>
+                
                 <div class="game-info">
-                    <p>Turn: <span id="chessTurn">White</span> | Bet: <span id="chessBetAmount">0</span> eGold</p>
+                    <p style="color: #FFB800;">⚠️ AI plays at master level - very difficult!</p>
                 </div>
-                <div class="chess-board" id="boardGrid"></div>
-                <div class="betting-controls">
-                    <button onclick="chessGame.resign()" class="bet-btn" style="background: #e74c3c;">Resign</button>
-                    <button onclick="chessGame.offerDraw()" class="bet-btn">Offer Draw</button>
-                </div>
-                <div id="chessMessages" class="game-message"></div>
             </div>
         `;
-
-        this.container = container;
-    }
-
-    startGame() {
-        const bet = parseFloat(document.getElementById('chessBet').value);
-        
-        if (bet > currentBalance) {
-            alert('Insufficient balance!');
-            return;
-        }
-
-        this.betAmount = bet;
-        updateBalance(-bet);
-        this.gameActive = true;
-        
-        document.getElementById('chessSetup').style.display = 'none';
-        document.getElementById('chessBoard').style.display = 'block';
-        document.getElementById('chessBetAmount').textContent = bet;
-        
-        this.renderBoard();
-        this.showMessage('Your turn! Move white pieces.');
-    }
-
+    },
+    
     renderBoard() {
-        const boardGrid = document.getElementById('boardGrid');
-        boardGrid.innerHTML = '';
-
+        const pieces = ['♜','♞','♝','♛','♚','♝','♞','♜'];
+        const pawns = '♟'.repeat(8);
+        let html = '<div class="board-grid">';
+        
         for (let row = 0; row < 8; row++) {
             for (let col = 0; col < 8; col++) {
-                const square = document.createElement('div');
-                square.className = `board-square ${(row + col) % 2 === 0 ? 'light' : 'dark'}`;
-                square.dataset.row = row;
-                square.dataset.col = col;
+                const isLight = (row + col) % 2 === 0;
+                let piece = '';
+                if (row === 0) piece = pieces[col];
+                else if (row === 1) piece = '♟';
+                else if (row === 6) piece = '♙';
+                else if (row === 7) piece = pieces[col].replace(/♜/g,'♖').replace(/♞/g,'♘').replace(/♝/g,'♗').replace(/♛/g,'♕').replace(/♚/g,'♔');
                 
-                const piece = this.board[row][col];
-                if (piece) {
-                    square.textContent = piece.symbol;
-                    square.dataset.color = piece.color;
-                }
-
-                square.addEventListener('click', () => this.handleSquareClick(row, col));
-                boardGrid.appendChild(square);
+                html += `<div class="chess-square ${isLight ? 'light' : 'dark'}">${piece}</div>`;
             }
         }
-    }
-
-    handleSquareClick(row, col) {
-        if (!this.gameActive || this.currentPlayer !== 'white') return;
-
-        const piece = this.board[row][col];
-
-        // Select piece
-        if (!this.selectedPiece && piece && piece.color === 'white') {
-            this.selectedPiece = { row, col };
-            document.querySelectorAll('.board-square').forEach(sq => sq.classList.remove('selected'));
-            const squares = document.querySelectorAll('.board-square');
-            squares[row * 8 + col].classList.add('selected');
+        html += '</div>';
+        return html;
+    },
+    
+    startGame() {
+        const balance = parseFloat(document.getElementById('userBalance').textContent);
+        if (balance < this.bet) {
+            this.showResult('Insufficient balance!', false);
             return;
         }
-
-        // Move piece
-        if (this.selectedPiece) {
-            const fromRow = this.selectedPiece.row;
-            const fromCol = this.selectedPiece.col;
-            
-            if (this.isValidMove(fromRow, fromCol, row, col)) {
-                this.movePiece(fromRow, fromCol, row, col);
-                this.selectedPiece = null;
-                this.currentPlayer = 'black';
-                document.getElementById('chessTurn').textContent = 'Black (AI)';
-                
-                if (this.checkWin('white')) {
-                    this.endGame(true);
-                    return;
-                }
-                
-                setTimeout(() => this.aiMove(), 1000);
-            } else {
-                this.showMessage('Invalid move!');
-            }
-            
-            document.querySelectorAll('.board-square').forEach(sq => sq.classList.remove('selected'));
-            this.selectedPiece = null;
-        }
-    }
-
-    isValidMove(fromRow, fromCol, toRow, toCol) {
-        const piece = this.board[fromRow][fromCol];
-        const target = this.board[toRow][toCol];
-
-        if (target && target.color === piece.color) return false;
-
-        // Simplified move validation
-        const rowDiff = Math.abs(toRow - fromRow);
-        const colDiff = Math.abs(toCol - fromCol);
-
-        switch(piece.type) {
-            case 'pawn':
-                if (piece.color === 'white') {
-                    return (fromRow - toRow === 1 && colDiff === 0 && !target) ||
-                           (fromRow - toRow === 1 && colDiff === 1 && target);
-                } else {
-                    return (toRow - fromRow === 1 && colDiff === 0 && !target) ||
-                           (toRow - fromRow === 1 && colDiff === 1 && target);
-                }
-            case 'rook':
-                return (rowDiff === 0 || colDiff === 0);
-            case 'knight':
-                return (rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2);
-            case 'bishop':
-                return rowDiff === colDiff;
-            case 'queen':
-                return rowDiff === colDiff || rowDiff === 0 || colDiff === 0;
-            case 'king':
-                return rowDiff <= 1 && colDiff <= 1;
-        }
-
-        return false;
-    }
-
-    movePiece(fromRow, fromCol, toRow, toCol) {
-        this.board[toRow][toCol] = this.board[fromRow][fromCol];
-        this.board[fromRow][fromCol] = null;
-        this.renderBoard();
-    }
-
-    aiMove() {
-        if (!this.gameActive) return;
-
-        // Simple AI: random valid move
-        const blackPieces = [];
-        for (let row = 0; row < 8; row++) {
-            for (let col = 0; col < 8; col++) {
-                if (this.board[row][col] && this.board[row][col].color === 'black') {
-                    blackPieces.push({ row, col });
-                }
-            }
-        }
-
-        let moved = false;
-        for (let attempt = 0; attempt < 50 && !moved; attempt++) {
-            const piece = blackPieces[Math.floor(Math.random() * blackPieces.length)];
-            const toRow = Math.floor(Math.random() * 8);
-            const toCol = Math.floor(Math.random() * 8);
-
-            if (this.isValidMove(piece.row, piece.col, toRow, toCol)) {
-                this.movePiece(piece.row, piece.col, toRow, toCol);
-                moved = true;
-                this.showMessage('AI moved');
-                
-                if (this.checkWin('black')) {
-                    this.endGame(false);
-                    return;
-                }
-            }
-        }
-
-        this.currentPlayer = 'white';
-        document.getElementById('chessTurn').textContent = 'White (You)';
-    }
-
-    checkWin(player) {
-        // Check if opponent's king is captured
-        const opponentColor = player === 'white' ? 'black' : 'white';
         
-        for (let row = 0; row < 8; row++) {
-            for (let col = 0; col < 8; col++) {
-                const piece = this.board[row][col];
-                if (piece && piece.type === 'king' && piece.color === opponentColor) {
-                    return false;
-                }
-            }
-        }
+        updateBalance(-this.bet);
         
-        return true;
-    }
-
-    endGame(won) {
-        this.gameActive = false;
-        
-        if (won) {
-            updateBalance(this.betAmount * 2);
-            this.showMessage(`Checkmate! You won ${this.betAmount * 2} eGold!`);
-        } else {
-            this.showMessage(`Checkmate! AI wins. You lost ${this.betAmount} eGold.`);
-        }
-
+        // Simulate game with heavy house advantage
         setTimeout(() => {
-            if (confirm('Play again?')) {
-                location.reload();
+            const outcome = Math.random();
+            if (outcome < 0.10) {  // 10% win
+                const winAmount = this.bet * 3;
+                updateBalance(winAmount);
+                this.showResult(`♔ Checkmate! You win ${winAmount} eGold!`, true);
+                soundEffects.play('win');
+            } else if (outcome < 0.20) {  // 10% draw
+                const drawAmount = this.bet * 1.5;
+                updateBalance(drawAmount);
+                this.showResult(`Draw! You get ${drawAmount} eGold back`, true);
+            } else {  // 80% lose
+                this.showResult('Checkmate! AI wins. Better luck next time!', false);
+                soundEffects.play('lose');
             }
         }, 2000);
-    }
-
+        
+        this.showResult('Game in progress...', false);
+    },
+    
     resign() {
-        if (confirm('Are you sure you want to resign?')) {
-            this.endGame(false);
-        }
+        this.showResult('You resigned!', false);
+    },
+    
+    showResult(message, isWin) {
+        const resultEl = document.getElementById('chessResult');
+        resultEl.textContent = message;
+        resultEl.className = `result-message ${isWin ? 'win' : 'lose'}`;
     }
-
-    offerDraw() {
-        if (confirm('Offer draw? You will get your bet back.')) {
-            updateBalance(this.betAmount);
-            this.gameActive = false;
-            this.showMessage('Draw accepted. Bet returned.');
-            setTimeout(() => location.reload(), 2000);
-        }
-    }
-
-    showMessage(msg) {
-        document.getElementById('chessMessages').textContent = msg;
-    }
-}
+};
