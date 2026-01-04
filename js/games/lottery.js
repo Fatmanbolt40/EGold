@@ -179,36 +179,6 @@ const lotteryGame = {
             }, 5000);
         }, 1500);
     }
-            case 3: prize = 10; break;
-        }
-        
-        if (prize > 0) {
-            updateBalance(prize);
-            document.getElementById('lotteryResult').innerHTML = `
-            const resultDiv = document.getElementById('lotteryResult');
-            resultDiv.className = 'game-result win';
-            resultDiv.innerHTML = `
-                <span style="font-size: 1.8em;">🎉 ${matches} MATCHES! 🎉</span><br>
-                <span style="color: #FFB800; font-size: 1.3em;">Winning numbers: ${winning.join(', ')}</span><br>
-                <span style="font-size: 1.5em; color: #2ecc71;">Prize: +${prize} eGold</span>
-            `;
-        } else {
-            const resultDiv = document.getElementById('lotteryResult');
-            resultDiv.className = 'game-result lose';
-            resultDiv.innerHTML = `
-                <span style="font-size: 1.4em;">${matches} matches</span><br>
-                <span style="color: #FFB800;">Winning numbers: ${winning.join(', ')}</span><br>
-                <span style="font-size: 1.2em;">💔 Better luck next time!</span>
-            `;
-        }
-        
-        // Reset
-        this.selected.forEach(num => {
-            const button = document.getElementById(`num${num}`);
-            button.classList.remove('selected')
-        this.selected = [];
-        document.getElementById('selectedNumbers').textContent = 'None';
-    }
 };
 
 window.lotteryGame = lotteryGame;

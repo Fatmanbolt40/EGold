@@ -30,9 +30,10 @@ const omahaGame = {
                 ${pokerEnhancer.createPremiumTable('omaha')}
                 
                 <script>
+                    const vipLvl = ${vipLevel};
                     document.getElementById('tableContent').innerHTML = \`
-                        ${pokerEnhancer.createPlayerSeat('dealer', 'Dealer', 1000, false, 0)}
-                        ${pokerEnhancer.createPlayerSeat('player', 'You', balance, true, ${vipLevel})}
+                        \${pokerEnhancer.createPlayerSeat('dealer', 'Dealer', 1000, false, 0)}
+                        \${pokerEnhancer.createPlayerSeat('player', 'You', ${balance}, true, \${vipLvl})}
                         
                         <div style="position: relative; z-index: 2; margin-top: 20px;">
                             <div style="margin: 20px 0;">
