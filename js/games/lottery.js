@@ -33,11 +33,11 @@ const lotteryGame = {
                     <h3>💎 Prize Table</h3>
                     <div style="display: grid; gap: 10px; margin-top: 15px;">
                         <div style="padding: 12px; background: linear-gradient(135deg, rgba(255, 184, 0, 0.2), rgba(212, 175, 55, 0.2)); border-radius: 8px; border: 2px solid #FFB800;">
-                            <span style="font-size: 1.5em;">🎰</span> 6 matches: <b style="color: #FFB800; font-size: 1.3em;">2000 eGold</b>
+                            <span style="font-size: 1.5em;">🎰</span> 6 matches: <b style="color: #FFB800; font-size: 1.3em;">2000 eGold</b> <small style="color: #2ecc71;">($200 USD)</small>
                         </div>
-                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">⭐ 5 matches: <b>200 eGold</b></div>
-                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">🎯 4 matches: <b>40 eGold</b></div>
-                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">🎁 3 matches: <b>10 eGold</b></div>
+                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">⭐ 5 matches: <b>200 eGold</b> <small style="color: #2ecc71;">($20 USD)</small></div>
+                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">🎯 4 matches: <b>40 eGold</b> <small style="color: #2ecc71;">($4 USD)</small></div>
+                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">🎁 3 matches: <b>10 eGold</b> <small style="color: #2ecc71;">($1 USD)</small></div>
                     </div>
                 </div>
             </div>

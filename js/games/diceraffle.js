@@ -23,14 +23,14 @@ const diceraffleGame = {
                     <h3>💎 Prize Table</h3>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 500px; margin: 15px auto; font-size: 1.1em;">
                         <div style="padding: 12px; background: linear-gradient(135deg, rgba(255, 184, 0, 0.2), rgba(212, 175, 55, 0.2)); border-radius: 8px; border: 2px solid #FFB800; grid-column: 1 / -1;">
-                            <span style="font-size: 1.5em;">🎰</span> Roll 16: <b style="color: #FFB800; font-size: 1.4em;">500 eGold</b>
+                            <span style="font-size: 1.5em;">🎰</span> Roll 16: <b style="color: #FFB800; font-size: 1.4em;">500 eGold</b> <small style="color: #2ecc71;">($50)</small>
                         </div>
-                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.15); border-radius: 8px;">💎 Roll 15: <b>250 eGold</b></div>
-                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.15); border-radius: 8px;">⭐ Roll 14: <b>125 eGold</b></div>
-                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">🎯 Roll 13: <b>60 eGold</b></div>
-                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">🎁 Roll 12: <b>30 eGold</b></div>
-                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">💰 Roll 11: <b>20 eGold</b></div>
-                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">✨ Roll 10: <b>15 eGold</b></div>
+                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.15); border-radius: 8px;">💎 Roll 15: <b>250 eGold</b> <small style="color: #2ecc71;">($25)</small></div>
+                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.15); border-radius: 8px;">⭐ Roll 14: <b>125 eGold</b> <small style="color: #2ecc71;">($12.50)</small></div>
+                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">🎯 Roll 13: <b>60 eGold</b> <small style="color: #2ecc71;">($6)</small></div>
+                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">🎁 Roll 12: <b>30 eGold</b> <small style="color: #2ecc71;">($3)</small></div>
+                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">💰 Roll 11: <b>20 eGold</b> <small style="color: #2ecc71;">($2)</small></div>
+                        <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">✨ Roll 10: <b>15 eGold</b> <small style="color: #2ecc71;">($1.50)</small></div>
                         <div style="grid-column: 1 / -1; padding: 10px; background: rgba(231, 76, 60, 0.1); border-radius: 8px; color: #e74c3c;">😢 Roll 1-9: <b>No Prize</b></div>
                     </div>
                 </div>

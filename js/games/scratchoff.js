@@ -27,12 +27,12 @@ const scratchoffGame = {
                     <h3>💎 Possible Prizes</h3>
                     <div style="display: grid; gap: 10px; margin-top: 15px;">
                         <div style="padding: 12px; background: linear-gradient(135deg, rgba(255, 184, 0, 0.2), rgba(212, 175, 55, 0.2)); border-radius: 8px; border: 2px solid #FFB800;">
-                            💎 Jackpot: <b style="color: #FFB800; font-size: 1.3em;">500 eGold</b>
+                            💎 Jackpot: <b style="color: #FFB800; font-size: 1.3em;">500 eGold</b> <small style="color: #2ecc71;">($50 USD)</small>
                         </div>
-                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">⭐ Big Win: <b>100 eGold</b></div>
-                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">🎯 Good Win: <b>50 eGold</b></div>
-                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">🎁 Nice: <b>25 eGold</b></div>
-                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">💰 Win: <b>15 eGold</b></div>
+                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">⭐ Big Win: <b>100 eGold</b> <small style="color: #2ecc71;">($10 USD)</small></div>
+                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">🎯 Good Win: <b>50 eGold</b> <small style="color: #2ecc71;">($5 USD)</small></div>
+                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">🎁 Nice: <b>25 eGold</b> <small style="color: #2ecc71;">($2.50 USD)</small></div>
+                        <div style="padding: 8px; background: rgba(255, 184, 0, 0.1); border-radius: 5px;">💰 Win: <b>15 eGold</b> <small style="color: #2ecc71;">($1.50 USD)</small></div>
                         <div style="padding: 8px; background: rgba(231, 76, 60, 0.1); border-radius: 5px; color: #e74c3c;">😢 Better Luck Next Time</div>
                     </div>
                 </div>
