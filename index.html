@@ -12,7 +12,10 @@
         <div class="header-content">
             <h1>🎰 Royal eGold Casino</h1>
             <div class="balance-display">
-                <span>Balance: <span id="balance">1000.00</span> eGold</span>
+                <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                    <span style="font-size: 1.2em; font-weight: bold;">Balance: <span id="balance">1000.00</span> eGold</span>
+                    <span id="usdValue" style="font-size: 0.9em; color: #2ecc71;">$100.00 USD</span>
+                </div>
             </div>
         </div>
     </header>
@@ -125,6 +128,14 @@
                 <p>Rummy variant</p>
                 <button class="play-btn" onclick="startGame('tonk')">Play Now</button>
             </div>
+
+            <!-- Hold'em Table -->
+            <div class="game-card" data-category="poker">
+                <div class="game-icon">🎰</div>
+                <h3>Hold'em Table</h3>
+                <p>Full table poker</p>
+                <button class="play-btn" onclick="startGame('holdtable')">Play Now</button>
+            </div>
         </div>
 
         <!-- Game Area -->
@@ -153,5 +164,6 @@
     <script src="js/games/omaha.js"></script>
     <script src="js/games/pineapple.js"></script>
     <script src="js/games/tonk.js"></script>
+    <script src="js/games/holdtable.js"></script>
 </body>
 </html>

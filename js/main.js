@@ -1,17 +1,26 @@
 // Main Application Controller
 let balance = parseFloat(localStorage.getItem('balance')) || 1000.00;
 let currentGame = null;
+const eGoldToUSD = 0.10; // 1 eGold = $0.10 USD
 
 // Update balance display
 function updateBalance(amount) {
     balance = Math.max(0, balance + amount);
+    const usdValue = (balance * eGoldToUSD).toFixed(2);
     document.getElementById('balance').textContent = balance.toFixed(2);
+    if (document.getElementById('usdValue')) {
+        document.getElementById('usdValue').textContent = `$${usdValue} USD`;
+    }
     localStorage.setItem('balance', balance.toString());
 }
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
+    const usdValue = (balance * eGoldToUSD).toFixed(2);
     document.getElementById('balance').textContent = balance.toFixed(2);
+    if (document.getElementById('usdValue')) {
+        document.getElementById('usdValue').textContent = `$${usdValue} USD`;
+    }
 });
 
 // Filter games by category
@@ -58,7 +67,8 @@ function startGame(gameType) {
         'checkers': '🔴 Checkers',
         'omaha': '🎴 Omaha Poker',
         'pineapple': '🍍 Pineapple Poker',
-        'tonk': '🎯 Tonk'
+        'tonk': '🎯 Tonk',
+        'holdtable': '🎰 Hold\'em Table'
     };
     
     gameTitle.textContent = titles[gameType] || gameType;
@@ -100,6 +110,9 @@ function startGame(gameType) {
             break;
         case 'tonk':
             if (window.tonkGame) tonkGame.init();
+            break;
+        case 'holdtable':
+            if (window.holdemTableGame) holdemTableGame.init();
             break;
     }
 }
