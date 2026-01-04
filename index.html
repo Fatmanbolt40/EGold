@@ -29,7 +29,7 @@
         .lobby-container {
             display: flex;
             min-height: 100vh;
-            overflow: hidden;
+            overflow: visible;
             position: relative;
         }
         
@@ -111,7 +111,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow: visible;
             background: linear-gradient(rgba(15, 30, 48, 0.9), rgba(10, 20, 35, 0.9));
             min-width: 0; /* Prevent flex item overflow */
         }
@@ -443,43 +443,55 @@
             .lobby-container {
                 min-height: 100vh;
                 height: auto;
-                flex-direction: row;
+                flex-direction: column;
             }
             
             .main-content {
-                overflow-y: auto;
-                overflow-x: hidden;
-                height: 100vh;
+                overflow: visible;
+                height: auto;
+                min-height: 100vh;
             }
             
             .sidebar {
-                width: 60px;
-                padding: 15px 0;
+                width: 100%;
+                height: auto;
+                padding: 10px 0;
+                flex-direction: row;
+                justify-content: space-around;
                 position: sticky;
                 top: 0;
-                height: 100vh;
-                flex-shrink: 0;
+                z-index: 100;
+                border-right: none;
+                border-bottom: 1px solid rgba(74, 144, 164, 0.3);
             }
             
             .sidebar:hover {
-                width: 60px;
+                width: 100%;
             }
             
             .sidebar-logo {
-                width: 45px;
-                height: 45px;
-                font-size: 2em;
-                margin-bottom: 20px;
+                display: none;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                justify-content: space-around;
+                align-items: center;
             }
             
             .sidebar-item {
-                width: 80%;
-                padding: 12px 0;
-                margin-bottom: 6px;
+                width: auto;
+                padding: 10px 12px;
+                margin-bottom: 0;
+                margin: 0 2px;
+                flex: 1;
+                max-width: 70px;
             }
             
             .sidebar-item i {
-                font-size: 1.4em;
+                font-size: 1.3em;
                 margin-bottom: 0;
             }
             
@@ -498,55 +510,60 @@
             
             .top-bar {
                 flex-direction: column;
-                gap: 12px;
+                gap: 10px;
                 align-items: stretch;
-                padding: 15px;
+                padding: 12px 10px;
                 flex-shrink: 0;
             }
             
             .logo-container {
-                gap: 10px;
+                gap: 8px;
                 justify-content: center;
-                flex-wrap: wrap;
+                flex-wrap: nowrap;
             }
             
             .logo-text {
-                font-size: 1.4em;
-                word-break: break-word;
+                font-size: 1.2em;
+                word-break: keep-all;
+                white-space: nowrap;
             }
             
             .logo-icon {
-                font-size: 1.6em;
+                font-size: 1.4em;
             }
             
             .status-buttons {
                 width: 100%;
                 justify-content: space-between;
-                gap: 10px;
+                gap: 8px;
                 flex-wrap: wrap;
             }
             
             .status-btn {
-                flex: 1;
-                min-width: 120px;
+                flex: 1 1 calc(50% - 4px);
+                min-width: 100px;
                 justify-content: center;
-                font-size: 0.85em;
-                padding: 10px 15px;
+                font-size: 0.8em;
+                padding: 8px 10px;
+                white-space: nowrap;
             }
             
             .balance-display {
                 width: 100%;
-                justify-content: space-between;
-                gap: 10px;
+                justify-content: center;
+                gap: 8px;
+                flex-wrap: wrap;
             }
             
             .balance-box {
                 flex: 1;
-                padding: 10px 15px;
+                min-width: 150px;
+                padding: 8px 12px;
             }
             
             .balance-amount {
-                font-size: 1.1em;
+                font-size: 1em;
+                line-height: 1.3;
             }
             
             .balance-usd {
@@ -554,33 +571,37 @@
             }
             
             .filter-panel {
-                padding: 20px 15px;
+                padding: 15px 10px;
             }
             
             .search-bar {
-                padding: 15px;
+                padding: 12px 10px;
             }
             
             .search-container {
                 max-width: 100%;
             }
             
+            .search-input {
+                font-size: 16px;
+            }
+            
             .games-table-container {
-                padding: 15px 10px;
+                padding: 10px 5px;
                 overflow-x: auto;
                 overflow-y: visible;
-                flex: 1;
                 -webkit-overflow-scrolling: touch;
             }
             
             .games-table {
-                min-width: 550px;
+                min-width: 100%;
+                width: max-content;
             }
             
             .games-table th,
             .games-table td {
-                padding: 12px 8px;
-                font-size: 0.85em;
+                padding: 10px 8px;
+                font-size: 0.82em;
                 white-space: nowrap;
             }
             
@@ -605,98 +626,43 @@
         }
         
         @media (max-width: 480px) {
-            .lobby-container {
-                flex-direction: row;
-            }
-            
-            .sidebar {
-                width: 50px;
-                padding: 10px 0;
-                height: 100vh;
-                position: sticky;
-                top: 0;
-            }
-            
-            .sidebar-logo {
-                width: 38px;
-                height: 38px;
-                font-size: 1.6em;
-                margin-bottom: 15px;
-            }
-            
-            .sidebar-item {
-                width: 85%;
-                padding: 10px 0;
-                margin-bottom: 5px;
-            }
-            
-            .sidebar-item i {
-                font-size: 1.2em;
-            }
-            
-            .main-content {
-                height: 100vh;
-                overflow-y: auto;
-            }
-            
-            .top-bar {
-                padding: 10px 8px;
-                flex-shrink: 0;
-            }
-            
+            /* Mobile inherits tablet styles, just adjust smaller elements */
             .logo-text {
-                font-size: 1.1em;
-                letter-spacing: 0.5px;
-            }
-            
-            .logo-icon {
-                font-size: 1.4em;
-            }
-            
-            .status-btn {
-                padding: 8px 12px;
-                font-size: 0.8em;
-                min-width: 100px;
-            }
-            
-            .status-btn i {
-                font-size: 0.9em;
-            }
-            
-            .balance-amount {
                 font-size: 1em;
             }
             
-            .balance-usd {
-                font-size: 0.75em;
+            .logo-icon {
+                font-size: 1.2em;
             }
             
-            .filter-panel {
-                padding: 15px 10px;
+            .status-btn {
+                padding: 8px 8px;
+                font-size: 0.75em;
+                min-width: 90px;
+            }
+            
+            .balance-amount {
+                font-size: 0.95em;
+            }
+            
+            .balance-usd {
+                font-size: 0.7em;
             }
             
             .filter-section h3 {
-                font-size: 0.9em;
-                margin-bottom: 10px;
-            }
-            
-            .filter-option {
-                padding: 6px 8px;
                 font-size: 0.85em;
             }
             
-            .filter-option input[type="checkbox"] {
-                width: 16px;
-                height: 16px;
+            .filter-option {
+                padding: 6px 6px;
+                font-size: 0.8em;
             }
             
-            .search-bar {
-                padding: 12px 10px;
+            .games-table th,
+            .games-table td {
+                padding: 8px 6px;
+                font-size: 0.78em;
             }
-            
-            .search-input {
-                padding: 12px 15px 12px 40px;
-                font-size: 0.9em;
             }
             
             .search-icon {
@@ -786,196 +752,43 @@
         
         /* iPhone Mini and very small screens (320px - 375px) */
         @media (max-width: 375px) {
-            .sidebar {
-                width: 45px;
-                padding: 8px 0;
-                height: 100vh;
-                position: sticky;
-                top: 0;
-            }
-            
-            .sidebar-logo {
-                width: 32px;
-                height: 32px;
-                font-size: 1.4em;
-                margin-bottom: 10px;
-                border: 1px solid #ffcd00;
-            }
-            
-            .sidebar-item {
-                padding: 8px 0;
-                margin-bottom: 4px;
-            }
-            
-            .sidebar-item i {
-                font-size: 1em;
-            }
-            
-            .main-content {
-                height: 100vh;
-                overflow-y: auto;
-                overflow-x: hidden;
-            }
-            
-            .top-bar {
-                padding: 8px 6px;
-                gap: 8px;
-                flex-shrink: 0;
-            }
-            
-            .logo-container {
-                gap: 6px;
-                justify-content: flex-start;
-            }
-            
+            /* Very small phones - just adjust smallest elements */
             .logo-text {
-                font-size: 1em;
-                letter-spacing: 0px;
-                line-height: 1.2;
+                font-size: 0.9em;
             }
             
             .logo-icon {
-                font-size: 1.2em;
-            }
-            
-            .status-buttons {
-                gap: 6px;
-                flex-wrap: wrap;
+                font-size: 1.1em;
             }
             
             .status-btn {
-                padding: 8px 8px;
+                padding: 7px 6px;
                 font-size: 0.7em;
-                min-width: 85px;
-                gap: 4px;
-                white-space: nowrap;
-            }
-            
-            .status-btn i {
-                font-size: 0.9em;
-            }
-            
-            .balance-display {
-                gap: 6px;
-                flex-wrap: wrap;
-                width: 100%;
+                min-width: 80px;
             }
             
             .balance-box {
-                padding: 6px 10px;
-                flex: 1;
-                min-width: 120px;
+                min-width: 110px;
+                padding: 6px 8px;
             }
             
             .balance-amount {
-                font-size: 0.9em;
-                line-height: 1.2;
+                font-size: 0.85em;
             }
             
             .balance-usd {
                 font-size: 0.65em;
             }
             
-            .filter-panel {
-                padding: 10px 6px;
-                flex-shrink: 0;
-            }
-            
-            .filter-grid {
-                gap: 12px;
-            }
-            
-            .filter-section h3 {
-                font-size: 0.8em;
-                margin-bottom: 6px;
-            }
-            
             .filter-option {
-                padding: 6px 4px;
+                padding: 5px 4px;
                 font-size: 0.75em;
-            }
-            
-            .search-bar {
-                padding: 8px 6px;
-                flex-shrink: 0;
-            }
-            
-            .search-input {
-                padding: 10px 10px 10px 32px;
-                font-size: 16px; /* Prevent zoom on iOS */
-            }
-            
-            .search-icon {
-                left: 10px;
-                font-size: 0.85em;
-            }
-            
-            .games-table-container {
-                padding: 8px 3px;
-                flex: 1;
-                overflow-x: auto;
-                overflow-y: visible;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            .games-table {
-                min-width: 420px;
             }
             
             .games-table th,
             .games-table td {
                 padding: 8px 4px;
-                font-size: 0.72em;
-                white-space: nowrap;
-            }
-            
-            .games-table th {
-                font-size: 0.68em;
-                padding: 10px 4px;
-                position: sticky;
-                top: 0;
-                background: linear-gradient(to bottom, #1a3d5c, #153048);
-                z-index: 10;
-            }
-            
-            .game-badge {
-                font-size: 0.6em;
-                padding: 2px 5px;
-            }
-            
-            .game-name {
-                font-size: 0.8em;
-            }
-            
-            .category-cell {
-                font-size: 0.75em;
-            }
-            
-            .category-icon {
-                font-size: 0.9em;
-            }
-            
-            .buyin-cell {
-                font-size: 0.8em;
-            }
-            
-            .player-count {
                 font-size: 0.7em;
-                padding: 1px 6px;
-            }
-            
-            .status-cell {
-                font-size: 0.75em;
-                gap: 5px;
-            }
-            
-            .join-btn {
-                padding: 5px 10px;
-                font-size: 0.7em;
-            }
-            
-            .games-table {
-                min-width: 450px; /* Further reduce for iPhone mini */
             }
         }
         
