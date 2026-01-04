@@ -51,6 +51,18 @@ class PhantomWallet {
 
             return true;
         } catch (err) {
+            // Check if user rejected the request (not a real error)
+            if (err.message && err.message.includes('rejected')) {
+                if (typeof errorLogger !== 'undefined') {
+                    errorLogger.warn('PHANTOM_USER_REJECTED', {
+                        message: 'User cancelled wallet connection'
+                    });
+                }
+                console.log('Wallet connection cancelled by user');
+                // Don't show alert for user cancellation
+                return false;
+            }
+            
             if (typeof errorLogger !== 'undefined') {
                 errorLogger.error('PHANTOM_CONNECT_ERROR', {
                     error: err.message,

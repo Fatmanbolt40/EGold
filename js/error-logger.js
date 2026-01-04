@@ -98,12 +98,20 @@ class ErrorLogger {
     
     error(category, data) {
         const entry = this.log('ERROR', category, data);
-        // Show in UI for critical errors
-        this.showErrorNotification(category, data);
+        // Only show critical errors in UI (not user actions)
+        const nonCriticalErrors = [
+            'PHANTOM_USER_REJECTED',
+            'PHANTOM_AUTO_CONNECT_NOT_AUTHORIZED'
+        ];
+        
+        if (!nonCriticalErrors.includes(category)) {
+            this.showErrorNotification(category, data);
+        }
     }
     
     warn(category, data) {
         this.log('WARN', category, data);
+        // Don't show warnings as notifications - they're informational
     }
     
     info(category, data) {
@@ -115,25 +123,48 @@ class ErrorLogger {
     }
     
     showErrorNotification(category, data) {
+        // Filter out expected user behaviors
+        const userActions = ['USER_REJECTED', 'CANCELLED', 'NOT_AUTHORIZED'];
+        if (userActions.some(action => category.includes(action))) {
+            return; // Don't show notification
+        }
+        
         const notification = document.createElement('div');
         notification.style.cssText = `
             position: fixed;
             top: 80px;
             right: 20px;
-            background: #e74c3c;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
             color: white;
             padding: 16px 24px;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             z-index: 10000;
             max-width: 400px;
-            font-family: monospace;
-            font-size: 12px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 14px;
+            border-left: 4px solid #fff;
         `;
+        
+        const errorMessage = typeof data === 'object' && data.error ? data.error : JSON.stringify(data).substring(0, 100);
+        
         notification.innerHTML = `
-            <strong>ERROR: ${category}</strong><br>
-            ${JSON.stringify(data, null, 2).substring(0, 200)}
-            <div style="margin-top: 8px; font-size: 10px;">Check console for details</div>
+            <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px;">
+                <div style="flex: 1;">
+                    <strong style="display: block; margin-bottom: 4px;">⚠️ ${category.replace(/_/g, ' ')}</strong>
+                    <div style="font-size: 12px; opacity: 0.9;">${errorMessage}</div>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" style="
+                    background: transparent;
+                    border: none;
+                    color: white;
+                    font-size: 20px;
+                    cursor: pointer;
+                    padding: 0;
+                    line-height: 1;
+                ">&times;</button>
+            </div>
+            <div style="margin-top: 8px; font-size: 11px; opacity: 0.8;">Click 🔍 Debug to view details</div>
         `;
         document.body.appendChild(notification);
         
