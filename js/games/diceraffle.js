@@ -1,127 +1,108 @@
-// 16-Sided Dice Raffle Game - Clean Implementation
+// Dice Raffle Game (d16)
 const diceraffleGame = {
-    ticketPrice: 15,
+    ticketCost: 15,
     
     init() {
-        try {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.info('DICERAFFLE_INIT', {});
-            }
-            this.render();
-        } catch (error) {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.error('DICERAFFLE_INIT_ERROR', { error: error.message, stack: error.stack });
-            }
-            console.error('Dice raffle init error:', error);
-        }
-    },
-    
-    render() {
-        const gameContent = document.getElementById('gameContent');
-        gameContent.innerHTML = `
-            <div class="diceraffle-game">
-                <h2>🎲 16-Sided Dice Raffle</h2>
-                <p>Roll the dice for a chance at massive prizes!</p>
+        const content = document.getElementById('gameContent');
+        content.innerHTML = `
+            <div style="text-align: center;">
+                <h3 style="color: #FFB800; font-size: 1.5em; margin-bottom: 20px;">16-Sided Dice Raffle</h3>
                 
-                <div class="dice-display" id="diceDisplay">
-                    <div class="dice-large">🎲</div>
-                    <div class="dice-result" id="diceResult">?</div>
-                </div>
+                <div id="dice" style="font-size: 8em; margin: 30px 0;">🎲</div>
+                <div id="diceNumber" style="font-size: 3em; color: #FFB800; min-height: 60px;"></div>
                 
-                <div class="prize-chart">
-                    <h3>Prize Chart</h3>
-                    <div class="prize-row jackpot">16 = 500 eGold (JACKPOT!) - 2% chance</div>
-                    <div class="prize-row">15 = 250 eGold - 3% chance</div>
-                    <div class="prize-row">14 = 125 eGold - 5% chance</div>
-                    <div class="prize-row">13 = 60 eGold - 7% chance</div>
-                    <div class="prize-row">12 = 30 eGold - 10% chance</div>
-                    <div class="prize-row">11 = 20 eGold - 13% chance</div>
-                    <div class="prize-row">10 = 15 eGold</div>
-                    <div class="prize-row">1-9 = Try Again - 60% chance</div>
-                </div>
-                
-                <button class="btn-roll" onclick="diceraffleGame.roll()">
-                    🎲 Roll Dice (${this.ticketPrice} eGold)
+                <button onclick="diceraffleGame.roll()" style="padding: 15px 40px; font-size: 1.3em; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer; margin: 20px 0;">
+                    Roll Dice (15 eGold)
                 </button>
                 
-                <div id="raffleResult" class="result-message"></div>
+                <div id="diceResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
                 
-                <div class="raffle-stats">
-                    <h4>Statistics</h4>
-                    <div>Total Rolls: <span id="totalRolls">0</span></div>
-                    <div>Highest Roll: <span id="highestRoll">0</span></div>
+                <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
+                    <h3 style="color: #FFB800; margin-bottom: 10px;">Prize Table</h3>
+                    <div style="color: #cccccc; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 400px; margin: 0 auto;">
+                        <div>🎰 Roll 16: 500 eGold</div>
+                        <div>💎 Roll 15: 250 eGold</div>
+                        <div>⭐ Roll 14: 125 eGold</div>
+                        <div>🎯 Roll 13: 60 eGold</div>
+                        <div>🎁 Roll 12: 30 eGold</div>
+                        <div>💰 Roll 11: 20 eGold</div>
+                        <div>✨ Roll 10: 15 eGold</div>
+                        <div style="grid-column: 1 / -1;">😢 Roll 1-9: No Prize</div>
+                    </div>
                 </div>
             </div>
         `;
     },
     
-    async roll() {
-        const balance = parseFloat(document.getElementById('userBalance').textContent);
-        if (balance < this.ticketPrice) {
-            this.showResult('Insufficient balance!', false);
+    roll() {
+        if (balance < this.ticketCost) {
+            document.getElementById('diceResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
             return;
         }
         
-        updateBalance(-this.ticketPrice);
+        updateBalance(-this.ticketCost);
         
-        // Animate rolling
-        const diceResultEl = document.getElementById('diceResult');
-        const diceDisplay = document.getElementById('diceDisplay');
+        const dice = document.getElementById('dice');
+        const diceNumber = document.getElementById('diceNumber');
         
-        for (let i = 0; i < 20; i++) {
-            diceResultEl.textContent = Math.floor(Math.random() * 16) + 1;
-            diceDisplay.style.transform = `rotate(${i * 36}deg)`;
-            await new Promise(resolve => setTimeout(resolve, 50));
-        }
-        
-        // Final result (weighted toward lower numbers for house edge)
-        let result;
-        const roll = Math.random();
-        if (roll < 0.02) result = 16;       // 2% chance
-        else if (roll < 0.05) result = 15;  // 3% chance
-        else if (roll < 0.10) result = 14;  // 5% chance
-        else if (roll < 0.17) result = 13;  // 7% chance
-        else if (roll < 0.27) result = 12;  // 10% chance
-        else if (roll < 0.40) result = 11;  // 13% chance
-        else result = Math.floor(Math.random() * 10) + 1;  // 60% chance for 1-10
-        diceResultEl.textContent = result;
-        diceDisplay.style.transform = 'rotate(0deg)';
-        
-        // Calculate prize (reduced for house edge)
-        const prizes = {
-            16: 500,
-            15: 250,
-            14: 125,
-            13: 60,
-            12: 30,
-            11: 20,
-            10: 15,
-            9: 0
-        };
-        
-        const prize = prizes[result] || 0;
-        
-        // Update stats
-        const totalRolls = parseInt(document.getElementById('totalRolls').textContent) + 1;
-        const highestRoll = Math.max(result, parseInt(document.getElementById('highestRoll').textContent));
-        document.getElementById('totalRolls').textContent = totalRolls;
-        document.getElementById('highestRoll').textContent = highestRoll;
-        
-        // Show result
-        if (prize > 0) {
-            updateBalance(prize);
-            this.showResult(`🎉 You rolled ${result}! Won ${prize} eGold!${result === 16 ? ' JACKPOT!' : ''}`, true);
-            soundEffects.play('win');
-        } else {
-            this.showResult(`You rolled ${result}. Try again!`, false);
-            soundEffects.play('lose');
-        }
-    },
-    
-    showResult(message, isWin) {
-        const resultEl = document.getElementById('raffleResult');
-        resultEl.textContent = message;
-        resultEl.className = `result-message ${isWin ? 'win' : 'lose'}`;
-        setTimeout(() => resultEl.className = 'result-message', 3000);
+        let rolls = 0;
+        const rollInterval = setInterval(() => {
+            diceNumber.textContent = Math.floor(Math.random() * 16) + 1;
+            dice.style.transform = `rotate(${rolls * 90}deg)`;
+            rolls++;
+            
+            if (rolls >= 15) {
+                clearInterval(rollInterval);
+                
+                // House edge: Weighted toward low numbers
+                const weights = [
+                    10, 10, 10, 10, 10, 10, 10, 10, 10,  // 1-9: 60% total
+                    13,  // 10: 13%
+                    13,  // 11: 13%
+                    10,  // 12: 10%
+                    7,   // 13: 7%
+                    5,   // 14: 5%
+                    3,   // 15: 3%
+                    2    // 16: 2%
+                ];
+                
+                const totalWeight = weights.reduce((a, b) => a + b, 0);
+                let random = Math.random() * totalWeight;
+                let result = 1;
+                
+                for (let i = 0; i < weights.length; i++) {
+                    random -= weights[i];
+                    if (random <= 0) {
+                        result = i + 1;
+                        break;
+                    }
+                }
+                
+                diceNumber.textContent = result;
+                
+                const prizes = {
+                    16: 500,
+                    15: 250,
+                    14: 125,
+                    13: 60,
+                    12: 30,
+                    11: 20,
+                    10: 15
+                };
+                
+                const prize = prizes[result] || 0;
+                
+                if (prize > 0) {
+                    updateBalance(prize);
+                    diceNumber.style.color = '#2ecc71';
+                    document.getElementById('diceResult').innerHTML = `<span style="color: #2ecc71; font-size: 1.5em;">🎉 You rolled ${result}! Prize: +${prize} eGold</span>`;
+                } else {
+                    diceNumber.style.color = '#e74c3c';
+                    document.getElementById('diceResult').innerHTML = `<span style="color: #e74c3c;">You rolled ${result}. Try again!</span>`;
+                }
+            }
+        }, 100);
     }
 };
+
+window.diceraffleGame = diceraffleGame;

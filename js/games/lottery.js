@@ -1,154 +1,126 @@
-// Standard Lottery Game - Clean Implementation
+// Lottery Game
 const lotteryGame = {
-    ticketPrice: 20,
-    selectedNumbers: [],
-    maxNumbers: 6,
-    numberRange: 49,
+    ticketCost: 20,
     
     init() {
-        try {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.info('LOTTERY_INIT', {});
-            }
-            this.selectedNumbers = [];
-            this.render();
-        } catch (error) {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.error('LOTTERY_INIT_ERROR', { error: error.message, stack: error.stack });
-            }
-            console.error('Lottery init error:', error);
-        }
-    },
-    
-    render() {
-        const gameContent = document.getElementById('gameContent');
-        gameContent.innerHTML = `
-            <div class="lottery-game">
-                <h2>🎱 Standard Lottery</h2>
-                <p>Pick ${this.maxNumbers} numbers from 1-${this.numberRange}</p>
+        const content = document.getElementById('gameContent');
+        content.innerHTML = `
+            <div style="text-align: center;">
+                <h3 style="color: #FFB800; font-size: 1.5em; margin-bottom: 20px;">Pick 6 Numbers (1-49)</h3>
                 
-                <div class="lottery-info">
-                    <div>Ticket Price: ${this.ticketPrice} eGold</div>
-                    <div>Jackpot: <span id="lotteryJackpot">${document.getElementById('progressiveJackpot').textContent}</span> eGold</div>
-                </div>
-                
-                <div class="selected-numbers">
-                    <h3>Your Numbers:</h3>
-                    <div id="selectedNumbers">
-                        ${this.selectedNumbers.map(n => `<span class="lottery-ball">${n}</span>`).join('') || 
-                         '<span class="placeholder">Select numbers below...</span>'}
-                    </div>
-                    <button class="btn-clear" onclick="lotteryGame.clearSelection()">Clear</button>
-                </div>
-                
-                <div class="number-grid">
-                    ${Array.from({length: this.numberRange}, (_, i) => i + 1).map(num => `
-                        <button class="number-btn ${this.selectedNumbers.includes(num) ? 'selected' : ''}" 
-                                onclick="lotteryGame.toggleNumber(${num})"
-                                ${this.selectedNumbers.length >= this.maxNumbers && !this.selectedNumbers.includes(num) ? 'disabled' : ''}>
+                <div id="numberButtons" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; max-width: 600px; margin: 20px auto;">
+                    ${Array.from({length: 49}, (_, i) => i + 1).map(num => 
+                        `<button onclick="lotteryGame.toggleNumber(${num})" id="num${num}" style="padding: 12px; background: #2A3544; color: #FFB800; border: 2px solid #FFB800; border-radius: 5px; cursor: pointer; font-size: 1em; font-weight: bold;">
                             ${num}
-                        </button>
-                    `).join('')}
+                        </button>`
+                    ).join('')}
                 </div>
                 
-                <div class="lottery-controls">
-                    <button class="btn-quick" onclick="lotteryGame.quickPick()">Quick Pick</button>
-                    <button class="btn-play" onclick="lotteryGame.playLottery()">Buy Ticket (${this.ticketPrice} eGold)</button>
+                <div style="margin: 20px 0;">
+                    <p style="font-size: 1.2em;">Selected: <span id="selectedNumbers" style="color: #FFB800;">None</span></p>
                 </div>
                 
-                <div id="lotteryResult" class="result-message"></div>
+                <button onclick="lotteryGame.play()" style="padding: 15px 40px; font-size: 1.3em; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer; margin: 20px 0;">
+                    Buy Ticket (20 eGold)
+                </button>
+                
+                <div id="lotteryResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
+                
+                <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
+                    <h3 style="color: #FFB800; margin-bottom: 10px;">Prizes</h3>
+                    <div style="color: #cccccc;">
+                        <p>6 matches: 2000 eGold 🎰</p>
+                        <p>5 matches: 200 eGold</p>
+                        <p>4 matches: 40 eGold</p>
+                        <p>3 matches: 10 eGold</p>
+                    </div>
+                </div>
             </div>
         `;
+        this.selected = [];
     },
+    
+    selected: [],
     
     toggleNumber(num) {
-        const index = this.selectedNumbers.indexOf(num);
+        const index = this.selected.indexOf(num);
+        const button = document.getElementById(`num${num}`);
+        
         if (index > -1) {
-            this.selectedNumbers.splice(index, 1);
-        } else if (this.selectedNumbers.length < this.maxNumbers) {
-            this.selectedNumbers.push(num);
-        }
-        this.render();
-    },
-    
-    quickPick() {
-        this.selectedNumbers = [];
-        while (this.selectedNumbers.length < this.maxNumbers) {
-            const num = Math.floor(Math.random() * this.numberRange) + 1;
-            if (!this.selectedNumbers.includes(num)) {
-                this.selectedNumbers.push(num);
+            this.selected.splice(index, 1);
+            button.style.background = '#2A3544';
+        } else {
+            if (this.selected.length >= 6) {
+                return;
             }
+            this.selected.push(num);
+            button.style.background = '#FFB800';
+            button.style.color = '#1A2332';
         }
-        this.selectedNumbers.sort((a, b) => a - b);
-        this.render();
+        
+        document.getElementById('selectedNumbers').textContent = 
+            this.selected.length > 0 ? this.selected.sort((a, b) => a - b).join(', ') : 'None';
     },
     
-    clearSelection() {
-        this.selectedNumbers = [];
-        this.render();
-    },
-    
-    playLottery() {
-        if (this.selectedNumbers.length < this.maxNumbers) {
-            this.showResult(`Please select ${this.maxNumbers} numbers!`, false);
+    play() {
+        if (this.selected.length !== 6) {
+            document.getElementById('lotteryResult').innerHTML = '<span style="color: #e74c3c;">Please select exactly 6 numbers!</span>';
             return;
         }
         
-        const balance = parseFloat(document.getElementById('userBalance').textContent);
-        if (balance < this.ticketPrice) {
-            this.showResult('Insufficient balance!', false);
+        if (balance < this.ticketCost) {
+            document.getElementById('lotteryResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
             return;
         }
         
-        updateBalance(-this.ticketPrice);
+        updateBalance(-this.ticketCost);
         
-        // Generate winning numbers
-        const winningNumbers = [];
-        while (winningNumbers.length < this.maxNumbers) {
-            const num = Math.floor(Math.random() * this.numberRange) + 1;
-            if (!winningNumbers.includes(num)) {
-                winningNumbers.push(num);
+        // Draw winning numbers
+        const winning = [];
+        while (winning.length < 6) {
+            const num = Math.floor(Math.random() * 49) + 1;
+            if (!winning.includes(num)) {
+                winning.push(num);
             }
         }
-        winningNumbers.sort((a, b) => a - b);
+        winning.sort((a, b) => a - b);
         
         // Count matches
-        const matches = this.selectedNumbers.filter(n => winningNumbers.includes(n)).length;
+        const matches = this.selected.filter(num => winning.includes(num)).length;
         
-        // Calculate prize (reduced for house edge)
-        const prizes = {
-            6: 2000,  // Jackpot
-            5: 200,
-            4: 40,
-            3: 10,
-            2: 0  // No payout for 2 matches
-        };
-        
-        const prize = prizes[matches] || 0;
-        
-        // Show results
-        const resultMsg = `
-            Winning Numbers: ${winningNumbers.map(n => `<span class="lottery-ball">${n}</span>`).join('')}<br>
-            Your Numbers: ${this.selectedNumbers.map(n => `<span class="lottery-ball ${winningNumbers.includes(n) ? 'match' : ''}">${n}</span>`).join('')}<br>
-            Matches: ${matches}/6<br>
-            ${prize > 0 ? `🎉 You won ${prize} eGold!` : '❌ Better luck next time!'}
-        `;
+        // Calculate prize (house edge: reduced payouts)
+        let prize = 0;
+        switch(matches) {
+            case 6: prize = 2000; break;
+            case 5: prize = 200; break;
+            case 4: prize = 40; break;
+            case 3: prize = 10; break;
+        }
         
         if (prize > 0) {
             updateBalance(prize);
-            soundEffects.play('win');
+            document.getElementById('lotteryResult').innerHTML = `
+                <span style="color: #2ecc71; font-size: 1.5em;">🎉 ${matches} MATCHES!</span><br>
+                <span style="color: #FFB800;">Winning numbers: ${winning.join(', ')}</span><br>
+                <span style="color: #2ecc71;">Prize: +${prize} eGold</span>
+            `;
         } else {
-            soundEffects.play('lose');
+            document.getElementById('lotteryResult').innerHTML = `
+                <span style="color: #e74c3c;">${matches} matches</span><br>
+                <span style="color: #FFB800;">Winning numbers: ${winning.join(', ')}</span><br>
+                <span style="color: #cccccc;">Better luck next time!</span>
+            `;
         }
         
-        this.showResult(resultMsg, prize > 0);
-        this.selectedNumbers = [];
-        setTimeout(() => this.render(), 5000);
-    },
-    
-    showResult(message, isWin) {
-        const resultEl = document.getElementById('lotteryResult');
-        resultEl.innerHTML = message;
-        resultEl.className = `result-message ${isWin ? 'win' : 'lose'}`;
+        // Reset
+        this.selected.forEach(num => {
+            const button = document.getElementById(`num${num}`);
+            button.style.background = '#2A3544';
+            button.style.color = '#FFB800';
+        });
+        this.selected = [];
+        document.getElementById('selectedNumbers').textContent = 'None';
     }
 };
+
+window.lotteryGame = lotteryGame;

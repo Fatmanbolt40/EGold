@@ -1,105 +1,86 @@
-// Chess Betting Game - Simplified with AI advantage
+// Chess Betting Game
 const chessGame = {
-    bet: 50,
-    difficulty: 'hard',
+    bet: 20,
     
     init() {
-        try {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.info('CHESS_INIT', {});
-            }
-            this.render();
-        } catch (error) {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.error('CHESS_INIT_ERROR', { error: error.message, stack: error.stack });
-            }
-            console.error('Chess init error:', error);
-        }
-    },
-    
-    render() {
-        const gameContent = document.getElementById('gameContent');
-        gameContent.innerHTML = `
-            <div class="chess-game">
-                <h2>♔ Chess Betting</h2>
-                <p>Win: 3x bet | Draw: 1.5x bet | Lose: -${this.bet} eGold</p>
+        const content = document.getElementById('gameContent');
+        content.innerHTML = `
+            <div style="text-align: center;">
+                <h3 style="color: #FFB800; font-size: 1.5em; margin-bottom: 20px;">Chess Betting</h3>
+                <p style="color: #cccccc; margin-bottom: 20px;">Bet on a simulated chess match</p>
                 
-                <div class="chess-board" id="chessBoard">
-                    ${this.renderBoard()}
+                <div style="margin: 30px auto; max-width: 400px; aspect-ratio: 1; background: repeating-conic-gradient(#fff 0% 25%, #2A3544 0% 50%) 50% / 50px 50px; border: 3px solid #FFB800; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    <div id="chessBoard" style="font-size: 8em;">♟️</div>
                 </div>
                 
-                <div class="game-controls">
-                    <button class="btn-action" onclick="chessGame.startGame()">Start Game (${this.bet} eGold)</button>
-                    <button class="btn-action" onclick="chessGame.resign()">Resign</button>
+                <div style="margin: 20px 0;">
+                    <div style="background: rgba(255, 184, 0, 0.1); padding: 15px; border-radius: 10px; display: inline-block;">
+                        <p style="color: #FFB800; font-size: 1.2em;">Bet: ${this.bet} eGold</p>
+                    </div>
                 </div>
                 
-                <div id="chessResult" class="result-message"></div>
+                <button onclick="chessGame.play()" style="padding: 15px 40px; font-size: 1.3em; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer; margin: 20px 0;">
+                    Play Match (${this.bet} eGold)
+                </button>
                 
-                <div class="game-info">
-                    <p style="color: #FFB800;">⚠️ AI plays at master level - very difficult!</p>
+                <div id="chessResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
+                
+                <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
+                    <h3 style="color: #FFB800; margin-bottom: 10px;">Outcomes</h3>
+                    <div style="color: #cccccc;">
+                        <p style="color: #2ecc71;">Win: 80 eGold (10% chance)</p>
+                        <p style="color: #FFB800;">Draw: 20 eGold (10% chance)</p>
+                        <p style="color: #e74c3c;">Lose: 0 eGold (80% chance)</p>
+                    </div>
                 </div>
             </div>
         `;
     },
     
-    renderBoard() {
-        const pieces = ['♜','♞','♝','♛','♚','♝','♞','♜'];
-        const pawns = '♟'.repeat(8);
-        let html = '<div class="board-grid">';
-        
-        for (let row = 0; row < 8; row++) {
-            for (let col = 0; col < 8; col++) {
-                const isLight = (row + col) % 2 === 0;
-                let piece = '';
-                if (row === 0) piece = pieces[col];
-                else if (row === 1) piece = '♟';
-                else if (row === 6) piece = '♙';
-                else if (row === 7) piece = pieces[col].replace(/♜/g,'♖').replace(/♞/g,'♘').replace(/♝/g,'♗').replace(/♛/g,'♕').replace(/♚/g,'♔');
-                
-                html += `<div class="chess-square ${isLight ? 'light' : 'dark'}">${piece}</div>`;
-            }
-        }
-        html += '</div>';
-        return html;
-    },
-    
-    startGame() {
-        const balance = parseFloat(document.getElementById('userBalance').textContent);
+    play() {
         if (balance < this.bet) {
-            this.showResult('Insufficient balance!', false);
+            document.getElementById('chessResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
             return;
         }
         
         updateBalance(-this.bet);
         
-        // Simulate game with heavy house advantage
-        setTimeout(() => {
-            const outcome = Math.random();
-            if (outcome < 0.10) {  // 10% win
-                const winAmount = this.bet * 3;
-                updateBalance(winAmount);
-                this.showResult(`♔ Checkmate! You win ${winAmount} eGold!`, true);
-                soundEffects.play('win');
-            } else if (outcome < 0.20) {  // 10% draw
-                const drawAmount = this.bet * 1.5;
-                updateBalance(drawAmount);
-                this.showResult(`Draw! You get ${drawAmount} eGold back`, true);
-            } else {  // 80% lose
-                this.showResult('Checkmate! AI wins. Better luck next time!', false);
-                soundEffects.play('lose');
-            }
-        }, 2000);
+        // Simulate match with house edge (80% loss, 10% win, 10% draw)
+        const board = document.getElementById('chessBoard');
+        const pieces = ['♔', '♕', '♖', '♗', '♘', '♙', '♚', '♛', '♜', '♝', '♞', '♟'];
         
-        this.showResult('Game in progress...', false);
-    },
-    
-    resign() {
-        this.showResult('You resigned!', false);
-    },
-    
-    showResult(message, isWin) {
-        const resultEl = document.getElementById('chessResult');
-        resultEl.textContent = message;
-        resultEl.className = `result-message ${isWin ? 'win' : 'lose'}`;
+        let moves = 0;
+        const matchInterval = setInterval(() => {
+            board.textContent = pieces[Math.floor(Math.random() * pieces.length)];
+            moves++;
+            
+            if (moves >= 10) {
+                clearInterval(matchInterval);
+                
+                const random = Math.random() * 100;
+                let result;
+                
+                if (random < 10) {
+                    // Win (10%)
+                    const payout = this.bet * 4;
+                    updateBalance(payout);
+                    board.textContent = '♔';
+                    result = `<span style="color: #2ecc71; font-size: 1.5em;">🎉 CHECKMATE! YOU WIN! +${payout} eGold</span>`;
+                } else if (random < 20) {
+                    // Draw (10%)
+                    updateBalance(this.bet);
+                    board.textContent = '♟️';
+                    result = '<span style="color: #FFB800;">DRAW - Bet returned</span>';
+                } else {
+                    // Lose (80%)
+                    board.textContent = '♚';
+                    result = '<span style="color: #e74c3c;">CHECKMATE - You lose!</span>';
+                }
+                
+                document.getElementById('chessResult').innerHTML = result;
+            }
+        }, 200);
     }
 };
+
+window.chessGame = chessGame;

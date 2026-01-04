@@ -1,180 +1,142 @@
-// Roulette Game - Clean Implementation
+// Roulette Game
 const rouletteGame = {
-    numbers: [
-        { num: 0, color: 'green' },
-        ...Array.from({length: 36}, (_, i) => ({
-            num: i + 1,
-            color: [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(i + 1) ? 'red' : 'black'
-        }))
-    ],
-    bets: [],
-    totalBet: 0,
-    
     init() {
-        try {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.info('ROULETTE_INIT', {});
-            }
-            this.bets = [];
-            this.totalBet = 0;
-            this.render();
-        } catch (error) {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.error('ROULETTE_INIT_ERROR', { error: error.message, stack: error.stack });
-            }
-            console.error('Roulette init error:', error);
-        }
-    },
-    
-    render() {
-        const gameContent = document.getElementById('gameContent');
-        gameContent.innerHTML = `
-            <div class="roulette-game">
-                <h2>🎡 European Roulette</h2>
+        const content = document.getElementById('gameContent');
+        content.innerHTML = `
+            <div style="text-align: center;">
+                <div id="rouletteWheel" style="font-size: 6em; margin: 20px 0;">🎡</div>
+                <div id="rouletteNumber" style="font-size: 2em; color: #FFB800; min-height: 50px; margin: 10px 0;"></div>
                 
-                <div class="roulette-wheel" id="wheel">
-                    <div class="wheel-ball">⚪</div>
-                    <div class="wheel-number">0</div>
+                <div style="margin: 20px 0;">
+                    <label style="font-size: 1.2em;">Bet Amount: </label>
+                    <input type="number" id="rouletteBet" value="10" min="5" max="500" style="padding: 10px; font-size: 1.1em; border-radius: 5px; border: 2px solid #FFB800; background: #2A3544; color: #FFB800; width: 100px;">
+                    <span style="color: #FFB800;"> eGold</span>
                 </div>
                 
-                <div class="betting-area">
-                    <h3>Place Your Bets</h3>
-                    <div class="bet-chips">
-                        ${[5, 10, 25, 50, 100].map(amt => 
-                            `<button class="chip" data-value="${amt}" onclick="rouletteGame.selectChip(${amt})">${amt}</button>`
-                        ).join('')}
-                    </div>
-                    <div class="selected-chip">Selected: <span id="selectedChip">10</span> eGold</div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 500px; margin: 20px auto;">
+                    <button onclick="rouletteGame.bet('red')" style="padding: 15px; background: #e74c3c; color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer;">
+                        RED (1.9x)
+                    </button>
+                    <button onclick="rouletteGame.bet('black')" style="padding: 15px; background: #2c3e50; color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer;">
+                        BLACK (1.9x)
+                    </button>
+                    <button onclick="rouletteGame.bet('green')" style="padding: 15px; background: #27ae60; color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer;">
+                        GREEN (30x)
+                    </button>
                 </div>
                 
-                <div class="roulette-board">
-                    ${this.renderBoard()}
+                <div style="margin-top: 20px;">
+                    <label style="font-size: 1.1em; margin-right: 10px;">Or pick a number (0-36):</label>
+                    <input type="number" id="rouletteNumberPick" min="0" max="36" placeholder="0-36" style="padding: 10px; font-size: 1.1em; border-radius: 5px; border: 2px solid #FFB800; background: #2A3544; color: #FFB800; width: 80px;">
+                    <button onclick="rouletteGame.betNumber()" style="padding: 10px 20px; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer; margin-left: 10px;">
+                        Bet Number (30x)
+                    </button>
                 </div>
                 
-                <div class="bet-summary">
-                    <div>Total Bet: <span id="totalBet">0</span> eGold</div>
-                    <div id="betsList"></div>
-                </div>
+                <div id="rouletteResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
                 
-                <div class="game-controls">
-                    <button class="btn-spin" onclick="rouletteGame.spin()">🎰 SPIN</button>
-                    <button class="btn-clear" onclick="rouletteGame.clearBets()">Clear Bets</button>
+                <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
+                    <h3 style="color: #FFB800;">How to Play</h3>
+                    <p style="color: #cccccc; margin-top: 10px;">Red: Numbers 1-18 | Black: Numbers 19-36 | Green: 0</p>
+                    <p style="color: #cccccc; margin-top: 5px;">Color bets pay 1.9x • Number bets pay 30x</p>
                 </div>
-                
-                <div id="rouletteResult" class="result-message"></div>
             </div>
         `;
-        this.selectedChip = 10;
     },
     
-    renderBoard() {
-        let html = '<div class="special-bets">';
-        html += `<button class="bet-btn color-bet red" onclick="rouletteGame.placeBet('red', 1.9)">RED (1.9x)</button>`;
-        html += `<button class="bet-btn color-bet black" onclick="rouletteGame.placeBet('black', 1.9)">BLACK (1.9x)</button>`;
-        html += `<button class="bet-btn" onclick="rouletteGame.placeBet('even', 1.9)">EVEN (1.9x)</button>`;
-        html += `<button class="bet-btn" onclick="rouletteGame.placeBet('odd', 1.9)">ODD (1.9x)</button>`;
-        html += '</div><div class="numbers-grid">';
+    bet(color) {
+        const betInput = document.getElementById('rouletteBet');
+        const bet = parseFloat(betInput.value);
         
-        this.numbers.forEach(({num, color}) => {
-            html += `<button class="number-btn ${color}" onclick="rouletteGame.placeBet(${num}, 30)">${num}</button>`;
-        });
-        html += '</div>';
-        return html;
-    },
-    
-    selectChip(value) {
-        this.selectedChip = value;
-        document.getElementById('selectedChip').textContent = value;
-        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-        event.target.classList.add('active');
-    },
-    
-    placeBet(type, payout) {
-        const balance = parseFloat(document.getElementById('userBalance').textContent);
-        if (balance < this.selectedChip) {
-            this.showResult('Insufficient balance!', false);
+        if (bet < 5) {
+            document.getElementById('rouletteResult').innerHTML = '<span style="color: #e74c3c;">Minimum bet is 5 eGold!</span>';
             return;
         }
         
-        this.bets.push({ type, amount: this.selectedChip, payout });
-        this.totalBet += this.selectedChip;
-        updateBalance(-this.selectedChip);
-        
-        document.getElementById('totalBet').textContent = this.totalBet.toFixed(2);
-        document.getElementById('betsList').innerHTML = this.bets.map((b, i) => 
-            `<div>Bet ${i+1}: ${b.type} - ${b.amount} eGold (${b.payout}x)</div>`
-        ).join('');
-    },
-    
-    clearBets() {
-        updateBalance(this.totalBet);
-        this.bets = [];
-        this.totalBet = 0;
-        document.getElementById('totalBet').textContent = '0';
-        document.getElementById('betsList').innerHTML = '';
-    },
-    
-    async spin() {
-        try {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.info('ROULETTE_SPIN', { totalBet: this.totalBet, betsCount: this.bets.length });
-            }
-            if (this.bets.length === 0) {
-            this.showResult('Place at least one bet!', false);
+        if (bet > balance) {
+            document.getElementById('rouletteResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
             return;
         }
         
-        // Animate wheel
-        await this.animateWheel();
+        updateBalance(-bet);
+        this.spin(bet, color, null);
+    },
+    
+    betNumber() {
+        const betInput = document.getElementById('rouletteBet');
+        const numberInput = document.getElementById('rouletteNumberPick');
+        const bet = parseFloat(betInput.value);
+        const number = parseInt(numberInput.value);
         
-        // Get result
-        const resultNum = this.numbers[Math.floor(Math.random() * this.numbers.length)];
-        document.getElementById('wheel').querySelector('.wheel-number').textContent = resultNum.num;
+        if (isNaN(number) || number < 0 || number > 36) {
+            document.getElementById('rouletteResult').innerHTML = '<span style="color: #e74c3c;">Pick a number between 0 and 36!</span>';
+            return;
+        }
         
-        // Check wins
-        let totalWin = 0;
-        this.bets.forEach(bet => {
-            let won = false;
-            if (typeof bet.type === 'number' && bet.type === resultNum.num) won = true;
-            else if (bet.type === 'red' && resultNum.color === 'red') won = true;
-            else if (bet.type === 'black' && resultNum.color === 'black') won = true;
-            else if (bet.type === 'even' && resultNum.num % 2 === 0 && resultNum.num !== 0) won = true;
-            else if (bet.type === 'odd' && resultNum.num % 2 === 1) won = true;
+        if (bet < 5) {
+            document.getElementById('rouletteResult').innerHTML = '<span style="color: #e74c3c;">Minimum bet is 5 eGold!</span>';
+            return;
+        }
+        
+        if (bet > balance) {
+            document.getElementById('rouletteResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
+            return;
+        }
+        
+        updateBalance(-bet);
+        this.spin(bet, null, number);
+    },
+    
+    spin(bet, color, pickedNumber) {
+        const wheel = document.getElementById('rouletteWheel');
+        const numberDisplay = document.getElementById('rouletteNumber');
+        
+        let spins = 0;
+        const spinInterval = setInterval(() => {
+            wheel.style.transform = `rotate(${spins * 45}deg)`;
+            numberDisplay.textContent = Math.floor(Math.random() * 37);
+            spins++;
             
-            if (won) totalWin += bet.amount * bet.payout;
-        });
-        
-        if (totalWin > 0) {
-            updateBalance(totalWin);
-            this.showResult(`🎉 Number ${resultNum.num} (${resultNum.color})! Won ${totalWin.toFixed(2)} eGold!`, true);
-            soundEffects.play('win');
-        } else {
-            this.showResult(`Number ${resultNum.num} (${resultNum.color}). Try again!`, false);
-            soundEffects.play('lose');
-        }
-        
-        // Clear bets
-        this.bets = [];
-        this.totalBet = 0;
-        document.getElementById('totalBet').textContent = '0';
-        document.getElementById('betsList').innerHTML = '';
-    },
-    
-    async animateWheel() {
-        const wheel = document.getElementById('wheel');
-        for (let i = 0; i < 30; i++) {
-            const randomNum = this.numbers[Math.floor(Math.random() * this.numbers.length)];
-            wheel.querySelector('.wheel-number').textContent = randomNum.num;
-            wheel.style.transform = `rotate(${i * 36}deg)`;
-            await new Promise(resolve => setTimeout(resolve, 50));
-        }
-        wheel.style.transform = 'rotate(0deg)';
-    },
-    
-    showResult(message, isWin) {
-        const resultEl = document.getElementById('rouletteResult');
-        resultEl.textContent = message;
-        resultEl.className = `result-message ${isWin ? 'win' : 'lose'}`;
-        setTimeout(() => resultEl.className = 'result-message', 3000);
+            if (spins >= 20) {
+                clearInterval(spinInterval);
+                
+                // Generate result
+                const result = Math.floor(Math.random() * 37);
+                numberDisplay.textContent = result;
+                
+                let resultColor;
+                if (result === 0) {
+                    resultColor = 'green';
+                    numberDisplay.style.color = '#27ae60';
+                } else if (result <= 18) {
+                    resultColor = 'red';
+                    numberDisplay.style.color = '#e74c3c';
+                } else {
+                    resultColor = 'black';
+                    numberDisplay.style.color = '#ffffff';
+                }
+                
+                // Check win
+                let won = false;
+                let payout = 0;
+                
+                if (color && resultColor === color) {
+                    payout = bet * 1.9; // House edge: 1.9x instead of 2x
+                    won = true;
+                } else if (pickedNumber !== null && result === pickedNumber) {
+                    payout = bet * 30; // House edge: 30x instead of 36x
+                    won = true;
+                }
+                
+                if (won) {
+                    updateBalance(payout);
+                    document.getElementById('rouletteResult').innerHTML = `<span style="color: #2ecc71; font-size: 1.5em;">🎉 WIN! Number ${result} (${resultColor})! +${payout.toFixed(2)} eGold</span>`;
+                } else {
+                    document.getElementById('rouletteResult').innerHTML = `<span style="color: #e74c3c;">Number ${result} (${resultColor}). Try again!</span>`;
+                }
+            }
+        }, 100);
     }
 };
+
+window.rouletteGame = rouletteGame;

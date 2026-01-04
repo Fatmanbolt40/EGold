@@ -1,102 +1,86 @@
-// Checkers Betting Game - Simplified with AI advantage
+// Checkers Betting Game
 const checkersGame = {
-    bet: 30,
+    bet: 15,
     
     init() {
-        try {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.info('CHECKERS_INIT', {});
-            }
-            this.render();
-        } catch (error) {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.error('CHECKERS_INIT_ERROR', { error: error.message, stack: error.stack });
-            }
-            console.error('Checkers init error:', error);
-        }
-    },
-    
-    render() {
-        const gameContent = document.getElementById('gameContent');
-        gameContent.innerHTML = `
-            <div class="checkers-game">
-                <h2>⚫ Checkers Betting</h2>
-                <p>Win: 2.5x bet | Draw: 1x bet | Lose: -${this.bet} eGold</p>
+        const content = document.getElementById('gameContent');
+        content.innerHTML = `
+            <div style="text-align: center;">
+                <h3 style="color: #FFB800; font-size: 1.5em; margin-bottom: 20px;">Checkers Betting</h3>
+                <p style="color: #cccccc; margin-bottom: 20px;">Bet on a simulated checkers match</p>
                 
-                <div class="checkers-board" id="checkersBoard">
-                    ${this.renderBoard()}
+                <div style="margin: 30px auto; max-width: 400px; aspect-ratio: 1; background: repeating-conic-gradient(#e74c3c 0% 25%, #2c3e50 0% 50%) 50% / 50px 50px; border: 3px solid #FFB800; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    <div id="checkersBoard" style="font-size: 8em;">🔴</div>
                 </div>
                 
-                <div class="game-controls">
-                    <button class="btn-action" onclick="checkersGame.startGame()">Start Game (${this.bet} eGold)</button>
-                    <button class="btn-action" onclick="checkersGame.resign()">Resign</button>
+                <div style="margin: 20px 0;">
+                    <div style="background: rgba(255, 184, 0, 0.1); padding: 15px; border-radius: 10px; display: inline-block;">
+                        <p style="color: #FFB800; font-size: 1.2em;">Bet: ${this.bet} eGold</p>
+                    </div>
                 </div>
                 
-                <div id="checkersResult" class="result-message"></div>
+                <button onclick="checkersGame.play()" style="padding: 15px 40px; font-size: 1.3em; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer; margin: 20px 0;">
+                    Play Match (${this.bet} eGold)
+                </button>
                 
-                <div class="game-info">
-                    <p style="color: #FFB800;">⚠️ AI uses advanced strategy - challenging game!</p>
+                <div id="checkersResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
+                
+                <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
+                    <h3 style="color: #FFB800; margin-bottom: 10px;">Outcomes</h3>
+                    <div style="color: #cccccc;">
+                        <p style="color: #2ecc71;">Win: 45 eGold (15% chance)</p>
+                        <p style="color: #FFB800;">Draw: 15 eGold (10% chance)</p>
+                        <p style="color: #e74c3c;">Lose: 0 eGold (75% chance)</p>
+                    </div>
                 </div>
             </div>
         `;
     },
     
-    renderBoard() {
-        let html = '<div class="board-grid">';
-        
-        for (let row = 0; row < 8; row++) {
-            for (let col = 0; col < 8; col++) {
-                const isLight = (row + col) % 2 === 0;
-                let piece = '';
-                
-                if (!isLight) {
-                    if (row < 3) piece = '⚫';  // Black pieces (AI)
-                    else if (row > 4) piece = '🔴';  // Red pieces (Player)
-                }
-                
-                html += `<div class="checkers-square ${isLight ? 'light' : 'dark'}">${piece}</div>`;
-            }
-        }
-        html += '</div>';
-        return html;
-    },
-    
-    startGame() {
-        const balance = parseFloat(document.getElementById('userBalance').textContent);
+    play() {
         if (balance < this.bet) {
-            this.showResult('Insufficient balance!', false);
+            document.getElementById('checkersResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
             return;
         }
         
         updateBalance(-this.bet);
         
-        // Simulate game with house advantage
-        setTimeout(() => {
-            const outcome = Math.random();
-            if (outcome < 0.15) {  // 15% win
-                const winAmount = this.bet * 2.5;
-                updateBalance(winAmount);
-                this.showResult(`🔴 Victory! You win ${winAmount} eGold!`, true);
-                soundEffects.play('win');
-            } else if (outcome < 0.25) {  // 10% draw
-                updateBalance(this.bet);
-                this.showResult(`Draw! You get ${this.bet} eGold back`, true);
-            } else {  // 75% lose
-                this.showResult('⚫ AI captures all your pieces! You lose.', false);
-                soundEffects.play('lose');
-            }
-        }, 2000);
+        // Simulate match with house edge (75% loss, 15% win, 10% draw)
+        const board = document.getElementById('checkersBoard');
+        const pieces = ['🔴', '⚫', '👑'];
         
-        this.showResult('Game in progress...', false);
-    },
-    
-    resign() {
-        this.showResult('You resigned!', false);
-    },
-    
-    showResult(message, isWin) {
-        const resultEl = document.getElementById('checkersResult');
-        resultEl.textContent = message;
-        resultEl.className = `result-message ${isWin ? 'win' : 'lose'}`;
+        let moves = 0;
+        const matchInterval = setInterval(() => {
+            board.textContent = pieces[Math.floor(Math.random() * pieces.length)];
+            moves++;
+            
+            if (moves >= 10) {
+                clearInterval(matchInterval);
+                
+                const random = Math.random() * 100;
+                let result;
+                
+                if (random < 15) {
+                    // Win (15%)
+                    const payout = this.bet * 3;
+                    updateBalance(payout);
+                    board.textContent = '👑';
+                    result = `<span style="color: #2ecc71; font-size: 1.5em;">🎉 KING ME! YOU WIN! +${payout} eGold</span>`;
+                } else if (random < 25) {
+                    // Draw (10%)
+                    updateBalance(this.bet);
+                    board.textContent = '🔴';
+                    result = '<span style="color: #FFB800;">DRAW - Bet returned</span>';
+                } else {
+                    // Lose (75%)
+                    board.textContent = '⚫';
+                    result = '<span style="color: #e74c3c;">You lose! Try again.</span>';
+                }
+                
+                document.getElementById('checkersResult').innerHTML = result;
+            }
+        }, 200);
     }
 };
+
+window.checkersGame = checkersGame;

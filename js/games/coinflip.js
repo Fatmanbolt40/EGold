@@ -1,143 +1,78 @@
-// Coin Flip Game - Clean Implementation
+// Coin Flip Game
 const coinflipGame = {
-    betAmount: 10,
-    
     init() {
-        try {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.info('COINFLIP_INIT', {});
-            }
-            this.render();
-        } catch (error) {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.error('COINFLIP_INIT_ERROR', { error: error.message, stack: error.stack });
-            }
-            console.error('Coinflip init error:', error);
-        }
-    },
-    
-    render() {
-        const gameContent = document.getElementById('gameContent');
-        gameContent.innerHTML = `
-            <div class="coinflip-game">
-                <h2>🪙 Coin Flip - 50/50 Instant Win</h2>
-                
-                <div class="coin-display" id="coin">
-                    <div class="coin-face">🪙</div>
+        const content = document.getElementById('gameContent');
+        content.innerHTML = `
+            <div style="text-align: center;">
+                <div id="coin" style="font-size: 8em; margin: 30px 0;">🪙</div>
+                <div style="margin: 20px 0;">
+                    <label style="font-size: 1.2em;">Bet Amount: </label>
+                    <input type="number" id="coinBet" value="5" min="5" max="500" style="padding: 10px; font-size: 1.1em; border-radius: 5px; border: 2px solid #FFB800; background: #2A3544; color: #FFB800; width: 100px;">
+                    <span style="color: #FFB800;"> eGold</span>
                 </div>
-                
-                <div class="bet-controls">
-                    <div class="bet-amount-selector">
-                        <button onclick="coinflipGame.changeBet(-10)">-10</button>
-                        <span>Bet: <span id="betAmount">${this.betAmount}</span> eGold</span>
-                        <button onclick="coinflipGame.changeBet(10)">+10</button>
+                <div style="margin: 20px 0;">
+                    <label style="font-size: 1.2em; display: block; margin-bottom: 10px;">Choose Side:</label>
+                    <div style="display: flex; gap: 20px; justify-content: center;">
+                        <button onclick="coinflipGame.flip('heads')" style="padding: 15px 40px; font-size: 1.2em; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer;">
+                            HEADS
+                        </button>
+                        <button onclick="coinflipGame.flip('tails')" style="padding: 15px 40px; font-size: 1.2em; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer;">
+                            TAILS
+                        </button>
                     </div>
                 </div>
-                
-                <div class="choice-buttons">
-                    <button class="choice-btn heads" onclick="coinflipGame.flip('heads')">
-                        <div class="coin-icon">👑</div>
-                        <div>HEADS</div>
-                        <div class="payout">Win 1.95x</div>
-                    </button>
-                    <button class="choice-btn tails" onclick="coinflipGame.flip('tails')">
-                        <div class="coin-icon">🦅</div>
-                        <div>TAILS</div>
-                        <div class="payout">Win 1.95x</div>
-                    </button>
-                </div>
-                
-                <div id="coinResult" class="result-message"></div>
-                
-                <div class="game-stats">
-                    <div class="stat">
-                        <span>Heads Count:</span>
-                        <span id="headsCount">0</span>
-                    </div>
-                    <div class="stat">
-                        <span>Tails Count:</span>
-                        <span id="tailsCount">0</span>
-                    </div>
+                <div id="coinResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
+                <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
+                    <p style="color: #FFB800;">Win 1.95x your bet!</p>
+                    <p style="color: #cccccc; font-size: 0.9em; margin-top: 10px;">Simple 50/50 game - pick your side!</p>
                 </div>
             </div>
         `;
     },
     
-    changeBet(amount) {
-        this.betAmount = Math.max(5, Math.min(1000, this.betAmount + amount));
-        document.getElementById('betAmount').textContent = this.betAmount;
-    },
-    
-    async flip(choice) {
-        try {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.info('COINFLIP_FLIP', { choice, bet: this.betAmount });
-            }
-            const balance = parseFloat(document.getElementById('userBalance').textContent);
-        if (balance < this.betAmount) {
-            this.showResult('Insufficient balance!', false);
+    flip(choice) {
+        const betInput = document.getElementById('coinBet');
+        const bet = parseFloat(betInput.value);
+        
+        if (bet < 5) {
+            document.getElementById('coinResult').innerHTML = '<span style="color: #e74c3c;">Minimum bet is 5 eGold!</span>';
             return;
         }
         
-        // Disable buttons
-        document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = true);
+        if (bet > balance) {
+            document.getElementById('coinResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
+            return;
+        }
         
         // Deduct bet
-        updateBalance(-this.betAmount);
+        updateBalance(-bet);
         
-        // Animate flip
-        await this.animateFlip();
-        
-        // Determine result (48% win rate for house edge)
-        const result = Math.random() < 0.48 ? choice : (choice === 'heads' ? 'tails' : 'heads');
-        const won = result === choice;
-        
-        // Display result
-        document.querySelector('.coin-face').textContent = result === 'heads' ? '👑' : '🦅';
-        
-        // Update stats
-        const countEl = document.getElementById(`${result}Count`);
-        countEl.textContent = parseInt(countEl.textContent) + 1;
-        
-        // Handle win/loss (1.95x payout for house edge)
-        if (won) {
-            const winAmount = this.betAmount * 1.95;
-            updateBalance(winAmount);
-            this.showResult(`🎉 ${result.toUpperCase()}! You won ${winAmount.toFixed(2)} eGold!`, true);
-            soundEffects.play('win');
-        } else {
-            this.showResult(`❌ ${result.toUpperCase()}! Better luck next time!`, false);
-            soundEffects.play('lose');
-        }
-        
-        // Re-enable buttons
-        setTimeout(() => {
-            document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = false);
-        }, 1000);
-        } catch (error) {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.error('COINFLIP_ERROR', {
-                    error: error.message,
-                    stack: error.stack
-                });
+        // Flip animation
+        const coin = document.getElementById('coin');
+        let flips = 0;
+        const flipInterval = setInterval(() => {
+            coin.textContent = flips % 2 === 0 ? '🟡' : '⚪';
+            flips++;
+            
+            if (flips >= 10) {
+                clearInterval(flipInterval);
+                
+                // House edge: 48% player win rate instead of 50%
+                const playerWins = Math.random() < 0.48;
+                const result = playerWins ? choice : (choice === 'heads' ? 'tails' : 'heads');
+                
+                coin.textContent = result === 'heads' ? '🟡' : '⚪';
+                
+                if (result === choice) {
+                    const payout = bet * 1.95; // House edge: 1.95x instead of 2x
+                    updateBalance(payout);
+                    document.getElementById('coinResult').innerHTML = `<span style="color: #2ecc71; font-size: 1.5em;">🎉 WIN! It's ${result}! +${payout.toFixed(2)} eGold</span>`;
+                } else {
+                    document.getElementById('coinResult').innerHTML = `<span style="color: #e74c3c;">It's ${result}. Try again!</span>`;
+                }
             }
-            console.error('Coinflip error:', error);
-        }
-    },
-    
-    async animateFlip() {
-        const coin = document.querySelector('.coin-display');
-        for (let i = 0; i < 10; i++) {
-            coin.style.transform = `rotateY(${i * 180}deg)`;
-            await new Promise(resolve => setTimeout(resolve, 50));
-        }
-        coin.style.transform = 'rotateY(0deg)';
-    },
-    
-    showResult(message, isWin) {
-        const resultEl = document.getElementById('coinResult');
-        resultEl.textContent = message;
-        resultEl.className = `result-message ${isWin ? 'win' : 'lose'}`;
-        setTimeout(() => resultEl.className = 'result-message', 3000);
+        }, 150);
     }
 };
+
+window.coinflipGame = coinflipGame;

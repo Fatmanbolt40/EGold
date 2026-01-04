@@ -1,184 +1,121 @@
-// Tonk Card Game - Clean Implementation with House Edge
+// Tonk Card Game
 const tonkGame = {
-    deck: [],
-    playerHand: [],
-    dealerHand: [],
-    discardPile: [],
-    currentBet: 20,
-    gamePhase: 'playing',
+    ante: 10,
     
     init() {
-        try {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.info('TONK_INIT', {});
-            }
-            this.newRound();
-            this.render();
-        } catch (error) {
-            if (typeof errorLogger !== 'undefined') {
-                errorLogger.error('TONK_INIT_ERROR', { error: error.message, stack: error.stack });
-            }
-            console.error('Tonk init error:', error);
-        }
-    },
-    
-    newRound() {
-        this.deck = texasholdemGame.createDeck();
-        texasholdemGame.shuffleDeck.call(this);
-        this.playerHand = Array(5).fill(null).map(() => this.drawCard());
-        this.dealerHand = Array(5).fill(null).map(() => this.drawCard());
-        this.discardPile = [this.drawCard()];
-        this.gamePhase = 'playing';
-    },
-    
-    drawCard() {
-        return this.deck.pop();
-    },
-    
-    render() {
-        const gameContent = document.getElementById('gameContent');
-        gameContent.innerHTML = `
-            <div class="tonk-table">
-                <h2>🎴 Tonk</h2>
-                <p>Get closest to 49 points without going over! Lower score wins.</p>
+        const content = document.getElementById('gameContent');
+        content.innerHTML = `
+            <div style="text-align: center;">
+                <h3 style="color: #FFB800; font-size: 1.5em; margin-bottom: 20px;">Tonk</h3>
+                <p style="color: #cccccc; margin-bottom: 20px;">Get closest to 49 without going over</p>
                 
-                <div class="game-info">
-                    <div>Bet: ${this.currentBet} eGold</div>
-                    <div>Deck: ${this.deck.length} cards</div>
-                </div>
-                
-                <div class="dealer-area">
-                    <h3>Dealer's Hand (${this.gamePhase === 'showdown' ? this.calculateScore(this.dealerHand) : '?'} points)</h3>
-                    <div class="hand">
-                        ${texasholdemGame.renderCards(this.dealerHand, this.gamePhase !== 'showdown')}
+                <div style="margin: 20px 0;">
+                    <div style="background: rgba(255, 184, 0, 0.1); padding: 15px; border-radius: 10px; display: inline-block;">
+                        <p style="color: #FFB800; font-size: 1.2em;">Ante: ${this.ante} eGold</p>
                     </div>
                 </div>
                 
-                <div class="discard-pile">
-                    <h3>Discard Pile</h3>
-                    <div class="card ${this.discardPile[0].suit === '♥' || this.discardPile[0].suit === '♦' ? 'red' : ''}">
-                        ${this.discardPile[0].rank}${this.discardPile[0].suit}
+                <div style="margin: 30px 0;">
+                    <h4 style="color: #FFB800;">Dealer's Hand</h4>
+                    <div id="dealerHand" style="font-size: 2em; margin: 10px 0;">🂠 🂠 🂠</div>
+                    <div id="dealerScore" style="font-size: 1.5em; color: #FFB800; margin-top: 10px;">Score: ???</div>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <h4 style="color: #FFB800;">Your Hand</h4>
+                    <div id="playerHand" style="font-size: 2em; margin: 10px 0;">🂠 🂠 🂠</div>
+                    <div id="playerScore" style="font-size: 1.5em; color: #FFB800; margin-top: 10px;">Score: ???</div>
+                </div>
+                
+                <button onclick="tonkGame.play()" style="padding: 15px 40px; font-size: 1.3em; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer; margin: 20px 0;">
+                    Play Hand (${this.ante} eGold)
+                </button>
+                
+                <div id="tonkResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
+                
+                <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
+                    <h3 style="color: #FFB800; margin-bottom: 10px;">Rules</h3>
+                    <div style="color: #cccccc;">
+                        <p>Face cards = 10 points</p>
+                        <p>Aces = 1 point</p>
+                        <p>Number cards = Face value</p>
+                        <p style="color: #e74c3c; margin-top: 10px;">Dealer wins ties</p>
                     </div>
                 </div>
-                
-                <div class="player-area">
-                    <h3>Your Hand (${this.calculateScore(this.playerHand)} points)</h3>
-                    <div class="hand">
-                        ${texasholdemGame.renderCards(this.playerHand)}
-                    </div>
-                </div>
-                
-                <div class="action-buttons">
-                    ${this.gamePhase === 'playing' ? `
-                        <button class="btn-action" onclick="tonkGame.drawFromDeck()">Draw from Deck</button>
-                        <button class="btn-action" onclick="tonkGame.drawFromDiscard()">Draw from Discard</button>
-                        <button class="btn-action" onclick="tonkGame.tonk()">Tonk (Knock)</button>
-                    ` : `
-                        <button class="btn-action" onclick="tonkGame.newGame()">New Round</button>
-                    `}
-                </div>
-                
-                <div id="tonkResult" class="result-message"></div>
             </div>
         `;
     },
     
-    calculateScore(hand) {
-        return hand.reduce((sum, card) => {
-            if (card.rank === 'A') return sum + 1;
-            if (['K', 'Q', 'J'].includes(card.rank)) return sum + 10;
-            return sum + parseInt(card.rank);
-        }, 0);
-    },
-    
-    drawFromDeck() {
-        if (this.deck.length === 0) {
-            this.showResult('Deck is empty!', false);
-            return;
-        }
-        this.playerHand.push(this.drawCard());
-        this.playerTurn();
-    },
-    
-    drawFromDiscard() {
-        this.playerHand.push(this.discardPile.pop());
-        this.playerTurn();
-    },
-    
-    playerTurn() {
-        const score = this.calculateScore(this.playerHand);
-        if (score > 49) {
-            this.bust();
-        } else {
-            this.dealerPlay();
-        }
-    },
-    
-    dealerPlay() {
-        // Dealer plays optimally with slight advantage
-        const dealerScore = this.calculateScore(this.dealerHand);
-        if (dealerScore < 40 && this.deck.length > 0) {
-            this.dealerHand.push(this.drawCard());
-        }
-        this.render();
-    },
-    
-    tonk() {
-        const balance = parseFloat(document.getElementById('userBalance').textContent);
-        if (balance < this.currentBet) {
-            this.showResult('Insufficient balance!', false);
+    play() {
+        if (balance < this.ante) {
+            document.getElementById('tonkResult').innerHTML = '<span style="color: #e74c3c;">Insufficient balance!</span>';
             return;
         }
         
-        updateBalance(-this.currentBet);
-        this.gamePhase = 'showdown';
+        updateBalance(-this.ante);
         
-        // Dealer plays to finish
-        while (this.calculateScore(this.dealerHand) < 42 && this.deck.length > 0) {
-            this.dealerHand.push(this.drawCard());
-        }
+        // Deal cards
+        const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+        const suits = ['♠', '♥', '♦', '♣'];
         
-        const playerScore = this.calculateScore(this.playerHand);
-        const dealerScore = this.calculateScore(this.dealerHand);
+        const getCard = () => ({
+            value: values[Math.floor(Math.random() * values.length)],
+            suit: suits[Math.floor(Math.random() * suits.length)]
+        });
         
-        this.render();
+        const getScore = (cards) => {
+            return cards.reduce((sum, card) => {
+                if (card.value === 'A') return sum + 1;
+                if (['J', 'Q', 'K'].includes(card.value)) return sum + 10;
+                return sum + parseInt(card.value);
+            }, 0);
+        };
         
-        if (playerScore > 49) {
-            this.showResult('Bust! You went over 49.', false);
-            soundEffects.play('lose');
-        } else if (dealerScore > 49) {
-            updateBalance(this.currentBet * 2);
-            this.showResult(`Dealer busts! You win ${this.currentBet * 2} eGold!`, true);
-            soundEffects.play('win');
-        } else if (playerScore < dealerScore) {
-            updateBalance(this.currentBet * 2);
-            this.showResult(`You win with ${playerScore} vs ${dealerScore}! +${this.currentBet * 2} eGold`, true);
-            soundEffects.play('win');
-        } else if (dealerScore < playerScore) {
-            this.showResult(`Dealer wins with ${dealerScore} vs ${playerScore}`, false);
-            soundEffects.play('lose');
+        const playerCards = [getCard(), getCard(), getCard()];
+        const dealerCards = [getCard(), getCard(), getCard()];
+        
+        const playerScore = getScore(playerCards);
+        const dealerScore = getScore(dealerCards);
+        
+        // Display
+        document.getElementById('playerHand').textContent = 
+            playerCards.map(c => `${c.value}${c.suit}`).join(' ');
+        document.getElementById('playerScore').textContent = `Score: ${playerScore}`;
+        
+        document.getElementById('dealerHand').textContent = 
+            dealerCards.map(c => `${c.value}${c.suit}`).join(' ');
+        document.getElementById('dealerScore').textContent = `Score: ${dealerScore}`;
+        
+        // Determine winner
+        const playerBust = playerScore > 49;
+        const dealerBust = dealerScore > 49;
+        
+        let result = '';
+        if (playerBust && dealerBust) {
+            result = '<span style="color: #FFB800;">Both bust - Dealer wins (house rule)</span>';
+        } else if (playerBust) {
+            result = '<span style="color: #e74c3c;">You bust! Dealer wins.</span>';
+        } else if (dealerBust) {
+            const payout = this.ante * 2;
+            updateBalance(payout);
+            result = `<span style="color: #2ecc71; font-size: 1.5em;">🎉 Dealer busts! YOU WIN! +${payout} eGold</span>`;
         } else {
-            // Dealer wins ties (house edge)
-            this.showResult(`Push at ${playerScore}, but dealer wins ties!`, false);
-            soundEffects.play('lose');
+            const diff = Math.abs(49 - playerScore);
+            const dealerDiff = Math.abs(49 - dealerScore);
+            
+            if (diff < dealerDiff) {
+                const payout = this.ante * 2;
+                updateBalance(payout);
+                result = `<span style="color: #2ecc71; font-size: 1.5em;">🎉 YOU WIN! +${payout} eGold</span>`;
+            } else if (diff === dealerDiff) {
+                result = '<span style="color: #FFB800;">Tie - Dealer wins (house rule)</span>';
+            } else {
+                result = '<span style="color: #e74c3c;">Dealer wins. Try again!</span>';
+            }
         }
-    },
-    
-    bust() {
-        this.gamePhase = 'showdown';
-        this.showResult('Bust! You went over 49.', false);
-        soundEffects.play('lose');
-        this.render();
-    },
-    
-    newGame() {
-        this.newRound();
-        this.render();
-    },
-    
-    showResult(message, isWin) {
-        const resultEl = document.getElementById('tonkResult');
-        resultEl.textContent = message;
-        resultEl.className = `result-message ${isWin ? 'win' : 'lose'}`;
+        
+        document.getElementById('tonkResult').innerHTML = result;
     }
 };
+
+window.tonkGame = tonkGame;
