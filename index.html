@@ -19,6 +19,7 @@
         
         body {
             background: linear-gradient(135deg, #0a1929 0%, #0d1b2a 100%);
+            background-attachment: fixed;
             color: #e6e6e6;
             min-height: 100vh;
             overflow-x: hidden;
@@ -27,7 +28,7 @@
         
         .lobby-container {
             display: flex;
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
             position: relative;
         }
@@ -112,6 +113,7 @@
             flex-direction: column;
             overflow: hidden;
             background: linear-gradient(rgba(15, 30, 48, 0.9), rgba(10, 20, 35, 0.9));
+            min-width: 0; /* Prevent flex item overflow */
         }
         
         /* Top Bar */
@@ -433,9 +435,30 @@
         }
         
         @media (max-width: 768px) {
+            body {
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+            
+            .lobby-container {
+                min-height: 100vh;
+                height: auto;
+                flex-direction: row;
+            }
+            
+            .main-content {
+                overflow-y: auto;
+                overflow-x: hidden;
+                height: 100vh;
+            }
+            
             .sidebar {
                 width: 60px;
                 padding: 15px 0;
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                flex-shrink: 0;
             }
             
             .sidebar:hover {
@@ -478,19 +501,22 @@
                 gap: 12px;
                 align-items: stretch;
                 padding: 15px;
+                flex-shrink: 0;
             }
             
             .logo-container {
                 gap: 10px;
                 justify-content: center;
+                flex-wrap: wrap;
             }
             
             .logo-text {
-                font-size: 1.5em;
+                font-size: 1.4em;
+                word-break: break-word;
             }
             
             .logo-icon {
-                font-size: 1.8em;
+                font-size: 1.6em;
             }
             
             .status-buttons {
@@ -541,12 +567,21 @@
             
             .games-table-container {
                 padding: 15px 10px;
+                overflow-x: auto;
+                overflow-y: visible;
+                flex: 1;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .games-table {
+                min-width: 550px;
             }
             
             .games-table th,
             .games-table td {
-                padding: 12px 10px;
+                padding: 12px 8px;
                 font-size: 0.85em;
+                white-space: nowrap;
             }
             
             .game-badge {
@@ -570,15 +605,22 @@
         }
         
         @media (max-width: 480px) {
+            .lobby-container {
+                flex-direction: row;
+            }
+            
             .sidebar {
                 width: 50px;
                 padding: 10px 0;
+                height: 100vh;
+                position: sticky;
+                top: 0;
             }
             
             .sidebar-logo {
-                width: 40px;
-                height: 40px;
-                font-size: 1.8em;
+                width: 38px;
+                height: 38px;
+                font-size: 1.6em;
                 margin-bottom: 15px;
             }
             
@@ -592,16 +634,23 @@
                 font-size: 1.2em;
             }
             
+            .main-content {
+                height: 100vh;
+                overflow-y: auto;
+            }
+            
             .top-bar {
-                padding: 10px;
+                padding: 10px 8px;
+                flex-shrink: 0;
             }
             
             .logo-text {
-                font-size: 1.2em;
+                font-size: 1.1em;
+                letter-spacing: 0.5px;
             }
             
             .logo-icon {
-                font-size: 1.5em;
+                font-size: 1.4em;
             }
             
             .status-btn {
@@ -657,16 +706,27 @@
             
             .games-table-container {
                 padding: 10px 5px;
+                flex: 1;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .games-table {
+                min-width: 480px;
             }
             
             .games-table th,
             .games-table td {
-                padding: 10px 8px;
+                padding: 10px 6px;
                 font-size: 0.8em;
+                white-space: nowrap;
             }
             
             .games-table th {
                 font-size: 0.75em;
+                position: sticky;
+                top: 0;
+                z-index: 10;
             }
             
             .game-type {
@@ -729,13 +789,16 @@
             .sidebar {
                 width: 45px;
                 padding: 8px 0;
+                height: 100vh;
+                position: sticky;
+                top: 0;
             }
             
             .sidebar-logo {
-                width: 35px;
-                height: 35px;
-                font-size: 1.5em;
-                margin-bottom: 12px;
+                width: 32px;
+                height: 32px;
+                font-size: 1.4em;
+                margin-bottom: 10px;
                 border: 1px solid #ffcd00;
             }
             
@@ -745,101 +808,134 @@
             }
             
             .sidebar-item i {
-                font-size: 1.1em;
+                font-size: 1em;
+            }
+            
+            .main-content {
+                height: 100vh;
+                overflow-y: auto;
+                overflow-x: hidden;
             }
             
             .top-bar {
-                padding: 8px;
-                gap: 10px;
+                padding: 8px 6px;
+                gap: 8px;
+                flex-shrink: 0;
             }
             
             .logo-container {
-                gap: 8px;
+                gap: 6px;
+                justify-content: flex-start;
             }
             
             .logo-text {
-                font-size: 1.1em;
-                letter-spacing: 0.5px;
+                font-size: 1em;
+                letter-spacing: 0px;
+                line-height: 1.2;
             }
             
             .logo-icon {
-                font-size: 1.3em;
+                font-size: 1.2em;
             }
             
             .status-buttons {
-                gap: 8px;
-            }
-            
-            .status-btn {
-                padding: 7px 10px;
-                font-size: 0.75em;
-                min-width: 90px;
-                gap: 5px;
-            }
-            
-            .balance-display {
-                gap: 8px;
+                gap: 6px;
                 flex-wrap: wrap;
             }
             
+            .status-btn {
+                padding: 8px 8px;
+                font-size: 0.7em;
+                min-width: 85px;
+                gap: 4px;
+                white-space: nowrap;
+            }
+            
+            .status-btn i {
+                font-size: 0.9em;
+            }
+            
+            .balance-display {
+                gap: 6px;
+                flex-wrap: wrap;
+                width: 100%;
+            }
+            
             .balance-box {
-                padding: 8px 12px;
-                min-width: 140px;
+                padding: 6px 10px;
+                flex: 1;
+                min-width: 120px;
             }
             
             .balance-amount {
-                font-size: 0.95em;
+                font-size: 0.9em;
+                line-height: 1.2;
             }
             
             .balance-usd {
-                font-size: 0.7em;
+                font-size: 0.65em;
             }
             
             .filter-panel {
-                padding: 12px 8px;
+                padding: 10px 6px;
+                flex-shrink: 0;
             }
             
             .filter-grid {
-                gap: 15px;
+                gap: 12px;
             }
             
             .filter-section h3 {
-                font-size: 0.85em;
-                margin-bottom: 8px;
+                font-size: 0.8em;
+                margin-bottom: 6px;
             }
             
             .filter-option {
-                padding: 5px 6px;
-                font-size: 0.8em;
+                padding: 6px 4px;
+                font-size: 0.75em;
             }
             
             .search-bar {
-                padding: 10px 8px;
+                padding: 8px 6px;
+                flex-shrink: 0;
             }
             
             .search-input {
-                padding: 10px 12px 10px 35px;
-                font-size: 0.85em;
+                padding: 10px 10px 10px 32px;
+                font-size: 16px; /* Prevent zoom on iOS */
             }
             
             .search-icon {
-                left: 12px;
+                left: 10px;
                 font-size: 0.85em;
             }
             
             .games-table-container {
                 padding: 8px 3px;
+                flex: 1;
+                overflow-x: auto;
+                overflow-y: visible;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .games-table {
+                min-width: 420px;
             }
             
             .games-table th,
             .games-table td {
-                padding: 8px 5px;
-                font-size: 0.75em;
+                padding: 8px 4px;
+                font-size: 0.72em;
+                white-space: nowrap;
             }
             
             .games-table th {
-                font-size: 0.7em;
-                padding: 10px 5px;
+                font-size: 0.68em;
+                padding: 10px 4px;
+                position: sticky;
+                top: 0;
+                background: linear-gradient(to bottom, #1a3d5c, #153048);
+                z-index: 10;
             }
             
             .game-badge {
