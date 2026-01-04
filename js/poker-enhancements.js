@@ -520,8 +520,8 @@ const pokerEnhancer = {
 };
 
 // Add CSS animations
-const style = document.createElement('style');
-style.textContent = `
+const pokerEnhancementStyle = document.createElement('style');
+pokerEnhancementStyle.textContent = `
     @keyframes cardFlip {
         0% { transform: rotateY(90deg) scale(0.8); opacity: 0; }
         50% { transform: rotateY(45deg) scale(0.9); }
@@ -566,7 +566,7 @@ style.textContent = `
         50% { box-shadow: inset 0 0 80px rgba(0,0,0,0.6), 0 25px 70px rgba(0,0,0,0.7), inset 0 2px 0 rgba(255,255,255,0.15); }
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(pokerEnhancementStyle);
 
 // Initialize
 if (document.readyState === 'loading') {

@@ -147,23 +147,5 @@ const diceraffleGame = {
         }, 1000);
     }
 };
-                } else {
-                    soundManager.playWin();
-                    particleSystem.createCoinBurst(window.innerWidth / 2, window.innerHeight / 2, prize);
-                    resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 WINNER! 🎉</span><br><span style="font-size: 1.4em;">Rolled ${result}!</span><br><span style="font-size: 1.5em; color: #FFB800;">+${prize.toFixed(2)} eGold <small style="color: #2ecc71;">($${(prize * 0.10).toFixed(2)})</small></span>`;
-                }
-                diceNumber.style.color = '#2ecc71';
-                const resultDiv = document.getElementById('diceResult');
-                resultDiv.className = 'game-result win';
-                resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 You rolled ${result}! 🎉</span><br><span style="font-size: 1.5em; color: #FFB800;">Prize: +${prize} eGold</span>`;
-            } else {
-                diceNumber.style.color = '#e74c3c';
-                const resultDiv = document.getElementById('diceResult');
-                resultDiv.className = 'game-result lose';
-                resultDiv.innerHTML = `<span style="font-size: 1.4em;">You rolled ${result}</span><br><span style="font-size: 1.2em;">💔 Try again!</span>`;
-            }
-        }, 1500);
-    }
-};
 
 window.diceraffleGame = diceraffleGame;

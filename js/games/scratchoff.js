@@ -476,8 +476,8 @@ const scratchoffGame = {
 };
 
 // Add CSS animations
-const style = document.createElement('style');
-style.textContent = `
+const scratchoffStyle = document.createElement('style');
+scratchoffStyle.textContent = `
     @keyframes bounceIn {
         0% {
             transform: scale(0) rotate(-180deg);
@@ -510,7 +510,7 @@ style.textContent = `
         }
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(scratchoffStyle);
 
 // Make it globally accessible
 window.scratchoffGame = scratchoffGame;
