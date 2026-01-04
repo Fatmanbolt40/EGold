@@ -6,7 +6,7 @@ const coinflipGame = {
             <div style="text-align: center;">
                 <div class="game-display">
                     <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">🪙 COIN FLIP 🪙</h3>
-                    <div id="coin" style="font-size: 10em; margin: 30px 0; filter: drop-shadow(0 8px 16px rgba(255, 184, 0, 0.4)); transition: all 0.3s ease;">🪙</div>
+                    <div id="coin">${VisualEnhancer.createCoinFlip()}</div>
                 </div>
                 <div class="game-controls">
                     <label style="font-size: 1.3em; color: #FFB800;">💰 Bet:</label>

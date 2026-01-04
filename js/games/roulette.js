@@ -6,7 +6,7 @@ const rouletteGame = {
             <div style="text-align: center;">
                 <div class="game-display">
                     <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 15px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">🎡 ROULETTE ROYALE 🎡</h3>
-                    <div id="rouletteWheel" style="font-size: 8em; margin: 20px 0; filter: drop-shadow(0 8px 16px rgba(255, 184, 0, 0.4));">🎡</div>
+                    <div id="rouletteWheel">${VisualEnhancer.createRouletteWheel()}</div>
                     <div id="rouletteNumber" style="font-size: 2.5em; color: #FFB800; min-height: 60px; margin: 15px 0; font-weight: bold; text-shadow: 0 0 15px rgba(255, 184, 0, 0.6);"></div>
                 </div>
                 
@@ -100,24 +100,16 @@ const rouletteGame = {
         const wheel = document.getElementById('rouletteWheel');
         const numberDisplay = document.getElementById('rouletteNumber');
         
-        let spins = 0;
-        const spinInterval = setInterval(() => {
-            wheel.style.transform = `rotate(${spins * 45}deg)`;
-            numberDisplay.textContent = Math.floor(Math.random() * 37);
-            spins++;
+        numberDisplay.textContent = 'Spinning...';
+        
+        setTimeout(() => {
+            // Generate result
+            const result = Math.floor(Math.random() * 37);
             
-            if (spins >= 20) {
-                clearInterval(spinInterval);
-                
-                // Generate result
-                const result = Math.floor(Math.random() * 37);
-                numberDisplay.textContent = result;
-                
-                let resultColor;
-                if (result === 0) {
-                    resultColor = 'green';
-                    numberDisplay.style.color = '#27ae60';
-                } else if (result <= 18) {
+            let resultColor;
+            if (result === 0) {
+                resultColor = 'green';
+            } else if (result <= 18) {
                     resultColor = 'red';
                     numberDisplay.style.color = '#e74c3c';
                 } else {
@@ -125,30 +117,36 @@ const rouletteGame = {
                     numberDisplay.style.color = '#ffffff';
                 }
                 
-                // Check win
-                let won = false;
-                let payout = 0;
-                
-                if (color && resultColor === color) {
-                    payout = bet * 1.9; // House edge: 1.9x instead of 2x
-                    won = true;
-                } else if (pickedNumber !== null && result === pickedNumber) {
-                    payout = bet * 30; // House edge: 30x instead of 36x
-                    won = true;
-                }
-                
-                if (won) {
-                    updateBalance(payout);
-                    const resultDiv = document.getElementById('rouletteResult');
-                    resultDiv.className = 'game-result win';
-                    resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 WINNER! 🎉</span><br><span style="font-size: 1.4em;">Number ${result} (${resultColor})!</span><br><span style="font-size: 1.5em; color: #FFB800;">+${payout.toFixed(2)} eGold</span>`;
-                } else {
-                    const resultDiv = document.getElementById('rouletteResult');
-                    resultDiv.className = 'game-result lose';
-                    resultDiv.innerHTML = `<span style="font-size: 1.4em;">Number ${result} (${resultColor})</span><br><span style="font-size: 1.2em;">💔 Try again!</span>`;
-                }
+                resultColor = 'black';
             }
-        }, 100);
+            
+            // Update wheel with result
+            wheel.innerHTML = VisualEnhancer.createRouletteWheel(result);
+            numberDisplay.textContent = `Number: ${result} (${resultColor.toUpperCase()})`;
+            
+            // Check win
+            let won = false;
+            let payout = 0;
+            
+            if (color && resultColor === color) {
+                payout = bet * 1.9; // House edge: 1.9x instead of 2x
+                won = true;
+            } else if (pickedNumber !== null && result === pickedNumber) {
+                payout = bet * 30; // House edge: 30x instead of 36x
+                won = true;
+            }
+            
+            if (won) {
+                updateBalance(payout);
+                const resultDiv = document.getElementById('rouletteResult');
+                resultDiv.className = 'game-result win';
+                resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 WINNER! 🎉</span><br><span style="font-size: 1.4em;">Number ${result} (${resultColor})!</span><br><span style="font-size: 1.5em; color: #FFB800;">+${payout.toFixed(2)} eGold</span>`;
+            } else {
+                const resultDiv = document.getElementById('rouletteResult');
+                resultDiv.className = 'game-result lose';
+                resultDiv.innerHTML = `<span style="font-size: 1.4em;">Number ${result} (${resultColor})</span><br><span style="font-size: 1.2em;">💔 Try again!</span>`;
+            }
+        }, 2000);
     }
 };
 

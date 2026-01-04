@@ -17,14 +17,8 @@ const slotsGame = {
         const content = document.getElementById('gameContent');
         content.innerHTML = `
             <div style="text-align: center;">
-                <div class="game-display" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 4px solid #FFB800; box-shadow: 0 0 30px rgba(255, 184, 0, 0.3);">
-                    <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">🎰 LUCKY SLOTS 🎰</h3>
-                    <div class="reel-container">
-                        <div id="reel1" class="reel glowing">🍒</div>
-                        <div id="reel2" class="reel glowing">🍒</div>
-                        <div id="reel3" class="reel glowing">🍒</div>
-                    </div>
-                </div>
+                ${VisualEnhancer.createSlotMachine(['🍒', '🍒', '🍒'])}
+                <div id="slotDisplay" style="margin: 20px 0;"></div>
                 <div class="game-controls">
                     <label style="font-size: 1.3em; color: #FFB800;">💰 Bet:</label>
                     <input type="number" id="slotsBet" value="5" min="5" max="100" class="game-input" style="width: 120px;">
@@ -81,28 +75,15 @@ const slotsGame = {
         updateBalance(-bet);
         
         // Spin animation
-        const reel1 = document.getElementById('reel1');
-        const reel2 = document.getElementById('reel2');
-        const reel3 = document.getElementById('reel3');
+        document.getElementById('slotDisplay').innerHTML = '<div style="color: #FFB800; font-size: 1.5em; animation: pulse 0.5s infinite;">🎰 SPINNING... 🎰</div>';
         
-        let spins = 0;
-        const spinInterval = setInterval(() => {
-            reel1.textContent = this.symbols[Math.floor(Math.random() * this.symbols.length)];
-            reel2.textContent = this.symbols[Math.floor(Math.random() * this.symbols.length)];
-            reel3.textContent = this.symbols[Math.floor(Math.random() * this.symbols.length)];
-            spins++;
+        setTimeout(() => {
+            // Final weighted result
+            const result1 = this.getWeightedSymbol();
+            const result2 = this.getWeightedSymbol();
+            const result3 = this.getWeightedSymbol();
             
-            if (spins >= 15) {
-                clearInterval(spinInterval);
-                
-                // Final weighted result
-                const result1 = this.getWeightedSymbol();
-                const result2 = this.getWeightedSymbol();
-                const result3 = this.getWeightedSymbol();
-                
-                reel1.textContent = result1;
-                reel2.textContent = result2;
-                reel3.textContent = result3;
+            document.getElementById('slotDisplay').innerHTML = VisualEnhancer.createSlotMachine([result1, result2, result3]);
                 
                 // Check win
                 if (result1 === result2 && result2 === result3) {
@@ -116,10 +97,9 @@ const slotsGame = {
                     const resultDiv = document.getElementById('slotsResult');
                     resultDiv.className = 'game-result lose';
                     resultDiv.innerHTML = '<span style="font-size: 1.3em;">💔 Try again!</span>';
-                    document.querySelectorAll('.reel').forEach(r => r.classList.remove('pulsing'));
                 }
-            }
-        }, 100);
+            }, 1500);
+        }, 1500);
     }
 };
 

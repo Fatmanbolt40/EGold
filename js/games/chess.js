@@ -11,8 +11,8 @@ const chessGame = {
                     <p style="font-size: 1.2em; color: #cccccc; margin-bottom: 20px;">Bet on a simulated chess match</p>
                 </div>
                 
-                <div class="game-board" style="background: repeating-conic-gradient(#fff 0% 25%, #2A3544 0% 50%) 50% / 50px 50px;">
-                    <div id="chessBoard" class="game-piece">♟️</div>
+                <div class="game-board">
+                    <div id="chessBoard">${VisualEnhancer.createChessBoard()}</div>
                 </div>
                 
                 <div style="margin: 25px 0; padding: 15px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">

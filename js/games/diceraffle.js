@@ -9,7 +9,7 @@ const diceraffleGame = {
                 <div class="game-display">
                     <h3 style="color: #FFB800; font-size: 1.8em; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 184, 0, 0.5);">🎲 16-SIDED DICE RAFFLE 🎲</h3>
                     
-                    <div id="dice" style="font-size: 10em; margin: 30px 0; filter: drop-shadow(0 8px 16px rgba(255, 184, 0, 0.4)); transition: all 0.3s ease;">🎲</div>
+                    <div id="dice" style="margin: 30px 0;">${VisualEnhancer.create3DDice(1)}</div>
                     <div id="diceNumber" style="font-size: 3.5em; color: #FFB800; min-height: 80px; font-weight: bold; text-shadow: 0 0 20px rgba(255, 184, 0, 0.8);"></div>
                 </div>
                 
@@ -49,67 +49,66 @@ const diceraffleGame = {
         const dice = document.getElementById('dice');
         const diceNumber = document.getElementById('diceNumber');
         
-        let rolls = 0;
-        const rollInterval = setInterval(() => {
-            diceNumber.textContent = Math.floor(Math.random() * 16) + 1;
-            dice.style.transform = `rotate(${rolls * 90}deg)`;
-            rolls++;
+        diceNumber.textContent = 'Rolling...';
+        
+        setTimeout(() => {
+            // House edge: Weighted toward low numbers
+            const weights = [
+                10, 10, 10, 10, 10, 10, 10, 10, 10,  // 1-9: 60% total
+                13,  // 10: 13%
+                13,  // 11: 13%
+                10,  // 12: 10%
+                7,   // 13: 7%
+                5,   // 14: 5%
+                3,   // 15: 3%
+                2    // 16: 2%
+            ];
             
-            if (rolls >= 15) {
-                clearInterval(rollInterval);
-                
-                // House edge: Weighted toward low numbers
-                const weights = [
-                    10, 10, 10, 10, 10, 10, 10, 10, 10,  // 1-9: 60% total
-                    13,  // 10: 13%
-                    13,  // 11: 13%
-                    10,  // 12: 10%
-                    7,   // 13: 7%
-                    5,   // 14: 5%
-                    3,   // 15: 3%
-                    2    // 16: 2%
-                ];
-                
-                const totalWeight = weights.reduce((a, b) => a + b, 0);
-                let random = Math.random() * totalWeight;
-                let result = 1;
-                
-                for (let i = 0; i < weights.length; i++) {
-                    random -= weights[i];
-                    if (random <= 0) {
-                        result = i + 1;
+            const totalWeight = weights.reduce((a, b) => a + b, 0);
+            let random = Math.random() * totalWeight;
+            let result = 1;
+            
+            for (let i = 0; i < weights.length; i++) {
+                random -= weights[i];
+                if (random <= 0) {
+                    result = i + 1;
                         break;
                     }
                 }
                 
                 diceNumber.textContent = result;
-                
-                const prizes = {
-                    16: 500,
-                    15: 250,
-                    14: 125,
-                    13: 60,
-                    12: 30,
-                    11: 20,
-                    10: 15
-                };
-                
-                const prize = prizes[result] || 0;
-                
-                if (prize > 0) {
-                    updateBalance(prize);
-                    diceNumber.style.color = '#2ecc71';
-                    const resultDiv = document.getElementById('diceResult');
-                    resultDiv.className = 'game-result win';
-                    resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 You rolled ${result}! 🎉</span><br><span style="font-size: 1.5em; color: #FFB800;">Prize: +${prize} eGold</span>`;
-                } else {
-                    diceNumber.style.color = '#e74c3c';
-                    const resultDiv = document.getElementById('diceResult');
-                    resultDiv.className = 'game-result lose';
-                    resultDiv.innerHTML = `<span style="font-size: 1.4em;">You rolled ${result}</span><br><span style="font-size: 1.2em;">💔 Try again!</span>`;
-                }
             }
-        }, 100);
+            
+            // Show result with dice visual  
+            const displayNum = result <= 6 ? result : Math.floor(Math.random() * 6) + 1;
+            dice.innerHTML = VisualEnhancer.create3DDice(displayNum);
+            diceNumber.textContent = result;
+            
+            const prizes = {
+                16: 500,
+                15: 250,
+                14: 125,
+                13: 60,
+                12: 30,
+                11: 20,
+                10: 15
+            };
+            
+            const prize = prizes[result] || 0;
+            
+            if (prize > 0) {
+                updateBalance(prize);
+                diceNumber.style.color = '#2ecc71';
+                const resultDiv = document.getElementById('diceResult');
+                resultDiv.className = 'game-result win';
+                resultDiv.innerHTML = `<span style="font-size: 1.8em;">🎉 You rolled ${result}! 🎉</span><br><span style="font-size: 1.5em; color: #FFB800;">Prize: +${prize} eGold</span>`;
+            } else {
+                diceNumber.style.color = '#e74c3c';
+                const resultDiv = document.getElementById('diceResult');
+                resultDiv.className = 'game-result lose';
+                resultDiv.innerHTML = `<span style="font-size: 1.4em;">You rolled ${result}</span><br><span style="font-size: 1.2em;">💔 Try again!</span>`;
+            }
+        }, 1500);
     }
 };
 
