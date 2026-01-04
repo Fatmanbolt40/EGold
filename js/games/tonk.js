@@ -55,7 +55,7 @@ const tonkGame = {
                 
                 <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
                     <h3 style="color: #FFB800; margin-bottom: 15px;">👑 Tonk Royale</h3>
-                    <p style="font-size: 1.1em; color: #cccccc; margin-bottom: 15px;">Classic rummy-style card game - get closest to 49 without busting</p>
+                    <p style="font-size: 1.1em; color: #cccccc; margin-bottom: 15px;">Classic rummy-style card game - Hit or Stand to get closest to 49 without busting!</p>
                     <h4 style="color: #FFB800; margin-bottom: 10px;">🎴 Card Values</h4>
                     <div style="color: #cccccc; line-height: 1.8; margin-bottom: 15px;">
                         <p><b>Face cards (J, Q, K):</b> 10 points each</p>
@@ -67,17 +67,58 @@ const tonkGame = {
                         <ul style="text-align: left; max-width: 450px; margin: 0 auto; color: #cccccc; line-height: 1.8;">
                             <li>Pay ante (<b>${this.ante} eGold</b>)</li>
                             <li>Both players dealt <b>3 cards</b></li>
+                            <li>Choose: <b style="color: #2ecc71;">Hit</b> (draw) or <b style="color: #FFB800;">Stand</b> (hold)</li>
                             <li>Goal: Get closest to <b style="color: #FFB800;">49 points</b></li>
                             <li><b>Don't bust!</b> Over 49 = automatic loss</li>
+                            <li>Dealer draws until 40+ or bust</li>
                             <li>Beat dealer's score to win</li>
                             <li><b>Dealer wins ties</b> (house advantage)</li>
                             <li>Win pays <b style="color: #FFB800;">2x ante!</b></li>
-                            <li>Strategic card values like Blackjack</li>
                         </ul>
                     </div>
                 </div>
             </div>
         `;
+    },
+    
+    playerCards: [],
+    dealerCards: [],
+    gameActive: false,
+    
+    getCard() {
+        const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+        const suits = ['♠', '♥', '♦', '♣'];
+        return {
+            value: values[Math.floor(Math.random() * values.length)],
+            suit: suits[Math.floor(Math.random() * suits.length)]
+        };
+    },
+    
+    getScore(cards) {
+        return cards.reduce((sum, card) => {
+            if (card.value === 'A') return sum + 1;
+            if (['J', 'Q', 'K'].includes(card.value)) return sum + 10;
+            return sum + parseInt(card.value);
+        }, 0);
+    },
+    
+    updateDisplay() {
+        const playerScore = this.getScore(this.playerCards);
+        document.getElementById('playerHand').textContent = 
+            this.playerCards.map(c => `${c.value}${c.suit}`).join(' ');
+        document.getElementById('playerScore').textContent = `Score: ${playerScore}`;
+        document.getElementById('playerScore').style.color = playerScore > 49 ? '#e74c3c' : '#2ecc71';
+        
+        if (!this.gameActive) {
+            const dealerScore = this.getScore(this.dealerCards);
+            document.getElementById('dealerHand').textContent = 
+                this.dealerCards.map(c => `${c.value}${c.suit}`).join(' ');
+            document.getElementById('dealerScore').textContent = `Score: ${dealerScore}`;
+            document.getElementById('dealerScore').style.color = dealerScore > 49 ? '#e74c3c' : '#2ecc71';
+        } else {
+            document.getElementById('dealerHand').textContent = '🂠 🂠 🂠';
+            document.getElementById('dealerScore').textContent = 'Hidden';
+        }
     },
     
     play() {
@@ -87,45 +128,58 @@ const tonkGame = {
         }
         
         updateBalance(-this.ante);
+        this.gameActive = true;
         
         // Track for VIP, achievements, and leaderboard
         if (typeof vipSystem !== 'undefined') vipSystem.trackWager(this.ante);
         if (typeof achievementSystem !== 'undefined') achievementSystem.trackBet(this.ante, 'Royal Tonk');
         if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWager(this.ante, 'Royal Tonk');
         
-        // Deal cards
-        const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-        const suits = ['♠', '♥', '♦', '♣'];
+        // Deal initial cards
+        this.playerCards = [this.getCard(), this.getCard(), this.getCard()];
+        this.dealerCards = [this.getCard(), this.getCard(), this.getCard()];
         
-        const getCard = () => ({
-            value: values[Math.floor(Math.random() * values.length)],
-            suit: suits[Math.floor(Math.random() * suits.length)]
-        });
+        this.updateDisplay();
         
-        const getScore = (cards) => {
-            return cards.reduce((sum, card) => {
-                if (card.value === 'A') return sum + 1;
-                if (['J', 'Q', 'K'].includes(card.value)) return sum + 10;
-                return sum + parseInt(card.value);
-            }, 0);
-        };
+        document.getElementById('tonkResult').innerHTML = `
+            <div style="margin: 20px 0;">
+                <button onclick="tonkGame.hit()" class="game-button" style="margin: 0 10px; padding: 15px 30px;">
+                    🎴 Hit (Draw Card)
+                </button>
+                <button onclick="tonkGame.stand()" class="game-button secondary" style="margin: 0 10px; padding: 15px 30px;">
+                    ✋ Stand (Hold)
+                </button>
+            </div>
+        `;
+    },
+    
+    hit() {
+        if (!this.gameActive) return;
         
-        const playerCards = [getCard(), getCard(), getCard()];
-        const dealerCards = [getCard(), getCard(), getCard()];
+        this.playerCards.push(this.getCard());
+        this.updateDisplay();
         
-        const playerScore = getScore(playerCards);
-        const dealerScore = getScore(dealerCards);
+        const playerScore = this.getScore(this.playerCards);
+        if (playerScore > 49) {
+            this.stand(); // Auto-stand if bust
+        }
+    },
+    
+    stand() {
+        if (!this.gameActive) return;
         
-        // Display
-        document.getElementById('playerHand').textContent = 
-            playerCards.map(c => `${c.value}${c.suit}`).join(' ');
-        document.getElementById('playerScore').textContent = `Score: ${playerScore}`;
+        this.gameActive = false;
         
-        document.getElementById('dealerHand').textContent = 
-            dealerCards.map(c => `${c.value}${c.suit}`).join(' ');
-        document.getElementById('dealerScore').textContent = `Score: ${dealerScore}`;
+        // Dealer plays
+        let dealerScore = this.getScore(this.dealerCards);
+        while (dealerScore < 40 && dealerScore <= 49) {
+            this.dealerCards.push(this.getCard());
+            dealerScore = this.getScore(this.dealerCards);
+        }
         
-        // Determine winner
+        this.updateDisplay();
+        
+        const playerScore = this.getScore(this.playerCards);
         const playerBust = playerScore > 49;
         const dealerBust = dealerScore > 49;
         

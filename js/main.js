@@ -12,11 +12,11 @@ const gamesDatabase = [
     { name: 'Instant Win Scratchers', category: 'Scratch-off', buyIn: 10, players: 'Single', badge: 'HOT', type: 'lottery', id: 'scratchoff' },
     { name: 'HexaRoll 16', category: 'Dice', buyIn: 15, players: 'Single', badge: '', type: 'quick', id: 'diceraffle' },
     { name: 'Royal Texas Hold\'em [Tournament]', category: 'Hold\'em', buyIn: 10, players: '8-max', badge: 'NEW', type: 'poker', id: 'texasholdem' },
-    { name: 'Royal Omaha Hi [Ring Game]', category: 'Omaha', buyIn: 10, players: '6-max', badge: '', type: 'poker', id: 'omaha' },
-    { name: 'Royal Crazy Pineapple [Sit & Go]', category: 'Pineapple', buyIn: 10, players: '6-max', badge: '', type: 'poker', id: 'pineapple' },
+    { name: 'Royal Omaha Hi [Quick Sim]', category: 'Omaha', buyIn: 10, players: 'Single', badge: '', type: 'poker', id: 'omaha' },
+    { name: 'Royal Crazy Pineapple [Quick Sim]', category: 'Pineapple', buyIn: 10, players: 'Single', badge: '', type: 'poker', id: 'pineapple' },
     { name: 'Royal Tonk Championship', category: 'Card Game', buyIn: 10, players: 'Single', badge: '', type: 'table', id: 'tonk' },
-    { name: 'Royal Chess Blitz', category: 'Chess', buyIn: 20, players: 'Single', badge: '', type: 'table', id: 'chess' },
-    { name: 'Royal Checkers Elite', category: 'Checkers', buyIn: 15, players: 'Single', badge: '', type: 'table', id: 'checkers' }
+    { name: 'Royal Chess Blitz [Quick Sim]', category: 'Chess', buyIn: 20, players: 'Single', badge: '', type: 'table', id: 'chess' },
+    { name: 'Royal Checkers Elite [Quick Sim]', category: 'Checkers', buyIn: 15, players: 'Single', badge: '', type: 'table', id: 'checkers' }
 ];
 
 // Update balance display

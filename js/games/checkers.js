@@ -26,8 +26,8 @@ const checkersGame = {
                 <div id="checkersResult" class="game-result"></div>
                 
                 <div class="game-info-box">
-                    <h3>� Royal Checkers</h3>
-                    <p style="font-size: 1.1em; color: #cccccc; margin: 10px 0;">Bet on a simulated checkers match with animated gameplay</p>
+                    <h3>🔴 Royal Checkers [Quick Simulation]</h3>
+                    <p style="font-size: 1.1em; color: #cccccc; margin: 10px 0;">⚡ Quick simulation game - automated match with instant random outcome (15% win rate)</p>
                     <h4 style="color: #FFB800; margin-top: 20px;">📊 Possible Outcomes</h4>
                     <div style="display: grid; gap: 10px; margin-top: 15px;">
                         <div style="padding: 12px; background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(39, 174, 96, 0.2)); border-radius: 8px; border: 2px solid #2ecc71;">
