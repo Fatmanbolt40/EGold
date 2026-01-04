@@ -43,19 +43,27 @@ function updateBalance(amount) {
 
 // Toggle sound on/off
 function toggleSound() {
-    const isEnabled = soundManager.toggle();
-    const btn = document.getElementById('soundBtn');
-    btn.textContent = isEnabled ? '🔊 Sound ON' : '🔇 Sound OFF';
-    soundManager.playButtonClick();
+    if (typeof soundManager !== 'undefined') {
+        const isEnabled = soundManager.toggle();
+        const btn = document.getElementById('soundBtn');
+        if (btn) btn.textContent = isEnabled ? '🔊 Sound ON' : '🔇 Sound OFF';
+        soundManager.playButtonClick();
+    }
 }
 
 // Populate games table
 function populateGamesTable() {
+    console.log('populateGamesTable called');
     const tbody = document.getElementById('gamesTableBody');
-    if (!tbody) return;
+    console.log('tbody element:', tbody);
+    if (!tbody) {
+        console.error('gamesTableBody element not found!');
+        return;
+    }
     
     // Filter to show only casino games in the main lobby
     const casinoGames = gamesDatabase.filter(game => game.type === 'casino');
+    console.log('Casino games filtered:', casinoGames.length, casinoGames);
     
     tbody.innerHTML = casinoGames.map(game => `
         <tr onclick="startGame('${game.id}')" style="cursor: pointer;">
@@ -127,18 +135,25 @@ function searchGames(query) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Content Loaded');
+    console.log('Games Database:', gamesDatabase);
+    
     const usdValue = (balance * eGoldToUSD).toFixed(2);
-    document.getElementById('balance').textContent = balance.toFixed(2);
+    const balanceEl = document.getElementById('balance');
+    if (balanceEl) {
+        balanceEl.textContent = balance.toFixed(2);
+    }
     if (document.getElementById('usdValue')) {
         document.getElementById('usdValue').textContent = `$${usdValue} USD`;
     }
     
     // Populate games table
+    console.log('Calling populateGamesTable');
     populateGamesTable();
     
     // Add click sound to all buttons
     document.addEventListener('click', function(e) {
-        if (e.target.tagName === 'BUTTON' || e.target.classList.contains('play-btn') || e.target.classList.contains('category-btn')) {
+        if ((e.target.tagName === 'BUTTON' || e.target.classList.contains('play-btn') || e.target.classList.contains('category-btn')) && typeof soundManager !== 'undefined') {
             soundManager.playButtonClick();
         }
     });
