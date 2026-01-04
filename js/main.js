@@ -449,51 +449,51 @@ function startGame(gameType) {
     switch(gameType) {
         case 'texasholdem':
             gameTitle.textContent = 'Texas Hold\'em Poker';
-            initTexasHoldem(gameContent);
+            texasholdemGame.init();
             break;
         case 'omaha':
             gameTitle.textContent = 'Omaha Poker';
-            initOmaha(gameContent);
+            omahaGame.init();
             break;
         case 'pineapple':
             gameTitle.textContent = 'Pineapple Poker';
-            initPineapple(gameContent);
+            pineappleGame.init();
             break;
         case 'tonk':
             gameTitle.textContent = 'Tonk';
-            initTonk(gameContent);
+            tonkGame.init();
             break;
         case 'chess':
             gameTitle.textContent = 'Chess Betting';
-            initChess(gameContent);
+            chessGame.init();
             break;
         case 'checkers':
             gameTitle.textContent = 'Checkers Betting';
-            initCheckers(gameContent);
+            checkersGame.init();
             break;
         case 'coinflip':
             gameTitle.textContent = 'Coin Flip';
-            initCoinFlip(gameContent);
+            coinflipGame.init();
             break;
         case 'roulette':
             gameTitle.textContent = 'European Roulette';
-            initRoulette(gameContent);
+            rouletteGame.init();
             break;
         case 'slots':
             gameTitle.textContent = 'Luxury Slots';
-            initSlots(gameContent);
+            slotsGame.init();
             break;
         case 'scratchoff':
             gameTitle.textContent = 'Scratch Off';
-            initScratchOff(gameContent);
+            scratchoffGame.init();
             break;
         case 'standardlottery':
             gameTitle.textContent = 'Standard Lottery';
-            initStandardLottery(gameContent);
+            lotteryGame.init();
             break;
         case 'diceraffle':
             gameTitle.textContent = '16-Sided Dice Raffle';
-            initDiceRaffle(gameContent);
+            diceraffleGame.init();
             break;
         case 'spinwheel':
             gameTitle.textContent = '🎡 Spin the Wheel';
