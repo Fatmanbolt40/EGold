@@ -148,21 +148,83 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Filter games by checkboxes (placeholder - can be enhanced)
-function filterGames(category) {
-    const cards = document.querySelectorAll('.game-card');
-    const buttons = document.querySelectorAll('.category-btn');
+// Filter games based on checkboxes
+function filterGames() {
+    const tbody = document.getElementById('gamesTableBody');
+    if (!tbody) return;
     
-    buttons.forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+    // Get all checkboxes
+    const checkboxes = document.querySelectorAll('.filter-option input[type="checkbox"]');
+    const checkedFilters = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.parentElement.textContent.trim());
     
-    cards.forEach(card => {
-        if (category === 'all' || card.dataset.category === category) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
+    // Filter casino games
+    const casinoGames = gamesDatabase.filter(game => game.type === 'casino');
+    
+    // Apply filters
+    const filtered = casinoGames.filter(game => {
+        // Game Type filters
+        const gameTypeMatch = 
+            checkedFilters.includes('Slots & Spins') && (game.category === 'Slots' || game.category === 'Coin Flip' || game.category === 'Roulette') ||
+            checkedFilters.includes('Card Games') && game.category === 'Card Game' ||
+            checkedFilters.includes('Lottery & Scratch') && (game.category === 'Scratch Cards' || game.category === 'Lottery' || game.category === 'Dice Roll');
+        
+        // Play Speed filters
+        const speedMatch =
+            checkedFilters.includes('Instant Win') && (game.buyIn <= 5) ||
+            checkedFilters.includes('Quick Play') && (game.buyIn > 5 && game.buyIn <= 15) ||
+            checkedFilters.includes('Extended') && (game.buyIn > 15);
+        
+        // Popularity filters
+        const popularityMatch =
+            checkedFilters.includes('Hot Games') && game.badge === 'HOT' ||
+            checkedFilters.includes('New Releases') && game.badge === 'NEW' ||
+            checkedFilters.includes('Classic Favorites') && !game.badge;
+        
+        // Bet Range filters
+        const betRangeMatch =
+            checkedFilters.includes('Low Stakes (1-5)') && (game.buyIn >= 1 && game.buyIn <= 5) ||
+            checkedFilters.includes('Medium (10-15)') && (game.buyIn >= 10 && game.buyIn <= 15) ||
+            checkedFilters.includes('High Roller (20+)') && (game.buyIn >= 20);
+        
+        // Show game if it matches any filter in each category
+        return gameTypeMatch || speedMatch || popularityMatch || betRangeMatch;
     });
+    
+    // If no filters are checked, show all casino games
+    const gamesToShow = checkedFilters.length === 0 ? casinoGames : filtered;
+    
+    // Update table
+    tbody.innerHTML = gamesToShow.map(game => `
+        <tr onclick="startGame('${game.id}')" style="cursor: pointer;">
+            <td class="game-type">
+                ${game.badge ? `<span class="game-badge">${game.badge}</span>` : ''}
+                <div class="game-name">${game.name}</div>
+            </td>
+            <td class="category-cell">
+                <i class="fas fa-dice category-icon"></i>
+                <span>${game.category}</span>
+            </td>
+            <td class="buyin-cell">
+                <div style="font-weight: 600; color: #2ecc71;">${game.buyIn} eGold</div>
+                <div style="color: #888; font-size: 0.85em;">$${(game.buyIn * eGoldToUSD).toFixed(2)} USD</div>
+            </td>
+            <td class="players-cell">
+                <div class="player-count">${game.players}</div>
+                <i class="fas fa-user"></i>
+            </td>
+            <td class="status-cell">
+                <span class="status-indicator"></span>
+                <button class="join-btn" onclick="event.stopPropagation(); startGame('${game.id}')">
+                    <i class="fas fa-play"></i> Play Now
+                </button>
+            </td>
+        </tr>
+    `).join('');
+    
+    // Show message if no games match
+    if (gamesToShow.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #888;">No games match the selected filters. Try adjusting your filters.</td></tr>';
+    }
 }
 
 // Start a game
