@@ -3,7 +3,17 @@ const diceraffleGame = {
     ticketPrice: 15,
     
     init() {
-        this.render();
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('DICERAFFLE_INIT', {});
+            }
+            this.render();
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('DICERAFFLE_INIT_ERROR', { error: error.message, stack: error.stack });
+            }
+            console.error('Dice raffle init error:', error);
+        }
     },
     
     render() {

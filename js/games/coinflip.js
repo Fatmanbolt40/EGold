@@ -3,7 +3,17 @@ const coinflipGame = {
     betAmount: 10,
     
     init() {
-        this.render();
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('COINFLIP_INIT', {});
+            }
+            this.render();
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('COINFLIP_INIT_ERROR', { error: error.message, stack: error.stack });
+            }
+            console.error('Coinflip init error:', error);
+        }
     },
     
     render() {
@@ -59,7 +69,11 @@ const coinflipGame = {
     },
     
     async flip(choice) {
-        const balance = parseFloat(document.getElementById('userBalance').textContent);
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('COINFLIP_FLIP', { choice, bet: this.betAmount });
+            }
+            const balance = parseFloat(document.getElementById('userBalance').textContent);
         if (balance < this.betAmount) {
             this.showResult('Insufficient balance!', false);
             return;
@@ -100,6 +114,15 @@ const coinflipGame = {
         setTimeout(() => {
             document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = false);
         }, 1000);
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('COINFLIP_ERROR', {
+                    error: error.message,
+                    stack: error.stack
+                });
+            }
+            console.error('Coinflip error:', error);
+        }
     },
     
     async animateFlip() {

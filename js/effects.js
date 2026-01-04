@@ -7,8 +7,12 @@ class EffectsManager {
 
     // Create confetti effect for big wins
     createConfetti(container, duration = 3000) {
-        const colors = ['#d4af37', '#ffd700', '#ffed4e', '#ff6b6b', '#4ecdc4', '#45b7d1'];
-        const particleCount = 100;
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.debug('EFFECTS_CONFETTI', { duration });
+            }
+            const colors = ['#d4af37', '#ffd700', '#ffed4e', '#ff6b6b', '#4ecdc4', '#45b7d1'];
+            const particleCount = 100;
         
         for (let i = 0; i < particleCount; i++) {
             setTimeout(() => {
@@ -42,6 +46,12 @@ class EffectsManager {
                 
                 animation.onfinish = () => particle.remove();
             }, i * 10);
+        }
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('EFFECTS_CONFETTI_ERROR', { error: error.message, stack: error.stack });
+            }
+            console.error('Confetti error:', error);
         }
     }
 

@@ -6,8 +6,18 @@ const lotteryGame = {
     numberRange: 49,
     
     init() {
-        this.selectedNumbers = [];
-        this.render();
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('LOTTERY_INIT', {});
+            }
+            this.selectedNumbers = [];
+            this.render();
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('LOTTERY_INIT_ERROR', { error: error.message, stack: error.stack });
+            }
+            console.error('Lottery init error:', error);
+        }
     },
     
     render() {

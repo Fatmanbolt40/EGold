@@ -11,9 +11,19 @@ const rouletteGame = {
     totalBet: 0,
     
     init() {
-        this.bets = [];
-        this.totalBet = 0;
-        this.render();
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('ROULETTE_INIT', {});
+            }
+            this.bets = [];
+            this.totalBet = 0;
+            this.render();
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('ROULETTE_INIT_ERROR', { error: error.message, stack: error.stack });
+            }
+            console.error('Roulette init error:', error);
+        }
     },
     
     render() {
@@ -105,7 +115,11 @@ const rouletteGame = {
     },
     
     async spin() {
-        if (this.bets.length === 0) {
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('ROULETTE_SPIN', { totalBet: this.totalBet, betsCount: this.bets.length });
+            }
+            if (this.bets.length === 0) {
             this.showResult('Place at least one bet!', false);
             return;
         }

@@ -14,11 +14,19 @@ class PhantomWallet {
 
     // Connect to Phantom wallet
     async connect() {
-        if (!this.isPhantomInstalled()) {
-            alert('Phantom wallet not detected! Please install Phantom from https://phantom.app');
-            window.open('https://phantom.app', '_blank');
-            return false;
-        }
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('PHANTOM_CONNECT_ATTEMPT', { timestamp: Date.now() });
+            }
+            
+            if (!this.isPhantomInstalled()) {
+                alert('Phantom wallet not detected! Please install Phantom from https://phantom.app');
+                window.open('https://phantom.app', '_blank');
+                if (typeof errorLogger !== 'undefined') {
+                    errorLogger.warn('PHANTOM_NOT_INSTALLED', {});
+                }
+                return false;
+            }
 
         try {
             const resp = await window.solana.connect();
@@ -43,6 +51,13 @@ class PhantomWallet {
 
             return true;
         } catch (err) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('PHANTOM_CONNECT_ERROR', {
+                    error: err.message,
+                    stack: err.stack,
+                    code: err.code
+                });
+            }
             console.error('Failed to connect to Phantom:', err);
             alert('Failed to connect to Phantom wallet. Please try again.');
             return false;
@@ -130,18 +145,38 @@ class PhantomWallet {
 
     // Auto-connect if previously authorized
     async autoConnect() {
-        if (this.isPhantomInstalled()) {
-            try {
-                const resp = await window.solana.connect({ onlyIfTrusted: true });
-                this.provider = window.solana;
-                this.publicKey = resp.publicKey.toString();
-                this.connected = true;
-                this.updateUI();
-                console.log('Auto-connected to Phantom');
-            } catch (err) {
-                // User hasn't authorized auto-connect yet
-                console.log('Auto-connect not authorized');
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('PHANTOM_AUTO_CONNECT_ATTEMPT', {});
             }
+            
+            if (this.isPhantomInstalled()) {
+                try {
+                    const resp = await window.solana.connect({ onlyIfTrusted: true });
+                    this.provider = window.solana;
+                    this.publicKey = resp.publicKey.toString();
+                    this.connected = true;
+                    this.updateUI();
+                    console.log('Auto-connected to Phantom');
+                    if (typeof errorLogger !== 'undefined') {
+                        errorLogger.info('PHANTOM_AUTO_CONNECTED', { publicKey: this.publicKey });
+                    }
+                } catch (err) {
+                    // User hasn't authorized auto-connect yet
+                    console.log('Auto-connect not authorized');
+                    if (typeof errorLogger !== 'undefined') {
+                        errorLogger.warn('PHANTOM_AUTO_CONNECT_NOT_AUTHORIZED', { error: err.message });
+                    }
+                }
+            }
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('PHANTOM_AUTO_CONNECT_ERROR', {
+                    error: error.message,
+                    stack: error.stack
+                });
+            }
+            console.error('Auto-connect error:', error);
         }
     }
 }

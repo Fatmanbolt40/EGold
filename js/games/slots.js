@@ -14,8 +14,18 @@ const slotsGame = {
     },
     
     init(betAmount) {
-        this.betAmount = betAmount || 10;
-        this.render();
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('SLOTS_INIT', { betAmount });
+            }
+            this.betAmount = betAmount || 10;
+            this.render();
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('SLOTS_INIT_ERROR', { error: error.message, stack: error.stack });
+            }
+            console.error('Slots init error:', error);
+        }
     },
     
     render() {
@@ -61,7 +71,11 @@ const slotsGame = {
     },
     
     async spin() {
-        const balance = parseFloat(document.getElementById('userBalance').textContent);
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('SLOTS_SPIN', { bet: this.betAmount });
+            }
+            const balance = parseFloat(document.getElementById('userBalance').textContent);
         if (balance < this.betAmount) {
             this.showResult('Insufficient balance!', false);
             return;
@@ -102,6 +116,15 @@ const slotsGame = {
         }
         
         spinBtn.disabled = false;
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('SLOTS_SPIN_ERROR', {
+                    error: error.message,
+                    stack: error.stack
+                });
+            }
+            console.error('Slots error:', error);
+        }
     },
     
     async animateReels() {

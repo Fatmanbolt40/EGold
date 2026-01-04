@@ -8,8 +8,18 @@ const tonkGame = {
     gamePhase: 'playing',
     
     init() {
-        this.newRound();
-        this.render();
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('TONK_INIT', {});
+            }
+            this.newRound();
+            this.render();
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('TONK_INIT_ERROR', { error: error.message, stack: error.stack });
+            }
+            console.error('Tonk init error:', error);
+        }
     },
     
     newRound() {

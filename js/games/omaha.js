@@ -9,8 +9,18 @@ const omahaGame = {
     gamePhase: 'betting',
     
     init() {
-        this.newRound();
-        this.render();
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('OMAHA_INIT', {});
+            }
+            this.newRound();
+            this.render();
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('OMAHA_INIT_ERROR', { error: error.message, stack: error.stack });
+            }
+            console.error('Omaha init error:', error);
+        }
     },
     
     newRound() {

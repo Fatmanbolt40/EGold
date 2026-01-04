@@ -3,7 +3,17 @@ const checkersGame = {
     bet: 30,
     
     init() {
-        this.render();
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('CHECKERS_INIT', {});
+            }
+            this.render();
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('CHECKERS_INIT_ERROR', { error: error.message, stack: error.stack });
+            }
+            console.error('Checkers init error:', error);
+        }
     },
     
     render() {

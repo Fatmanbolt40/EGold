@@ -3,8 +3,18 @@ const pineappleGame = {
     ...omahaGame,
     
     init() {
-        this.newRound();
-        this.render();
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('PINEAPPLE_INIT', {});
+            }
+            this.newRound();
+            this.render();
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('PINEAPPLE_INIT_ERROR', { error: error.message, stack: error.stack });
+            }
+            console.error('Pineapple init error:', error);
+        }
     },
     
     newRound() {

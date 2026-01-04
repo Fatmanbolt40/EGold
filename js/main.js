@@ -21,7 +21,11 @@ let stats = {
 
 // Update balance display
 function updateBalance(amount) {
-    currentBalance = parseFloat(currentBalance) + parseFloat(amount);
+    try {
+        if (typeof errorLogger !== 'undefined') {
+            errorLogger.debug('UPDATE_BALANCE', { amount, currentBalance });
+        }
+        currentBalance = parseFloat(currentBalance) + parseFloat(amount);
     document.getElementById('userBalance').textContent = currentBalance.toFixed(2);
     
     // Update stats
@@ -86,6 +90,16 @@ function updateBalance(amount) {
             '#2ecc71',
             '1.5rem'
         );
+    }
+    } catch (error) {
+        if (typeof errorLogger !== 'undefined') {
+            errorLogger.error('UPDATE_BALANCE_ERROR', {
+                error: error.message,
+                stack: error.stack,
+                amount
+            });
+        }
+        console.error('Update balance error:', error);
     }
 }
 

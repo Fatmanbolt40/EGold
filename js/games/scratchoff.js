@@ -4,7 +4,17 @@ const scratchoffGame = {
     prizes: [0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 10, 10, 20, 50, 100, 200],
     
     init() {
-        this.render();
+        try {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.info('SCRATCHOFF_INIT', {});
+            }
+            this.render();
+        } catch (error) {
+            if (typeof errorLogger !== 'undefined') {
+                errorLogger.error('SCRATCHOFF_INIT_ERROR', { error: error.message, stack: error.stack });
+            }
+            console.error('Scratchoff init error:', error);
+        }
     },
     
     render() {
