@@ -179,25 +179,6 @@ function startGame(gameType) {
     };
     document.body.appendChild(backBtn);
     
-    // Set game title
-    const titles = {
-        'slots': '🎰 Royal Triple Spin',
-        'coinflip': '🪙 Heads or Tails Royale',
-        'roulette': '🎡 Royal Wheel 36',
-        'texasholdem': '🃏 Royal Hold\'em',
-        'lottery': '🎟️ eGold Lotto 6/49',
-        'scratchoff': '💳 Instant Win Scratchers',
-        'diceraffle': '🎲 HexaRoll 16',
-        'chess': '♟️ Wager Chess',
-        'checkers': '🔴 Royal Checkers',
-        'omaha': '🎴 Omaha Royale',
-        'pineapple': '🍍 Pineapple Royale',
-        'tonk': '🎯 Tonk Royale',
-        'holdtable': '🎰 Royal Table Multiplayer'
-    };
-    
-    gameTitle.textContent = titles[gameType] || gameType;
-    
     // Initialize the specific game
     switch(gameType) {
         case 'slots':
