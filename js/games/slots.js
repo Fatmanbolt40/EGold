@@ -97,6 +97,11 @@ const slotsGame = {
         // Deduct bet
         updateBalance(-bet);
         
+        // Track wager for VIP system
+        if (typeof vipSystem !== 'undefined') {
+            vipSystem.trackWager(bet);
+        }
+        
         // Spin animation
         document.getElementById('slotDisplay').innerHTML = '<div style="color: #FFB800; font-size: 1.5em; animation: pulse 0.5s infinite;">🎰 SPINNING... 🎰</div>';
         

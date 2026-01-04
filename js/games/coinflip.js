@@ -76,6 +76,11 @@ const coinflipGame = {
         // Deduct bet
         updateBalance(-bet);
         
+        // Track wager for VIP system
+        if (typeof vipSystem !== 'undefined') {
+            vipSystem.trackWager(bet);
+        }
+        
         // Flip animation
         const coin = document.getElementById('coin');
         coin.innerHTML = VisualEnhancer.createCoinFlip(null, true);
