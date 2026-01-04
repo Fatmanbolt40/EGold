@@ -12,6 +12,12 @@
         <div class="header-content">
             <h1>🎰 Royal eGold Casino</h1>
             <div style="display: flex; align-items: center; gap: 20px;">
+                <button onclick="spectatorSystem.showLiveGamesFeed()" class="category-btn" style="padding: 8px 16px; font-size: 0.9em;">
+                    👁️ Live Games
+                </button>
+                <button onclick="spectatorSystem.showGlobalChat()" class="category-btn" style="padding: 8px 16px; font-size: 0.9em;">
+                    💬 Chat
+                </button>
                 <button onclick="toggleSound()" class="category-btn" id="soundBtn" style="padding: 8px 16px; font-size: 0.9em;">
                     🔊 Sound ON
                 </button>
@@ -163,9 +169,10 @@
     <!-- Scripts -->
     <script src="js/sound-effects.js"></script>
     <script src="js/particle-effects.js"></script>
-    <script src="js/main.js"></script>
     <script src="js/visual-enhancements.js"></script>
+    <script src="js/spectator-system.js"></script>
     <script src="js/pvp-system.js"></script>
+    <script src="js/main.js"></script>
     <script src="js/games/slots.js"></script>
     <script src="js/games/coinflip.js"></script>
     <script src="js/games/roulette.js"></script>
