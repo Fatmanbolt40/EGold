@@ -59,6 +59,24 @@ const omahaGame = {
                 </button>
                 
                 <div id="omahaResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
+                
+                <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
+                    <h3 style="color: #FFB800; margin-bottom: 15px;">👑 Omaha Royale</h3>
+                    <p style="font-size: 1.1em; color: #cccccc; margin-bottom: 15px;">4 hole cards variant - must use exactly 2 from hand + 3 from board</p>
+                    <div style="margin-top: 15px; padding: 15px; background: rgba(46, 204, 113, 0.1); border-radius: 10px; border: 2px solid #2ecc71;">
+                        <h4 style="color: #2ecc71; margin-bottom: 10px;">📜 Game Rules</h4>
+                        <ul style="text-align: left; max-width: 450px; margin: 0 auto; color: #cccccc; line-height: 1.8;">
+                            <li>Pay ante (<b>${this.ante} eGold</b>)</li>
+                            <li>Receive <b>4 hole cards</b> (vs. 2 in Hold'em)</li>
+                            <li><b>5 community cards</b> dealt</li>
+                            <li><b>Must use exactly 2</b> hole cards + 3 community</li>
+                            <li>Cannot use 3 or 4 hole cards</li>
+                            <li>More possibilities = bigger hands</li>
+                            <li>Beat dealer to win <b style="color: #FFB800;">2x ante!</b></li>
+                            <li>Same hand rankings as Hold'em</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         `;
     },

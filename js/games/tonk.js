@@ -54,12 +54,26 @@ const tonkGame = {
                 <div id="tonkResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
                 
                 <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
-                    <h3 style="color: #FFB800; margin-bottom: 10px;">Rules</h3>
-                    <div style="color: #cccccc;">
-                        <p>Face cards = 10 points</p>
-                        <p>Aces = 1 point</p>
-                        <p>Number cards = Face value</p>
-                        <p style="color: #e74c3c; margin-top: 10px;">Dealer wins ties</p>
+                    <h3 style="color: #FFB800; margin-bottom: 15px;">👑 Tonk Royale</h3>
+                    <p style="font-size: 1.1em; color: #cccccc; margin-bottom: 15px;">Classic rummy-style card game - get closest to 49 without busting</p>
+                    <h4 style="color: #FFB800; margin-bottom: 10px;">🎴 Card Values</h4>
+                    <div style="color: #cccccc; line-height: 1.8; margin-bottom: 15px;">
+                        <p><b>Face cards (J, Q, K):</b> 10 points each</p>
+                        <p><b>Aces:</b> 1 point</p>
+                        <p><b>Number cards:</b> Face value (2-10)</p>
+                    </div>
+                    <div style="margin-top: 15px; padding: 15px; background: rgba(46, 204, 113, 0.1); border-radius: 10px; border: 2px solid #2ecc71;">
+                        <h4 style="color: #2ecc71; margin-bottom: 10px;">📜 Game Rules</h4>
+                        <ul style="text-align: left; max-width: 450px; margin: 0 auto; color: #cccccc; line-height: 1.8;">
+                            <li>Pay ante (<b>${this.ante} eGold</b>)</li>
+                            <li>Both players dealt <b>3 cards</b></li>
+                            <li>Goal: Get closest to <b style="color: #FFB800;">49 points</b></li>
+                            <li><b>Don't bust!</b> Over 49 = automatic loss</li>
+                            <li>Beat dealer's score to win</li>
+                            <li><b>Dealer wins ties</b> (house advantage)</li>
+                            <li>Win pays <b style="color: #FFB800;">2x ante!</b></li>
+                            <li>Strategic card values like Blackjack</li>
+                        </ul>
                     </div>
                 </div>
             </div>

@@ -55,6 +55,24 @@ const pineappleGame = {
                 </button>
                 
                 <div id="pineappleResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
+                
+                <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
+                    <h3 style="color: #FFB800; margin-bottom: 15px;">👑 Pineapple Royale</h3>
+                    <p style="font-size: 1.1em; color: #cccccc; margin-bottom: 15px;">Exotic poker variant - start with 3 cards, discard 1 after the flop</p>
+                    <div style="margin-top: 15px; padding: 15px; background: rgba(46, 204, 113, 0.1); border-radius: 10px; border: 2px solid #2ecc71;">
+                        <h4 style="color: #2ecc71; margin-bottom: 10px;">📜 Game Rules</h4>
+                        <ul style="text-align: left; max-width: 450px; margin: 0 auto; color: #cccccc; line-height: 1.8;">
+                            <li>Pay ante (<b>${this.ante} eGold</b>)</li>
+                            <li>Receive <b>3 hole cards</b> (not 2)</li>
+                            <li>Flop: <b>3 community cards</b> revealed</li>
+                            <li><b>Discard 1</b> hole card (strategic choice!)</li>
+                            <li>Turn & River complete the board</li>
+                            <li>Play with final <b>2 hole + 5 community</b></li>
+                            <li>Beat dealer to win <b style="color: #FFB800;">2x ante!</b></li>
+                            <li>Higher variance than standard Hold'em</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         `;
     },

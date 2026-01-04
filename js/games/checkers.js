@@ -26,17 +26,31 @@ const checkersGame = {
                 <div id="checkersResult" class="game-result"></div>
                 
                 <div class="game-info-box">
-                    <h3>📊 Outcomes</h3>
+                    <h3>� Royal Checkers</h3>
+                    <p style="font-size: 1.1em; color: #cccccc; margin: 10px 0;">Bet on a simulated checkers match with animated gameplay</p>
+                    <h4 style="color: #FFB800; margin-top: 20px;">📊 Possible Outcomes</h4>
                     <div style="display: grid; gap: 10px; margin-top: 15px;">
                         <div style="padding: 12px; background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(39, 174, 96, 0.2)); border-radius: 8px; border: 2px solid #2ecc71;">
-                            <span style="font-size: 1.3em;">👑</span> Win: <b style="color: #2ecc71; font-size: 1.3em;">45 eGold</b> <small style="color: #cccccc;">(15% chance)</small>
+                            <span style="font-size: 1.3em;">👑</span> Win (King Me!): <b style="color: #2ecc71; font-size: 1.3em;">45 eGold</b> <small style="color: #cccccc;">(15% chance)</small>
                         </div>
                         <div style="padding: 10px; background: rgba(255, 184, 0, 0.1); border-radius: 8px;">
-                            ⚖️ Draw: <b style="color: #FFB800;">15 eGold</b> <small style="color: #cccccc;">(10% chance)</small>
+                            ⚖️ Draw (Stalemate): <b style="color: #FFB800;">15 eGold</b> <small style="color: #cccccc;">(10% chance - bet returned)</small>
                         </div>
                         <div style="padding: 10px; background: rgba(231, 76, 60, 0.1); border-radius: 8px;">
                             💔 Lose: <b style="color: #e74c3c;">0 eGold</b> <small style="color: #cccccc;">(75% chance)</small>
                         </div>
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(46, 204, 113, 0.1); border-radius: 10px; border: 2px solid #2ecc71;">
+                        <h4 style="color: #2ecc71; margin-bottom: 10px;">📜 Game Rules</h4>
+                        <ul style="text-align: left; max-width: 450px; margin: 0 auto; color: #cccccc; line-height: 1.8;">
+                            <li>Place bet of <b>15 eGold</b></li>
+                            <li>Watch <b>animated match</b> simulation</li>
+                            <li>15% chance to win (King promotion)</li>
+                            <li>10% chance for draw (bet returned)</li>
+                            <li>Win pays <b style="color: #FFB800;">3x your bet!</b></li>
+                            <li>Quick-play format (10 seconds)</li>
+                            <li>Results determined by RNG simulation</li>
+                        </ul>
                     </div>
                 </div>
             </div>
