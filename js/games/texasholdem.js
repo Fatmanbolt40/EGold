@@ -9,45 +9,94 @@ const texasholdemGame = {
     
     initSolo() {
         const content = document.getElementById('gameContent');
+        const vipLevel = typeof vipSystem !== 'undefined' ? vipSystem.getCurrentLevel().level : 0;
+        
         content.innerHTML = `
             <div style="text-align: center;">
-                <h3 style="color: #FFB800; font-size: 1.5em; margin-bottom: 20px;">Texas Hold'em Poker</h3>
-                
-                <div style="margin: 20px 0;">
-                    <div style="background: rgba(255, 184, 0, 0.1); padding: 15px; border-radius: 10px; display: inline-block;">
-                        <p style="color: #FFB800; font-size: 1.2em;">Ante: ${this.ante} eGold</p>
-                    </div>
+                <!-- WPT-Style Header -->
+                <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #FFB800; box-shadow: 0 4px 20px rgba(255,184,0,0.3);">
+                    <h3 style="color: #FFB800; font-size: 2em; margin: 0; text-shadow: 0 0 20px rgba(255,184,0,0.6);">♠️ ROYAL TEXAS HOLD'EM ♥️</h3>
+                    <p style="color: #888; margin: 10px 0 0 0;">WPT Professional Style</p>
                 </div>
                 
-                <!-- Poker Table -->
-                <div style="background: linear-gradient(135deg, #1a5f1a 0%, #0d4a0d 100%); padding: 40px; border-radius: 20px; border: 5px solid #8B4513; box-shadow: 0 10px 40px rgba(0,0,0,0.5); max-width: 900px; margin: 30px auto;">
-                    <div style="margin: 20px 0;">
-                        <h4 style="color: #FFB800; margin-bottom: 10px;">Dealer's Hand</h4>
-                        <div id="dealerHand">${VisualEnhancer.createCard('?', 'spades', true)}${VisualEnhancer.createCard('?', 'spades', true)}</div>
-                    </div>
-                    
-                    <div style="margin: 30px 0;">
-                        <h4 style="color: #FFB800; margin-bottom: 10px;">Community Cards</h4>
-                        <div id="communityCards">
-                            ${VisualEnhancer.createCard('?', 'spades', true)}
-                            ${VisualEnhancer.createCard('?', 'spades', true)}
-                            ${VisualEnhancer.createCard('?', 'spades', true)}
-                            ${VisualEnhancer.createCard('?', 'spades', true)}
-                            ${VisualEnhancer.createCard('?', 'spades', true)}
+                <!-- Quick Actions -->
+                <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;">
+                    <button onclick="pokerEnhancer.showHandHistory()" style="background: linear-gradient(135deg, #3498db, #2980b9); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(52,152,219,0.3);">
+                        📜 Hand History
+                    </button>
+                    <button onclick="pokerEnhancer.showQuickChat()" style="background: linear-gradient(135deg, #9b59b6, #8e44ad); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(155,89,182,0.3);">
+                        💬 Quick Chat
+                    </button>
+                </div>
+                
+                <!-- Premium Poker Table -->
+                ${pokerEnhancer.createPremiumTable('holdem')}
+                
+                <script>
+                    // Add table content with player seats
+                    document.getElementById('tableContent').innerHTML = \`
+                        ${pokerEnhancer.createPlayerSeat('dealer', 'Dealer', 1000, false, 0)}
+                        ${pokerEnhancer.createPlayerSeat('player', 'You', balance, true, ${vipLevel})}
+                        
+                        <div style="position: relative; z-index: 2; margin-top: 20px;">
+                            <div style="margin: 20px 0;">
+                                <div style="color: #888; font-size: 0.9em; margin-bottom: 10px;">Dealer</div>
+                                <div id="dealerHand">${pokerEnhancer.createEnhancedCard('?', '♠', true)}${pokerEnhancer.createEnhancedCard('?', '♠', true)}</div>
+                            </div>
+                            
+                            <div style="margin: 30px 0;">
+                                <div style="color: #FFB800; font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">🎴 Community Cards 🎴</div>
+                                <div id="communityCards" style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; display: inline-block;">
+                                    ${pokerEnhancer.createEnhancedCard('?', '♠', true)}
+                                    ${pokerEnhancer.createEnhancedCard('?', '♠', true)}
+                                    ${pokerEnhancer.createEnhancedCard('?', '♠', true)}
+                                    ${pokerEnhancer.createEnhancedCard('?', '♠', true)}
+                                    ${pokerEnhancer.createEnhancedCard('?', '♠', true)}
+                                </div>
+                            </div>
+                            
+                            <div style="margin: 20px 0;">
+                                <div style="color: #FFB800; font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">Your Hand</div>
+                                <div id="playerHand">${pokerEnhancer.createEnhancedCard('?', '♠', true)}${pokerEnhancer.createEnhancedCard('?', '♠', true)}</div>
+                            </div>
+                            
+                            <!-- Pot Display -->
+                            <div id="potDisplay" style="
+                                position: absolute;
+                                top: 50%;
+                                right: -100px;
+                                transform: translateY(-50%);
+                                background: rgba(0,0,0,0.7);
+                                padding: 15px;
+                                border-radius: 10px;
+                                border: 2px solid #FFB800;
+                                min-width: 120px;
+                            ">
+                                <div style="color: #888; font-size: 0.9em;">Pot</div>
+                                <div style="color: #FFB800; font-size: 1.5em; font-weight: bold;">${this.ante}</div>
+                                ${pokerEnhancer.createChipStack(this.ante)}
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div style="margin: 20px 0;">
-                        <h4 style="color: #FFB800; margin-bottom: 10px;">Your Hand</h4>
-                        <div id="playerHand">${VisualEnhancer.createCard('?', 'spades', true)}${VisualEnhancer.createCard('?', 'spades', true)}</div>
-                    </div>
-                </div>
+                    \`;
+                </script>
                 
-                <button onclick="texasholdemGame.play()" style="padding: 15px 40px; font-size: 1.3em; background: #FFB800; border: none; border-radius: 8px; color: #1A2332; font-weight: bold; cursor: pointer; margin: 20px 0;">
-                    Play Hand (${this.ante} eGold)
+                <button onclick="texasholdemGame.play()" class="game-button" style="
+                    padding: 18px 50px; 
+                    font-size: 1.4em; 
+                    background: linear-gradient(135deg, #FFB800, #d4af37); 
+                    border: none; 
+                    border-radius: 12px; 
+                    color: #1A2332; 
+                    font-weight: bold; 
+                    cursor: pointer; 
+                    margin: 30px 0;
+                    box-shadow: 0 6px 20px rgba(255,184,0,0.4);
+                    transition: all 0.3s ease;
+                ">
+                    🎰 Deal Hand (${this.ante} eGold)
                 </button>
                 
-                <div id="pokerResult" style="margin-top: 20px; font-size: 1.3em; min-height: 30px;"></div>
+                <div id="pokerResult" class="game-result" style="margin-top: 20px; font-size: 1.4em; min-height: 40px; font-weight: bold;"></div>
                 
                 <div style="margin-top: 30px; padding: 20px; background: rgba(255, 184, 0, 0.1); border-radius: 10px; border: 2px solid #FFB800;">
                     <h3 style="color: #FFB800; margin-bottom: 15px;">👑 Royal Hold'em</h3>
@@ -137,39 +186,72 @@ const texasholdemGame = {
         setTimeout(() => {
             soundManager.playCardDeal();
             document.getElementById('playerHand').innerHTML = 
-                playerCards.map(c => `<div class="card-deal">${VisualEnhancer.createCard(c.value, suitMap[c.suit])}</div>`).join('');
+                playerCards.map(c => pokerEnhancer.createEnhancedCard(c.value, c.suit)).join('');
         }, 300);
         
         setTimeout(() => {
             soundManager.playCardDeal();
             document.getElementById('communityCards').innerHTML = 
-                community.map((c, i) => `<div class="card-deal" style="animation-delay: ${i * 0.1}s">${VisualEnhancer.createCard(c.value, suitMap[c.suit])}</div>`).join('');
+                community.map((c, i) => `<div style="display: inline-block; animation: cardFlip 0.6s ease ${i * 0.1}s;">${pokerEnhancer.createEnhancedCard(c.value, c.suit)}</div>`).join('');
         }, 600);
         
         setTimeout(() => {
             soundManager.playCardDeal();
             document.getElementById('dealerHand').innerHTML = 
-                dealerCards.map(c => `<div class="card-flip">${VisualEnhancer.createCard(c.value, suitMap[c.suit])}</div>`).join('');
+                dealerCards.map(c => pokerEnhancer.createEnhancedCard(c.value, c.suit)).join('');
             
             // Evaluate hands (simplified)
             const playerScore = this.evaluateHand([...playerCards, ...community]);
             const dealerScore = this.evaluateHand([...dealerCards, ...community]) + 0.5; // House edge
             
+            let result, payout = 0;
+            
             if (playerScore > dealerScore) {
-                const payout = this.ante * 2;
+                result = 'win';
+                payout = this.ante * 2;
                 updateBalance(payout);
+                
+                // Track win for achievements and leaderboard
+                if (typeof achievementSystem !== 'undefined') achievementSystem.trackWin(payout);
+                if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackWin(payout);
+                
                 soundManager.playWin();
                 particleSystem.createChipStack(window.innerWidth / 2, window.innerHeight / 2, 10);
                 const resultDiv = document.getElementById('pokerResult');
                 resultDiv.className = 'win-effect';
                 resultDiv.innerHTML = `<span style="color: #2ecc71; font-size: 1.5em;">🎉 YOU WIN! +${payout} eGold <small style="color: #2ecc71;">($${(payout * 0.10).toFixed(2)})</small></span>`;
             } else if (playerScore === dealerScore) {
+                result = 'draw';
                 soundManager.playLoss();
+                
+                // Track loss for achievements
+                if (typeof achievementSystem !== 'undefined') achievementSystem.trackLoss();
+                if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackLoss();
+                
                 document.getElementById('pokerResult').innerHTML = '<span style="color: #FFB800;">Push - Dealer wins ties (house rule)</span>';
             } else {
+                result = 'loss';
                 soundManager.playLoss();
+                
+                // Track loss for achievements
+                if (typeof achievementSystem !== 'undefined') achievementSystem.trackLoss();
+                if (typeof leaderboardSystem !== 'undefined') leaderboardSystem.trackLoss();
+                
                 document.getElementById('pokerResult').className = 'loss-effect';
                 document.getElementById('pokerResult').innerHTML = '<span style="color: #e74c3c;">Dealer wins. Try again!</span>';
+            }
+            
+            // Record hand in history
+            if (typeof pokerEnhancer !== 'undefined') {
+                pokerEnhancer.recordHand(
+                    'Royal Texas Hold\'em',
+                    playerCards,
+                    dealerCards,
+                    community,
+                    result,
+                    this.ante,
+                    payout
+                );
             }
         }, 900);
     },
