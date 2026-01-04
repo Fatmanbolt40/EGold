@@ -124,10 +124,6 @@ function searchGames(query) {
         </tr>
     `).join('');
 }
-            </td>
-        </tr>
-    `).join('');
-}
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
