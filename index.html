@@ -891,8 +891,38 @@
                 </div>
             </div>
             
+            <!-- Game Type Tabs -->
+            <div style="background: rgba(15, 30, 48, 0.7); padding: 20px 30px; border-bottom: 1px solid rgba(74, 144, 164, 0.2); display: flex; gap: 15px; align-items: center;">
+                <h3 style="color: #9cb4bf; margin: 0; font-size: 1.1em;"><i class="fas fa-gamepad"></i> Game Library:</h3>
+                <button id="casinoTab" onclick="switchGameTab('casino')" style="
+                    background: linear-gradient(135deg, #FFB800, #FF8C00);
+                    color: #0a1929;
+                    border: none;
+                    padding: 10px 25px;
+                    border-radius: 25px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    box-shadow: 0 4px 15px rgba(255, 184, 0, 0.4);
+                    transition: all 0.3s ease;
+                ">
+                    <i class="fas fa-dice"></i> Casino Games (7)
+                </button>
+                <button id="tournamentTab" onclick="switchGameTab('tournament')" style="
+                    background: rgba(74, 144, 164, 0.3);
+                    color: #9cb4bf;
+                    border: 1px solid rgba(74, 144, 164, 0.5);
+                    padding: 10px 25px;
+                    border-radius: 25px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                ">
+                    <i class="fas fa-trophy"></i> Tournament Games (5)
+                </button>
+            </div>
+            
             <!-- Filter Panel -->
-            <div class="filter-panel">
+            <div class="filter-panel" id="filterPanel">
                 <div class="filter-grid">
                     <div class="filter-section">
                         <h3><i class="fas fa-dice"></i> Game Types</h3>

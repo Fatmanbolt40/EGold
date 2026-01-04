@@ -159,6 +159,90 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Track current game tab
+let currentGameTab = 'casino';
+
+// Switch between casino and tournament games
+function switchGameTab(tab) {
+    currentGameTab = tab;
+    
+    // Update button styles
+    const casinoBtn = document.getElementById('casinoTab');
+    const tournamentBtn = document.getElementById('tournamentTab');
+    const filterPanel = document.getElementById('filterPanel');
+    
+    if (tab === 'casino') {
+        casinoBtn.style.background = 'linear-gradient(135deg, #FFB800, #FF8C00)';
+        casinoBtn.style.color = '#0a1929';
+        casinoBtn.style.border = 'none';
+        casinoBtn.style.boxShadow = '0 4px 15px rgba(255, 184, 0, 0.4)';
+        
+        tournamentBtn.style.background = 'rgba(74, 144, 164, 0.3)';
+        tournamentBtn.style.color = '#9cb4bf';
+        tournamentBtn.style.border = '1px solid rgba(74, 144, 164, 0.5)';
+        tournamentBtn.style.boxShadow = 'none';
+        
+        // Show filters for casino games
+        if (filterPanel) filterPanel.style.display = 'block';
+        
+        populateGamesTable();
+    } else {
+        tournamentBtn.style.background = 'linear-gradient(135deg, #FFB800, #FF8C00)';
+        tournamentBtn.style.color = '#0a1929';
+        tournamentBtn.style.border = 'none';
+        tournamentBtn.style.boxShadow = '0 4px 15px rgba(255, 184, 0, 0.4)';
+        
+        casinoBtn.style.background = 'rgba(74, 144, 164, 0.3)';
+        casinoBtn.style.color = '#9cb4bf';
+        casinoBtn.style.border = '1px solid rgba(74, 144, 164, 0.5)';
+        casinoBtn.style.boxShadow = 'none';
+        
+        // Hide filters for tournament games
+        if (filterPanel) filterPanel.style.display = 'none';
+        
+        showTournamentGames();
+    }
+}
+
+// Show tournament games
+function showTournamentGames() {
+    const tbody = document.getElementById('gamesTableBody');
+    if (!tbody) return;
+    
+    const tournamentGames = gamesDatabase.filter(game => game.type === 'tournament');
+    
+    tbody.innerHTML = tournamentGames.map(game => `
+        <tr onclick="startGame('${game.id}')" style="cursor: pointer;">
+            <td class="game-type">
+                ${game.badge ? `<span class="game-badge">${game.badge}</span>` : ''}
+                <div class="game-name">${game.name}</div>
+            </td>
+            <td class="category-cell">
+                <i class="fas fa-trophy category-icon"></i>
+                <span>${game.category}</span>
+            </td>
+            <td class="buyin-cell">
+                <div style="font-weight: 600; color: #2ecc71;">${game.buyIn} eGold</div>
+                <div style="color: #888; font-size: 0.85em;">$${(game.buyIn * eGoldToUSD).toFixed(2)} USD</div>
+            </td>
+            <td class="players-cell">
+                <div class="player-count">${game.players}</div>
+                <i class="fas fa-users"></i>
+            </td>
+            <td class="status-cell">
+                <span class="status-indicator"></span>
+                <button class="join-btn" onclick="event.stopPropagation(); startGame('${game.id}')">
+                    <i class="fas fa-play"></i> Play Now
+                </button>
+            </td>
+        </tr>
+    `).join('');
+    
+    if (tournamentGames.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #888;">No tournament games available.</td></tr>';
+    }
+}
+
 // Filter games based on checkboxes
 function filterGames() {
     const tbody = document.getElementById('gamesTableBody');
