@@ -171,6 +171,39 @@ function filterGames() {
     // Filter casino games
     const casinoGames = gamesDatabase.filter(game => game.type === 'casino');
     
+    // If no filters are checked, show all casino games
+    if (checkedFilters.length === 0) {
+        const gamesToShow = casinoGames;
+        
+        tbody.innerHTML = gamesToShow.map(game => `
+            <tr onclick="startGame('${game.id}')" style="cursor: pointer;">
+                <td class="game-type">
+                    ${game.badge ? `<span class="game-badge">${game.badge}</span>` : ''}
+                    <div class="game-name">${game.name}</div>
+                </td>
+                <td class="category-cell">
+                    <i class="fas fa-dice category-icon"></i>
+                    <span>${game.category}</span>
+                </td>
+                <td class="buyin-cell">
+                    <div style="font-weight: 600; color: #2ecc71;">${game.buyIn} eGold</div>
+                    <div style="color: #888; font-size: 0.85em;">$${(game.buyIn * eGoldToUSD).toFixed(2)} USD</div>
+                </td>
+                <td class="players-cell">
+                    <div class="player-count">${game.players}</div>
+                    <i class="fas fa-user"></i>
+                </td>
+                <td class="status-cell">
+                    <span class="status-indicator"></span>
+                    <button class="join-btn" onclick="event.stopPropagation(); startGame('${game.id}')">
+                        <i class="fas fa-play"></i> Play Now
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+        return;
+    }
+    
     // Apply filters
     const filtered = casinoGames.filter(game => {
         // Game Type filters
@@ -201,8 +234,7 @@ function filterGames() {
         return gameTypeMatch || speedMatch || popularityMatch || betRangeMatch;
     });
     
-    // If no filters are checked, show all casino games
-    const gamesToShow = checkedFilters.length === 0 ? casinoGames : filtered;
+    const gamesToShow = filtered;
     
     // Update table
     tbody.innerHTML = gamesToShow.map(game => `
