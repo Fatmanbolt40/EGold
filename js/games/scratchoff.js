@@ -7,6 +7,7 @@ const scratchoffGame = {
     prizeResult: null,
     canvas: null,
     ctx: null,
+    eventListeners: [],
     
     init() {
         const content = document.getElementById('gameContent');
@@ -83,6 +84,12 @@ const scratchoffGame = {
     
     drawScratchCoating() {
         if (!this.ctx) return;
+        
+        // Clear any existing content first
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Reset composite operation to default
+        this.ctx.globalCompositeOperation = 'source-over';
         
         // Create metallic gradient base
         const gradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
@@ -161,15 +168,28 @@ const scratchoffGame = {
         // Generate the prize BEFORE scratching
         this.prizeResult = this.generatePrize();
         
-        // Create the prize pattern (completely hidden with opacity 0)
-        this.createPrizePattern();
+        // CRITICAL: Reset prize area first - clear content and set opacity to 0
+        const prizeArea = document.getElementById('prizeArea');
+        if (prizeArea) {
+            prizeArea.innerHTML = '';
+            prizeArea.style.opacity = '0';
+        }
         
         // Reset scratch state
         this.scratchedPercent = 0;
         this.isScratching = false;
         
+        // Make sure canvas is visible and clear it completely
+        if (this.canvas) {
+            this.canvas.style.display = 'block';
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+        
         // Redraw the scratch coating
         this.drawScratchCoating();
+        
+        // Create the prize pattern (completely hidden with opacity 0)
+        this.createPrizePattern();
         
         // Enable scratching
         this.setupScratchEvents();
@@ -187,8 +207,9 @@ const scratchoffGame = {
         const prizeArea = document.getElementById('prizeArea');
         if (!prizeArea || !this.prizeResult) return;
         
-        // Prize area is completely invisible until revealed
-        prizeArea.style.opacity = '0';
+        // Prize area must be completely invisible until revealed
+        // Force opacity to 0 with important flag
+        prizeArea.style.setProperty('opacity', '0', 'important');
         
         let pattern = '';
         
@@ -305,42 +326,73 @@ const scratchoffGame = {
         const canvas = this.canvas;
         if (!canvas) return;
         
+        // Remove any existing event listeners first
+        this.removeEventListeners();
+        
         let isMouseDown = false;
         
         // Mouse events
-        canvas.addEventListener('mousedown', (e) => {
+        const mousedown = (e) => {
             isMouseDown = true;
             this.scratch(e.offsetX, e.offsetY);
-        });
+        };
         
-        canvas.addEventListener('mousemove', (e) => {
+        const mousemove = (e) => {
             if (isMouseDown) {
                 this.scratch(e.offsetX, e.offsetY);
             }
-        });
+        };
         
-        canvas.addEventListener('mouseup', () => {
+        const mouseup = () => {
             isMouseDown = false;
-        });
+        };
         
-        canvas.addEventListener('mouseleave', () => {
+        const mouseleave = () => {
             isMouseDown = false;
-        });
+        };
         
         // Touch events
-        canvas.addEventListener('touchstart', (e) => {
+        const touchstart = (e) => {
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
             const touch = e.touches[0];
             this.scratch(touch.clientX - rect.left, touch.clientY - rect.top);
+        };
+        
+        const touchmove = (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            this.scratch(touch.clientX - rect.left, touch.clientY - rect.top);
+        };
+        
+        // Add event listeners
+        canvas.addEventListener('mousedown', mousedown);
+        canvas.addEventListener('mousemove', mousemove);
+        canvas.addEventListener('mouseup', mouseup);
+        canvas.addEventListener('mouseleave', mouseleave);
+        canvas.addEventListener('touchstart', touchstart);
+        canvas.addEventListener('touchmove', touchmove);
+        
+        // Store references so we can remove them later
+        this.eventListeners = [
+            { event: 'mousedown', handler: mousedown },
+            { event: 'mousemove', handler: mousemove },
+            { event: 'mouseup', handler: mouseup },
+            { event: 'mouseleave', handler: mouseleave },
+            { event: 'touchstart', handler: touchstart },
+            { event: 'touchmove', handler: touchmove }
+        ];
+    },
+    
+    removeEventListeners() {
+        if (!this.canvas || !this.eventListeners.length) return;
+        
+        this.eventListeners.forEach(({ event, handler }) => {
+            this.canvas.removeEventListener(event, handler);
         });
         
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const rect = canvas.getBoundingClientRect();
-            const touch = e.touches[0];
-            this.scratch(touch.clientX - rect.left, touch.clientY - rect.top);
-        });
+        this.eventListeners = [];
     },
     
     scratch(x, y) {
@@ -377,7 +429,7 @@ const scratchoffGame = {
         if (prizeArea && this.scratchedPercent > 20) {
             // Fade in prize as scratching progresses (20% to 100% scratch = 0 to 1 opacity)
             const opacity = Math.min((this.scratchedPercent - 20) / 80, 1);
-            prizeArea.style.opacity = opacity.toString();
+            prizeArea.style.setProperty('opacity', opacity.toString(), 'important');
         }
         
         // If more than 65% scratched, fully reveal and complete
@@ -390,12 +442,15 @@ const scratchoffGame = {
         if (!this.prizeResult) return;
         
         // Clear the canvas completely and hide it
-        this.canvas.style.display = 'none';
+        if (this.canvas) {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.canvas.style.display = 'none';
+        }
         
         // Ensure prize area is fully visible
         const prizeArea = document.getElementById('prizeArea');
         if (prizeArea) {
-            prizeArea.style.opacity = '1';
+            prizeArea.style.setProperty('opacity', '1', 'important');
         }
         
         const resultDiv = document.getElementById('scratchResult');
@@ -439,22 +494,27 @@ const scratchoffGame = {
     },
     
     resetGame() {
+        // Remove event listeners first
+        this.removeEventListeners();
+        
         // Reset state
         this.prizeResult = null;
         this.scratchedPercent = 0;
         this.isScratching = false;
         
+        // Hide prize area completely and clear it
+        const prizeArea = document.getElementById('prizeArea');
+        if (prizeArea) {
+            prizeArea.innerHTML = '';
+            prizeArea.style.setProperty('opacity', '0', 'important');
+        }
+        
         // Reset canvas
         if (this.canvas) {
             this.canvas.style.display = 'block';
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.globalCompositeOperation = 'source-over';
             this.drawScratchCoating();
-        }
-        
-        // Hide prize area completely
-        const prizeArea = document.getElementById('prizeArea');
-        if (prizeArea) {
-            prizeArea.style.opacity = '0';
-            prizeArea.innerHTML = '';
         }
         
         // Re-enable buy button

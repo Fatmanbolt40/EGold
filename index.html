@@ -8,6 +8,11 @@
     <meta name="theme-color" content="#0a1929">
     <title>Royal eGold Casino - Premium Poker Experience</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Solana Web3.js and SPL Token -->
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <script src="https://unpkg.com/@solana/spl-token@latest/lib/index.iife.min.js"></script>
+    
     <link rel="stylesheet" href="styles/main.css">
     <style>
         * {
@@ -864,6 +869,15 @@
         
         <!-- Main Content -->
         <div class="main-content">
+            <!-- eGold Token Banner -->
+            <div style="background: linear-gradient(135deg, #FFB800, #FF8C00); padding: 12px 30px; text-align: center; border-bottom: 2px solid #FF8C00;">
+                <span style="color: #0a1929; font-weight: bold; font-size: 1em;">
+                    <i class="fas fa-coins"></i> Now Playing with REAL eGold Tokens! 
+                    <span style="margin-left: 15px;">Mint: <code style="background: rgba(0,0,0,0.2); padding: 3px 8px; border-radius: 4px; font-size: 0.85em;">mntzrj9TrAmybpqz7WovMsY4mWFVdUCQQD6WhmeN1TL</code></span>
+                    <a href="https://solscan.io/token/mntzrj9TrAmybpqz7WovMsY4mWFVdUCQQD6WhmeN1TL" target="_blank" style="margin-left: 10px; color: #0a1929; text-decoration: underline;">View on Solscan</a>
+                </span>
+            </div>
+            
             <!-- Top Bar -->
             <div class="top-bar fade-in">
                 <div class="logo-container">
@@ -884,9 +898,24 @@
                     <button onclick="toggleSound()" class="status-btn" id="soundBtn">
                         <i class="fas fa-volume-up"></i> Sound ON
                     </button>
+                    <button onclick="phantomWallet.connect()" class="status-btn" id="walletConnectBtn" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                        <i class="fas fa-wallet"></i> Connect Wallet
+                    </button>
+                    <button onclick="phantomWallet.showDepositPrompt()" class="status-btn" id="depositBtn" style="background: linear-gradient(135deg, #2ecc71, #27ae60); display: none;">
+                        <i class="fas fa-arrow-down"></i> Deposit
+                    </button>
+                    <button onclick="phantomWallet.showWithdrawModal()" class="status-btn" id="withdrawBtn" style="background: linear-gradient(135deg, #FFB800, #FF8C00); display: none;">
+                        <i class="fas fa-arrow-up"></i> Withdraw
+                    </button>
+                    <button onclick="phantomWallet.syncBalance()" class="status-btn" id="syncBalanceBtn" style="background: linear-gradient(135deg, #3498db, #2980b9); display: none;">
+                        <i class="fas fa-sync"></i> Sync
+                    </button>
                     <div class="balance-box">
-                        <span class="balance-amount"><span id="balance">1000.00</span> eGold</span>
-                        <span class="balance-usd" id="usdValue">$100.00 USD</span>
+                        <span class="balance-amount"><span id="balance">0.00</span> eGold</span>
+                        <span class="balance-usd" id="usdValue">$0.00 USD</span>
+                        <div style="font-size: 0.7em; color: #888; margin-top: 3px;">
+                            Casino Wallet | <a href="https://solscan.io/token/mntzrj9TrAmybpqz7WovMsY4mWFVdUCQQD6WhmeN1TL" target="_blank" style="color: #FFB800;">View Token</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1029,6 +1058,10 @@
     <script src="js/leaderboard.js"></script>
     <script src="js/poker-enhancements.js"></script>
     <script src="js/poker-engine.js"></script>
+    <script src="js/omaha-engine.js"></script>
+    <script src="js/pineapple-engine.js"></script>
+    <script src="js/tonk-engine.js"></script>
+    <script src="js/admin-system.js"></script>
     <script src="js/tournament-lobby.js"></script>
     <script src="js/spectator-system.js"></script>
     <script src="js/pvp-system.js"></script>

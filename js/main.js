@@ -1,5 +1,5 @@
 // Main Application Controller
-let balance = parseFloat(localStorage.getItem('balance')) || 1000.00;
+let balance = 0; // Start at 0, will load from wallet
 let currentGame = null;
 const eGoldToUSD = 0.10; // 1 eGold = $0.10 USD
 

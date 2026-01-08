@@ -1,5 +1,5 @@
-// Full Texas Hold'em Poker Engine - ClubWPT Style
-const PokerEngine = {
+// Professional Omaha Poker Engine
+const OmahaEngine = {
     // Game state
     players: [],
     communityCards: [],
@@ -7,13 +7,10 @@ const PokerEngine = {
     currentBet: 0,
     dealerPosition: 0,
     activePosition: 0,
-    gamePhase: 'waiting', // waiting, preflop, flop, turn, river, showdown
+    gamePhase: 'waiting',
     deck: [],
-    
-    // Tournament settings
     smallBlind: 5,
     bigBlind: 10,
-    tournamentLevel: 1,
     
     init() {
         this.createDeck();
@@ -42,9 +39,8 @@ const PokerEngine = {
         }
     },
     
-    // Initialize 8-player table
     initializeTable(playerChips = 1000) {
-        const playerNames = ['You', 'ClubWPT', 'gflsk86', 'sugar2022', 'DavidJT', 'Lash7', 'Player7', 'Player8'];
+        const playerNames = ['You', 'OmahaKing', 'HighCard88', 'PLO_Pro', 'WrapMaster', 'NutFlusher'];
         
         this.players = playerNames.map((name, index) => ({
             id: index,
@@ -54,7 +50,7 @@ const PokerEngine = {
             bet: 0,
             folded: false,
             isPlayer: index === 0,
-            sittingOut: Math.random() > 0.7 && index > 0, // Some AI sitting out
+            sittingOut: Math.random() > 0.75 && index > 0,
             position: index,
             lastAction: null
         }));
@@ -64,12 +60,10 @@ const PokerEngine = {
         this.communityCards = [];
     },
     
-    // Start new hand
     startNewHand() {
         this.createDeck();
         this.shuffleDeck();
         
-        // Reset player states
         this.players.forEach(player => {
             player.cards = [];
             player.bet = 0;
@@ -94,8 +88,8 @@ const PokerEngine = {
         this.pot += this.bigBlind;
         this.currentBet = this.bigBlind;
         
-        // Deal hole cards
-        for (let i = 0; i < 2; i++) {
+        // Deal 4 hole cards to each player (Omaha)
+        for (let i = 0; i < 4; i++) {
             this.players.forEach(player => {
                 if (!player.folded) {
                     player.cards.push(this.deck.pop());
@@ -103,16 +97,14 @@ const PokerEngine = {
             });
         }
         
-        // Set action to left of big blind
         this.activePosition = (this.dealerPosition + 3) % this.players.length;
         this.gamePhase = 'preflop';
         
         return this.getGameState();
     },
     
-    // Deal community cards
     dealFlop() {
-        this.deck.pop(); // Burn card
+        this.deck.pop();
         this.communityCards.push(this.deck.pop());
         this.communityCards.push(this.deck.pop());
         this.communityCards.push(this.deck.pop());
@@ -120,39 +112,35 @@ const PokerEngine = {
         this.currentBet = 0;
         this.players.forEach(p => { p.bet = 0; p.lastAction = null; });
         this.activePosition = (this.dealerPosition + 1) % this.players.length;
-        // Skip to first active player
         while (this.players[this.activePosition].folded || this.players[this.activePosition].sittingOut) {
             this.activePosition = (this.activePosition + 1) % this.players.length;
         }
     },
     
     dealTurn() {
-        this.deck.pop(); // Burn card
+        this.deck.pop();
         this.communityCards.push(this.deck.pop());
         this.gamePhase = 'turn';
         this.currentBet = 0;
         this.players.forEach(p => { p.bet = 0; p.lastAction = null; });
         this.activePosition = (this.dealerPosition + 1) % this.players.length;
-        // Skip to first active player
         while (this.players[this.activePosition].folded || this.players[this.activePosition].sittingOut) {
             this.activePosition = (this.activePosition + 1) % this.players.length;
         }
     },
     
     dealRiver() {
-        this.deck.pop(); // Burn card
+        this.deck.pop();
         this.communityCards.push(this.deck.pop());
         this.gamePhase = 'river';
         this.currentBet = 0;
         this.players.forEach(p => { p.bet = 0; p.lastAction = null; });
         this.activePosition = (this.dealerPosition + 1) % this.players.length;
-        // Skip to first active player
         while (this.players[this.activePosition].folded || this.players[this.activePosition].sittingOut) {
             this.activePosition = (this.activePosition + 1) % this.players.length;
         }
     },
     
-    // Player actions
     playerFold(playerId) {
         const player = this.players[playerId];
         player.folded = true;
@@ -165,7 +153,6 @@ const PokerEngine = {
         const callAmount = this.currentBet - player.bet;
         
         if (callAmount >= player.chips) {
-            // All-in
             this.pot += player.chips;
             player.bet += player.chips;
             player.chips = 0;
@@ -186,7 +173,6 @@ const PokerEngine = {
         const raiseAmount = totalBet - player.bet;
         
         if (raiseAmount >= player.chips) {
-            // All-in
             this.pot += player.chips;
             this.currentBet = player.bet + player.chips;
             player.bet = this.currentBet;
@@ -209,47 +195,36 @@ const PokerEngine = {
         this.nextPlayer();
     },
     
-    // AI decision making
     getAIAction(player) {
-        const activePlayers = this.players.filter(p => !p.folded && !p.sittingOut).length;
         const callAmount = this.currentBet - player.bet;
-        const potOdds = callAmount / (this.pot + callAmount);
-        
-        // Simple AI strategy
         const handStrength = this.evaluateHandStrength(player.cards, this.communityCards);
         const random = Math.random();
         
-        // Fold if weak hand and facing bet
-        if (handStrength < 0.3 && callAmount > 0 && random > 0.3) {
+        if (handStrength < 0.25 && callAmount > 0 && random > 0.3) {
             return { action: 'fold' };
         }
         
-        // Raise with strong hand
-        if (handStrength > 0.7 && random > 0.5) {
-            const raiseAmount = this.bigBlind * (2 + Math.floor(random * 3));
+        if (handStrength > 0.75 && random > 0.5) {
+            const raiseAmount = this.bigBlind * (2 + Math.floor(random * 4));
             return { action: 'raise', amount: raiseAmount };
         }
         
-        // Call or check
         if (callAmount === 0) {
             return { action: 'check' };
-        } else if (random > potOdds || handStrength > 0.5) {
+        } else if (random > 0.4 || handStrength > 0.5) {
             return { action: 'call' };
         }
         
         return { action: 'fold' };
     },
     
-    // Advance to next player
     nextPlayer() {
         let nextPos = (this.activePosition + 1) % this.players.length;
         let searched = 0;
         
-        // Find next active player
         while (searched < this.players.length) {
             const player = this.players[nextPos];
             if (!player.folded && !player.sittingOut && player.chips > 0) {
-                // Check if betting round is complete
                 if (this.isBettingRoundComplete()) {
                     this.advancePhase();
                     return;
@@ -261,7 +236,6 @@ const PokerEngine = {
             searched++;
         }
         
-        // All players acted, advance phase
         this.advancePhase();
     },
     
@@ -270,7 +244,6 @@ const PokerEngine = {
         
         if (activePlayers.length <= 1) return true;
         
-        // All active players must have acted and matched current bet or be all-in
         return activePlayers.every(p => 
             (p.bet === this.currentBet || p.chips === 0) && p.lastAction !== null
         );
@@ -313,13 +286,11 @@ const PokerEngine = {
         
         const activePlayers = this.players.filter(p => !p.folded);
         
-        // Evaluate all hands
         const results = activePlayers.map(player => ({
             player: player,
-            score: this.evaluateHand([...player.cards, ...this.communityCards])
+            score: this.evaluateOmahaHand(player.cards, this.communityCards)
         }));
         
-        // Find winner
         results.sort((a, b) => b.score - a.score);
         const winner = results[0].player;
         
@@ -331,73 +302,143 @@ const PokerEngine = {
         }, 3000);
     },
     
-    evaluateHandStrength(holeCards, communityCards) {
-        // Safety check
-        if (!holeCards || holeCards.length < 2) return 0.1;
+    evaluateOmahaHand(holeCards, communityCards) {
+        // Must use exactly 2 hole cards and 3 community cards
+        let bestScore = 0;
         
-        if (communityCards.length === 0) {
-            // Pre-flop hand strength
-            const card1 = holeCards[0].numValue;
-            const card2 = holeCards[1].numValue;
-            const isPair = card1 === card2;
-            const highCard = Math.max(card1, card2);
-            
-            if (isPair && highCard >= 12) return 0.9; // High pair
-            if (isPair) return 0.7;
-            if (highCard >= 13) return 0.6; // Ace high
-            if (highCard >= 11) return 0.5; // Face card
-            return 0.3;
+        // Try all combinations of 2 hole cards
+        for (let i = 0; i < holeCards.length - 1; i++) {
+            for (let j = i + 1; j < holeCards.length; j++) {
+                // Try all combinations of 3 community cards
+                for (let a = 0; a < communityCards.length - 2; a++) {
+                    for (let b = a + 1; b < communityCards.length - 1; b++) {
+                        for (let c = b + 1; c < communityCards.length; c++) {
+                            const hand = [
+                                holeCards[i], 
+                                holeCards[j], 
+                                communityCards[a], 
+                                communityCards[b], 
+                                communityCards[c]
+                            ];
+                            const score = this.evaluateHand(hand);
+                            if (score > bestScore) bestScore = score;
+                        }
+                    }
+                }
+            }
         }
         
-        const score = this.evaluateHand([...holeCards, ...communityCards]);
-        return score / 1000;
+        return bestScore;
+    },
+    
+    evaluateHandStrength(holeCards, communityCards) {
+        if (!holeCards || holeCards.length < 4) return 0.1;
+        
+        if (communityCards.length === 0) {
+            // Pre-flop: look for high pairs, suited cards, connected cards
+            const values = holeCards.map(c => c.numValue).sort((a, b) => b - a);
+            const suits = holeCards.map(c => c.suit);
+            
+            // Count pairs
+            const valueCounts = {};
+            for (const v of values) {
+                valueCounts[v] = (valueCounts[v] || 0) + 1;
+            }
+            const pairs = Object.values(valueCounts).filter(c => c >= 2).length;
+            
+            // High cards bonus
+            const highCards = values.filter(v => v >= 11).length;
+            
+            // Suited cards
+            const suitCounts = {};
+            for (const s of suits) {
+                suitCounts[s] = (suitCounts[s] || 0) + 1;
+            }
+            const maxSuited = Math.max(...Object.values(suitCounts));
+            
+            let strength = 0.3;
+            if (pairs >= 2) strength += 0.3;
+            if (highCards >= 2) strength += 0.2;
+            if (maxSuited >= 3) strength += 0.15;
+            if (values[0] >= 13) strength += 0.1;
+            
+            return Math.min(strength, 0.95);
+        }
+        
+        const score = this.evaluateOmahaHand(holeCards, communityCards);
+        return Math.min(score / 1000, 0.99);
     },
     
     evaluateHand(cards) {
         const values = cards.map(c => c.numValue).sort((a, b) => b - a);
         const suits = cards.map(c => c.suit);
         
-        // Count occurrences
         const valueCounts = {};
         for (const v of values) {
             valueCounts[v] = (valueCounts[v] || 0) + 1;
         }
         
         const counts = Object.values(valueCounts).sort((a, b) => b - a);
-        const isFlush = suits.some(suit => suits.filter(s => s === suit).length >= 5);
+        const isFlush = suits.every(s => s === suits[0]);
         
-        // Check for straight
-        const uniqueValues = [...new Set(values)].sort((a, b) => b - a);
+        // Check straight
         let isStraight = false;
-        for (let i = 0; i <= uniqueValues.length - 5; i++) {
-            if (uniqueValues[i] - uniqueValues[i + 4] === 4) {
-                isStraight = true;
-                break;
-            }
+        for (let i = 0; i < values.length - 1; i++) {
+            if (values[i] - values[i + 1] !== 1) break;
+            if (i === 3) isStraight = true;
+        }
+        // Check A-2-3-4-5 straight
+        if (values[0] === 14 && values[1] === 5 && values[2] === 4 && values[3] === 3 && values[4] === 2) {
+            isStraight = true;
         }
         
-        const highCard = Math.max(...values);
+        // Royal flush
+        if (isFlush && isStraight && values[0] === 14 && values[1] === 13) {
+            return 900 + values[0];
+        }
         
-        // Royal Flush
-        if (isStraight && isFlush && highCard === 14) return 1000;
-        // Straight Flush
-        if (isStraight && isFlush) return 900;
-        // Four of a Kind
-        if (counts[0] === 4) return 800 + highCard;
-        // Full House
-        if (counts[0] === 3 && counts[1] >= 2) return 700 + highCard;
+        // Straight flush
+        if (isFlush && isStraight) {
+            return 800 + values[0];
+        }
+        
+        // Four of a kind
+        if (counts[0] === 4) {
+            return 700 + values[0];
+        }
+        
+        // Full house
+        if (counts[0] === 3 && counts[1] === 2) {
+            return 600 + values[0];
+        }
+        
         // Flush
-        if (isFlush) return 600 + highCard;
+        if (isFlush) {
+            return 500 + values[0];
+        }
+        
         // Straight
-        if (isStraight) return 500 + highCard;
-        // Three of a Kind
-        if (counts[0] === 3) return 400 + highCard;
-        // Two Pair
-        if (counts[0] === 2 && counts[1] === 2) return 300 + highCard;
-        // Pair
-        if (counts[0] === 2) return 200 + highCard;
-        // High Card
-        return highCard;
+        if (isStraight) {
+            return 400 + values[0];
+        }
+        
+        // Three of a kind
+        if (counts[0] === 3) {
+            return 300 + values[0];
+        }
+        
+        // Two pair
+        if (counts[0] === 2 && counts[1] === 2) {
+            return 200 + values[0];
+        }
+        
+        // One pair
+        if (counts[0] === 2) {
+            return 100 + values[0];
+        }
+        
+        // High card
+        return values[0];
     },
     
     getGameState() {
@@ -406,11 +447,13 @@ const PokerEngine = {
             communityCards: this.communityCards,
             pot: this.pot,
             currentBet: this.currentBet,
-            activePosition: this.activePosition,
             dealerPosition: this.dealerPosition,
+            activePosition: this.activePosition,
             gamePhase: this.gamePhase,
             smallBlind: this.smallBlind,
             bigBlind: this.bigBlind
         };
     }
 };
+
+window.OmahaEngine = OmahaEngine;

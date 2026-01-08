@@ -235,11 +235,19 @@ const texasholdemGame = {
                     <div class="action-buttons" id="actionButtons" style="justify-content: center;"></div>
                     
                     <!-- Raise slider -->
-                    <div id="raiseControls" style="margin-top: 15px; display: none;">
-                        <input type="range" id="raiseSlider" min="10" max="100" value="20" style="width: 300px;">
-                        <div style="color: #FFB800; font-weight: bold; margin-top: 5px;">
-                            Raise: <span id="raiseAmount">20</span> eGold
+                    <div id="raiseControls" style="margin-top: 15px; display: none; padding: 15px; background: rgba(255,184,0,0.1); border-radius: 10px; border: 2px solid #FFB800;">
+                        <div style="color: #FFB800; font-weight: bold; margin-bottom: 10px; font-size: 1.1em;">
+                            Select Raise Amount
                         </div>
+                        <input type="range" id="raiseSlider" min="10" max="100" value="20" style="width: 100%; max-width: 400px; height: 8px; cursor: pointer;">
+                        <div style="display: flex; justify-content: space-between; margin-top: 10px; color: #ccc; font-size: 0.9em;">
+                            <span id="minRaise">Min</span>
+                            <span style="color: #FFB800; font-weight: bold; font-size: 1.3em;"><span id="raiseAmount">20</span> eGold</span>
+                            <span id="maxRaise">Max</span>
+                        </div>
+                        <button class="poker-btn raise-btn" onclick="texasholdemGame.playerAction('confirmRaise')" style="margin-top: 10px; width: 100%; max-width: 400px;">
+                            Confirm Raise
+                        </button>
                     </div>
                 </div>
                 
@@ -278,7 +286,18 @@ const texasholdemGame = {
         
         // Update pot
         document.getElementById('potAmount').textContent = `Pot: ${state.pot} eGold`;
-        document.getElementById('gamePhaseDisplay').textContent = state.gamePhase;
+        
+        // Update game phase display with proper capitalization
+        const phaseMap = {
+            'waiting': 'Waiting',
+            'preflop': 'Pre-Flop',
+            'flop': 'Flop',
+            'turn': 'Turn',
+            'river': 'River',
+            'showdown': 'Showdown',
+            'complete': 'Complete'
+        };
+        document.getElementById('gamePhaseDisplay').textContent = phaseMap[state.gamePhase] || state.gamePhase;
         document.getElementById('blindLevel').textContent = `${state.smallBlind}/${state.bigBlind}`;
         
         // Update player position
@@ -435,37 +454,49 @@ const texasholdemGame = {
         // Setup raise slider
         const raiseSlider = document.getElementById('raiseSlider');
         const raiseAmount = document.getElementById('raiseAmount');
-        raiseSlider.min = this.gameState.bigBlind;
-        raiseSlider.max = Math.min(player.chips - callAmount, 100);
-        raiseSlider.value = this.gameState.bigBlind * 2;
+        const minRaise = Math.max(this.gameState.bigBlind, this.gameState.currentBet * 2);
+        const maxRaise = player.chips - callAmount;
+        raiseSlider.min = minRaise;
+        raiseSlider.max = Math.max(minRaise, maxRaise);
+        raiseSlider.value = Math.min(minRaise * 2, maxRaise);
         raiseAmount.textContent = raiseSlider.value;
         
         raiseSlider.oninput = () => {
             raiseAmount.textContent = raiseSlider.value;
         };
+        
+        raiseSlider.step = this.gameState.bigBlind;
     },
     
     playerAction(action) {
         const player = this.gameState.players[0];
+        const raiseControls = document.getElementById('raiseControls');
         
         if (action === 'fold') {
             PokerEngine.playerFold(0);
             this.addChatMessage('You', 'Fold');
             if (typeof soundManager !== 'undefined') soundManager.playButtonClick();
+            if (raiseControls) raiseControls.style.display = 'none';
         } else if (action === 'call') {
             PokerEngine.playerCall(0);
             this.addChatMessage('You', `Call ${this.gameState.currentBet - player.bet}`);
             if (typeof soundManager !== 'undefined') soundManager.playChipSound();
+            if (raiseControls) raiseControls.style.display = 'none';
         } else if (action === 'check') {
             PokerEngine.playerCheck(0);
             this.addChatMessage('You', 'Check');
             if (typeof soundManager !== 'undefined') soundManager.playButtonClick();
+            if (raiseControls) raiseControls.style.display = 'none';
         } else if (action === 'raise') {
-            const raiseControls = document.getElementById('raiseControls');
-            if (raiseControls.style.display === 'none') {
+            if (raiseControls.style.display === 'none' || raiseControls.style.display === '') {
                 raiseControls.style.display = 'block';
+                // Update min/max labels
+                const raiseSlider = document.getElementById('raiseSlider');
+                document.getElementById('minRaise').textContent = raiseSlider.min;
+                document.getElementById('maxRaise').textContent = raiseSlider.max;
                 return;
             }
+        } else if (action === 'confirmRaise') {
             const raiseAmount = parseInt(document.getElementById('raiseSlider').value);
             PokerEngine.playerRaise(0, raiseAmount);
             this.addChatMessage('You', `Raise ${raiseAmount}`);
