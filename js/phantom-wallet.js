@@ -360,8 +360,12 @@ class PhantomWallet {
             const transaction = new Transaction();
             
             // Check if destination token account exists
+            console.log('🔍 Checking if token account exists:', toTokenAccount.toString());
             const toAccountInfo = await this.connection.getAccountInfo(toTokenAccount);
+            console.log('📋 Account info:', toAccountInfo);
+            
             if (!toAccountInfo) {
+                console.log('⚠️ Token account does not exist, will create it');
                 // Create associated token account
                 transaction.add(
                     createAssociatedTokenAccountInstruction(
@@ -373,6 +377,8 @@ class PhantomWallet {
                         ASSOCIATED_TOKEN_PROGRAM_ID
                     )
                 );
+            } else {
+                console.log('✅ Token account already exists, skipping creation');
             }
             
             // Add transfer instruction
