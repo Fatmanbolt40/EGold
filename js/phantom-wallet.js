@@ -99,8 +99,10 @@ class PhantomWallet {
             return 0;
         } catch (err) {
             // Silently fail on RPC errors (rate limits are common on free tier)
-            if (err.message && (err.message.includes('403') || err.message.includes('429'))) {
-                console.warn('⚠️ RPC rate limit - balance check skipped');
+            // Also handle "account not found" which is normal for new wallets
+            if (err.message && (err.message.includes('403') || err.message.includes('429') || err.message.includes('could not find account'))) {
+                // Account doesn't exist yet - will be created on first deposit
+                return 0;
             } else {
                 console.error('Error getting site wallet balance:', err);
             }
