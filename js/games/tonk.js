@@ -456,7 +456,10 @@ const tonkGame = {
         chat.appendChild(msg);
         chat.scrollTop = chat.scrollHeight;
         
+        while (chat.children.length > 15) {
+            chat.removeChild(chat.firstChild);
+        }
+    }
 };
 
 window.tonkGame = tonkGame;
-                    </div>
