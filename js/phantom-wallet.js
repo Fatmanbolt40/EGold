@@ -79,7 +79,7 @@ class PhantomWallet {
             
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    'https://api.mainnet-beta.solana.com',
+                    'https://mainnet.helius-rpc.com/?api-key=8bc73df4-6f6b-441d-953c-335e77d0d0d7',
                     'confirmed'
                 );
             }
@@ -136,7 +136,7 @@ class PhantomWallet {
             
             // Create RPC connection (use QuickNode free endpoint with better limits)
             this.connection = new window.solanaWeb3.Connection(
-                'https://api.mainnet-beta.solana.com',
+                'https://mainnet.helius-rpc.com/?api-key=8bc73df4-6f6b-441d-953c-335e77d0d0d7',
                 'confirmed'
             );
 
@@ -237,7 +237,7 @@ class PhantomWallet {
             // Get or create connection
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    'https://api.mainnet-beta.solana.com'
+                    'https://mainnet.helius-rpc.com/?api-key=8bc73df4-6f6b-441d-953c-335e77d0d0d7'
                 );
             }
             
@@ -322,7 +322,7 @@ class PhantomWallet {
             // Get or create connection
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    'https://api.mainnet-beta.solana.com'
+                    'https://mainnet.helius-rpc.com/?api-key=8bc73df4-6f6b-441d-953c-335e77d0d0d7'
                 );
             }
             
@@ -439,7 +439,7 @@ class PhantomWallet {
             
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    'https://api.mainnet-beta.solana.com'
+                    'https://mainnet.helius-rpc.com/?api-key=8bc73df4-6f6b-441d-953c-335e77d0d0d7'
                 );
             }
             
@@ -763,7 +763,7 @@ class PhantomWallet {
                     this.publicKey = resp.publicKey.toString();
                     this.connected = true;
                     this.connection = new window.solanaWeb3.Connection(
-                        'https://api.mainnet-beta.solana.com'
+                        'https://mainnet.helius-rpc.com/?api-key=8bc73df4-6f6b-441d-953c-335e77d0d0d7'
                     );
                     
                     // Sync balance
