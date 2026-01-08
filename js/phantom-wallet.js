@@ -90,7 +90,12 @@ class PhantomWallet {
                 this.siteWallet.publicKey
             );
             
+            console.log('🔍 Checking token account:', tokenAccount.toString());
+            console.log('🔍 For wallet:', this.siteWallet.publicKey.toString());
+            
             const balance = await this.connection.getTokenAccountBalance(tokenAccount);
+            
+            console.log('📊 Raw balance response:', balance);
             
             if (balance && balance.value) {
                 return parseFloat(balance.value.uiAmount || 0);
