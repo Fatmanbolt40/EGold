@@ -123,7 +123,6 @@ class PhantomWallet {
                 return false;
             }
 
-        try {
             const resp = await window.solana.connect();
             this.provider = window.solana;
             this.publicKey = resp.publicKey.toString();
