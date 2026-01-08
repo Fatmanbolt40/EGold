@@ -537,6 +537,11 @@ const omahaGame = {
         
         const resultDiv = document.getElementById('pvpResultOmaha');
         setTimeout(() => {
+            resultDiv.innerText = 'You win with Royal Flush!';
+            resultDiv.style.color = '#2ecc71';
+        }, 2000);
+    }
+};
 
 window.omahaGame = omahaGame;
 

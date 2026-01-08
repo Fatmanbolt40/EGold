@@ -898,16 +898,16 @@
                     <button onclick="toggleSound()" class="status-btn" id="soundBtn">
                         <i class="fas fa-volume-up"></i> Sound ON
                     </button>
-                    <button onclick="phantomWallet.connect()" class="status-btn" id="walletConnectBtn" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                    <button onclick="if(typeof phantomWallet !== 'undefined') phantomWallet.connect()" class="status-btn" id="walletConnectBtn" style="background: linear-gradient(135deg, #667eea, #764ba2);">
                         <i class="fas fa-wallet"></i> Connect Wallet
                     </button>
-                    <button onclick="phantomWallet.showDepositPrompt()" class="status-btn" id="depositBtn" style="background: linear-gradient(135deg, #2ecc71, #27ae60); display: none;">
+                    <button onclick="if(typeof phantomWallet !== 'undefined') phantomWallet.showDepositPrompt()" class="status-btn" id="depositBtn" style="background: linear-gradient(135deg, #2ecc71, #27ae60); display: none;">
                         <i class="fas fa-arrow-down"></i> Deposit
                     </button>
-                    <button onclick="phantomWallet.showWithdrawModal()" class="status-btn" id="withdrawBtn" style="background: linear-gradient(135deg, #FFB800, #FF8C00); display: none;">
+                    <button onclick="if(typeof phantomWallet !== 'undefined') phantomWallet.showWithdrawModal()" class="status-btn" id="withdrawBtn" style="background: linear-gradient(135deg, #FFB800, #FF8C00); display: none;">
                         <i class="fas fa-arrow-up"></i> Withdraw
                     </button>
-                    <button onclick="phantomWallet.syncBalance()" class="status-btn" id="syncBalanceBtn" style="background: linear-gradient(135deg, #3498db, #2980b9); display: none;">
+                    <button onclick="if(typeof phantomWallet !== 'undefined') phantomWallet.syncBalance()" class="status-btn" id="syncBalanceBtn" style="background: linear-gradient(135deg, #3498db, #2980b9); display: none;">
                         <i class="fas fa-sync"></i> Sync
                     </button>
                     <div class="balance-box">

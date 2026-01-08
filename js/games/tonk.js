@@ -5,7 +5,6 @@ const tonkGame = {
     selectedCard: null,
     
     init() {
-    init() {
         const content = document.getElementById('gameContent');
         content.innerHTML = `
             <style>

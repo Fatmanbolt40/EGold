@@ -166,7 +166,7 @@ class AdminSystem {
         const accounts = [];
         
         // Current session
-        if (phantomWallet && phantomWallet.siteWallet) {
+        if (typeof phantomWallet !== 'undefined' && phantomWallet && phantomWallet.siteWallet) {
             const balance = await phantomWallet.getSiteWalletBalance();
             accounts.push({
                 siteWallet: phantomWallet.siteWallet.publicKey.toString(),
@@ -432,7 +432,7 @@ class AdminSystem {
     
     // Check if current user is banned
     checkBanStatus() {
-        if (phantomWallet && phantomWallet.siteWallet) {
+        if (typeof phantomWallet !== 'undefined' && phantomWallet && phantomWallet.siteWallet) {
             const walletAddress = phantomWallet.siteWallet.publicKey.toString();
             if (this.bannedAccounts.includes(walletAddress)) {
                 this.blockCurrentSession();
