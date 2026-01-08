@@ -2,6 +2,7 @@
 let balance = 0; // Start at 0, will load from wallet
 let currentGame = null;
 const eGoldToUSD = 0.10; // 1 eGold = $0.10 USD
+let phantomWallet = null; // Will be initialized on DOMContentLoaded
 
 // Game database
 const gamesDatabase = [
@@ -137,6 +138,14 @@ function searchGames(query) {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM Content Loaded');
     console.log('Games Database:', gamesDatabase);
+    
+    // Initialize Phantom Wallet
+    if (typeof PhantomWallet !== 'undefined') {
+        phantomWallet = new PhantomWallet();
+        console.log('✅ Phantom Wallet initialized');
+    } else {
+        console.warn('⚠️ PhantomWallet class not found');
+    }
     
     const usdValue = (balance * eGoldToUSD).toFixed(2);
     const balanceEl = document.getElementById('balance');
