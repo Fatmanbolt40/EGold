@@ -79,7 +79,7 @@ class PhantomWallet {
             
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    'https://rpc.ankr.com/solana',
+                    'https://solana-mainnet.rpc.extrnode.com',
                     'confirmed'
                 );
             }
@@ -131,7 +131,7 @@ class PhantomWallet {
             
             // Create RPC connection (use QuickNode free endpoint with better limits)
             this.connection = new window.solanaWeb3.Connection(
-                'https://rpc.ankr.com/solana',
+                'https://solana-mainnet.rpc.extrnode.com',
                 'confirmed'
             );
 
@@ -232,7 +232,7 @@ class PhantomWallet {
             // Get or create connection
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    'https://rpc.ankr.com/solana'
+                    'https://solana-mainnet.rpc.extrnode.com'
                 );
             }
             
@@ -317,7 +317,7 @@ class PhantomWallet {
             // Get or create connection
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    'https://rpc.ankr.com/solana'
+                    'https://solana-mainnet.rpc.extrnode.com'
                 );
             }
             
@@ -434,7 +434,7 @@ class PhantomWallet {
             
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    'https://rpc.ankr.com/solana'
+                    'https://solana-mainnet.rpc.extrnode.com'
                 );
             }
             
@@ -758,7 +758,7 @@ class PhantomWallet {
                     this.publicKey = resp.publicKey.toString();
                     this.connected = true;
                     this.connection = new window.solanaWeb3.Connection(
-                        'https://rpc.ankr.com/solana'
+                        'https://solana-mainnet.rpc.extrnode.com'
                     );
                     
                     // Sync balance
