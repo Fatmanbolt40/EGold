@@ -68,6 +68,11 @@
                     { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
                 ];
                 
+                // The instruction data should be empty for create ATA instruction
+                // BUT we need the SYSVAR_RENT account as well!
+                const SYSVAR_RENT_PUBKEY = new solanaWeb3.PublicKey('SysvarRent111111111111111111111111111111111');
+                keys.push({ pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false });
+                
                 return new solanaWeb3.TransactionInstruction({
                     keys,
                     programId: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -1141,7 +1146,7 @@
     <script src="js/poker-state-manager.js"></script>
     
     <!-- Blockchain Integration -->
-    <script src="js/phantom-wallet.js?v=20260108010"></script>
+    <script src="js/phantom-wallet.js?v=20260108011"></script>
     
     <!-- Game Systems -->
     <script src="js/sound-effects.js"></script>
