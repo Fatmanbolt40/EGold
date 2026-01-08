@@ -127,9 +127,9 @@ class PhantomWallet {
             this.provider = window.solana;
             this.publicKey = resp.publicKey.toString();
             this.connected = true;
-            this.connection = new window.solanaWeb3.Connection(
-                window.solana.connection.rpcEndpoint || 'https://api.mainnet-beta.solana.com'
-            );
+            
+            // Create RPC connection (use mainnet-beta)
+            this.connection = new window.solanaWeb3.Connection('https://api.mainnet-beta.solana.com');
 
             console.log('Phantom connected:', this.publicKey);
             
