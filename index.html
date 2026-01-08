@@ -13,9 +13,76 @@
     <title>Royal eGold Casino - Premium Poker Experience</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Solana Web3.js and SPL Token - Using jsdelivr CDN for better browser compatibility -->
-    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.98.4/lib/index.iife.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@solana/spl-token@0.4.14/lib/index.iife.min.js" crossorigin="anonymous"></script>
+    <!-- Solana Web3.js - Self-contained bundle -->
+    <script src="https://unpkg.com/@solana/web3.js@1.95.2/lib/index.iife.js"></script>
+    <script>
+        // SPL Token functions we need - embedded to avoid CDN issues
+        window.splToken = {
+            TOKEN_PROGRAM_ID: new solanaWeb3.PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'),
+            ASSOCIATED_TOKEN_PROGRAM_ID: new solanaWeb3.PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'),
+            
+            // Get associated token address
+            async getAssociatedTokenAddress(mint, owner, allowOwnerOffCurve = false, programId = null, associatedTokenProgramId = null) {
+                const TOKEN_PROGRAM_ID = programId || new solanaWeb3.PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
+                const ASSOCIATED_TOKEN_PROGRAM_ID = associatedTokenProgramId || new solanaWeb3.PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
+                
+                const [address] = await solanaWeb3.PublicKey.findProgramAddress(
+                    [owner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()],
+                    ASSOCIATED_TOKEN_PROGRAM_ID
+                );
+                return address;
+            },
+            
+            // Create associated token account instruction
+            createAssociatedTokenAccountInstruction(payer, associatedToken, owner, mint, programId = null, associatedTokenProgramId = null) {
+                const TOKEN_PROGRAM_ID = programId || new solanaWeb3.PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
+                const ASSOCIATED_TOKEN_PROGRAM_ID = associatedTokenProgramId || new solanaWeb3.PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
+                
+                const keys = [
+                    { pubkey: payer, isSigner: true, isWritable: true },
+                    { pubkey: associatedToken, isSigner: false, isWritable: true },
+                    { pubkey: owner, isSigner: false, isWritable: false },
+                    { pubkey: mint, isSigner: false, isWritable: false },
+                    { pubkey: solanaWeb3.SystemProgram.programId, isSigner: false, isWritable: false },
+                    { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
+                ];
+                
+                return new solanaWeb3.TransactionInstruction({
+                    keys,
+                    programId: ASSOCIATED_TOKEN_PROGRAM_ID,
+                    data: Buffer.alloc(0),
+                });
+            },
+            
+            // Create transfer instruction
+            createTransferInstruction(source, destination, owner, amount, multiSigners = [], programId = null) {
+                const TOKEN_PROGRAM_ID = programId || new solanaWeb3.PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
+                
+                const dataLayout = {
+                    index: 3,
+                    layout: {
+                        amount: BigInt(amount)
+                    }
+                };
+                
+                const keys = [
+                    { pubkey: source, isSigner: false, isWritable: true },
+                    { pubkey: destination, isSigner: false, isWritable: true },
+                    { pubkey: owner, isSigner: true, isWritable: false }
+                ];
+                
+                const data = Buffer.alloc(9);
+                data.writeUInt8(3, 0); // Transfer instruction
+                data.writeBigUInt64LE(BigInt(amount), 1);
+                
+                return new solanaWeb3.TransactionInstruction({
+                    keys,
+                    programId: TOKEN_PROGRAM_ID,
+                    data,
+                });
+            }
+        };
+    </script>
     
     <link rel="stylesheet" href="styles/main.css">
     <style>
@@ -1079,9 +1146,9 @@
     <script src="js/games/diceraffle.js"></script>
     <script src="js/games/chess.js"></script>
     <script src="js/games/checkers.js"></script>
-    <script src="js/games/omaha.js"></script>
-    <script src="js/games/pineapple.js"></script>
-    <script src="js/games/tonk.js"></script>
+    <script src="js/games/omaha.js?v=2"></script>
+    <script src="js/games/pineapple.js?v=2"></script>
+    <script src="js/games/tonk.js?v=2"></script>
     <script src="js/games/holdtable.js"></script>
 </body>
 </html>
