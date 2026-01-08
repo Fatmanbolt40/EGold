@@ -16,10 +16,26 @@
     
     <!-- Solana Web3.js - Self-contained bundle -->
     <script src="https://unpkg.com/@solana/web3.js@1.95.2/lib/index.iife.js"></script>
-    <script src="https://unpkg.com/buffer@6.0.3/index.js"></script>
     <script>
-        // Make Buffer available globally for SPL Token functions
-        window.Buffer = buffer.Buffer;
+        // Simple Buffer polyfill for browser
+        if (typeof window.Buffer === 'undefined') {
+            window.Buffer = {
+                alloc: function(size) {
+                    return new Uint8Array(size);
+                },
+                from: function(data) {
+                    return new Uint8Array(data);
+                }
+            };
+            // Extend Uint8Array prototype for Buffer methods
+            Uint8Array.prototype.writeUInt8 = function(value, offset) {
+                this[offset] = value;
+            };
+            Uint8Array.prototype.writeBigUInt64LE = function(value, offset) {
+                const view = new DataView(this.buffer);
+                view.setBigUint64(offset, value, true);
+            };
+        }
         
         // SPL Token functions we need - embedded to avoid CDN issues
         window.splToken = {
