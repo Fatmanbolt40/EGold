@@ -392,6 +392,15 @@ class PhantomWallet {
             transaction.recentBlockhash = blockhash;
             transaction.feePayer = fromPubkey;
             
+            console.log('💳 Transaction details:', {
+                feePayer: fromPubkey.toString(),
+                from: fromTokenAccount.toString(),
+                to: toTokenAccount.toString(),
+                amount: amount,
+                decimals: decimals,
+                transferAmount: transferAmount
+            });
+            
             // Sign and send
             const signed = await this.provider.signAndSendTransaction(transaction);
             console.log('Deposit transaction:', signed.signature);
