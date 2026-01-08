@@ -779,15 +779,5 @@ class PhantomWallet {
     }
 }
 
-// Global instance
-const phantomWallet = new PhantomWallet();
-window.phantomWallet = phantomWallet;
-
-// Try to auto-connect when page loads
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => phantomWallet.autoConnect(), 100);
-    });
-} else {
-    setTimeout(() => phantomWallet.autoConnect(), 100);
-}
+// Export the class globally
+window.PhantomWallet = PhantomWallet;

@@ -142,9 +142,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize Phantom Wallet
     if (typeof PhantomWallet !== 'undefined') {
         phantomWallet = new PhantomWallet();
+        window.phantomWallet = phantomWallet; // Make it globally accessible
         console.log('✅ Phantom Wallet initialized');
+        
+        // Auto-connect if previously connected
+        setTimeout(() => {
+            if (phantomWallet.autoConnect) {
+                phantomWallet.autoConnect();
+            }
+        }, 100);
     } else {
-        console.warn('⚠️ PhantomWallet class not found');
+        console.error('❌ PhantomWallet class not found - check if phantom-wallet.js is loaded');
     }
     
     const usdValue = (balance * eGoldToUSD).toFixed(2);
