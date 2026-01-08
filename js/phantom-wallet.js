@@ -232,7 +232,7 @@ class PhantomWallet {
             // Get or create connection
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    || 'https://rpc.ankr.com/solana'
+                    'https://rpc.ankr.com/solana'
                 );
             }
             
@@ -317,7 +317,7 @@ class PhantomWallet {
             // Get or create connection
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    || 'https://rpc.ankr.com/solana'
+                    'https://rpc.ankr.com/solana'
                 );
             }
             
@@ -758,7 +758,7 @@ class PhantomWallet {
                     this.publicKey = resp.publicKey.toString();
                     this.connected = true;
                     this.connection = new window.solanaWeb3.Connection(
-                        || 'https://rpc.ankr.com/solana'
+                        'https://rpc.ankr.com/solana'
                     );
                     
                     // Sync balance
