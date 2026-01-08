@@ -269,11 +269,18 @@ class PhantomWallet {
     async syncBalance() {
         if (!this.siteWallet) this.generateSiteWallet();
         
+        console.log('🔄 Syncing balance...');
         const eGoldBalance = await this.getSiteWalletBalance();
+        console.log('💰 Site wallet balance:', eGoldBalance, 'eGold');
+        
         if (typeof updateBalance === 'function') {
-            // Set balance without adding/subtracting
-            balance = eGoldBalance;
-            updateBalance(0);
+            // Set balance directly and persist to localStorage
+            window.balance = eGoldBalance;
+            localStorage.setItem('balance', eGoldBalance.toString());
+            updateBalance(0); // Trigger UI update
+            console.log('✅ Balance updated to:', eGoldBalance, 'eGold');
+        } else {
+            console.error('❌ updateBalance function not found');
         }
         
         // Update admin database
