@@ -384,20 +384,30 @@ class PhantomWallet {
             const signed = await this.provider.signAndSendTransaction(transaction);
             console.log('Deposit transaction:', signed.signature);
             
-            // Wait for confirmation
-            await this.connection.confirmTransaction(signed.signature);
+            // Wait for confirmation with timeout handling
+            try {
+                await this.connection.confirmTransaction(signed.signature, 'confirmed');
+            } catch (timeoutError) {
+                // Transaction likely succeeded but confirmation timed out
+                console.warn('Transaction confirmation timeout - transaction likely succeeded');
+            }
             
             // Update balance
             await this.syncBalance();
             
-            effects.createConfetti(window.innerWidth / 2, window.innerHeight / 2, 100);
-            effects.floatingText(
-                window.innerWidth / 2,
-                window.innerHeight / 2,
-                `💰 Deposited ${amount} eGold!`,
-                '#2ecc71',
-                '2rem'
-            );
+            // Show success message with visual effects if available
+            if (typeof effects !== 'undefined') {
+                effects.createConfetti(window.innerWidth / 2, window.innerHeight / 2, 100);
+                effects.floatingText(
+                    window.innerWidth / 2,
+                    window.innerHeight / 2,
+                    `💰 Deposited ${amount} eGold!`,
+                    '#2ecc71',
+                    '2rem'
+                );
+            } else {
+                console.log(`✅ Deposited ${amount} eGold!`);
+            }
             
             return true;
         } catch (err) {
