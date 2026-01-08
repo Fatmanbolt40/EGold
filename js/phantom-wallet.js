@@ -79,7 +79,7 @@ class PhantomWallet {
             
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    'https://solana-mainnet.rpc.extrnode.com',
+                    'https://api.mainnet-beta.solana.com',
                     'confirmed'
                 );
             }
@@ -98,7 +98,12 @@ class PhantomWallet {
             
             return 0;
         } catch (err) {
-            console.error('Error getting site wallet balance:', err);
+            // Silently fail on RPC errors (rate limits are common on free tier)
+            if (err.message && (err.message.includes('403') || err.message.includes('429'))) {
+                console.warn('⚠️ RPC rate limit - balance check skipped');
+            } else {
+                console.error('Error getting site wallet balance:', err);
+            }
             return 0;
         }
     }
@@ -131,7 +136,7 @@ class PhantomWallet {
             
             // Create RPC connection (use QuickNode free endpoint with better limits)
             this.connection = new window.solanaWeb3.Connection(
-                'https://solana-mainnet.rpc.extrnode.com',
+                'https://api.mainnet-beta.solana.com',
                 'confirmed'
             );
 
@@ -232,7 +237,7 @@ class PhantomWallet {
             // Get or create connection
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    'https://solana-mainnet.rpc.extrnode.com'
+                    'https://api.mainnet-beta.solana.com'
                 );
             }
             
@@ -317,7 +322,7 @@ class PhantomWallet {
             // Get or create connection
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    'https://solana-mainnet.rpc.extrnode.com'
+                    'https://api.mainnet-beta.solana.com'
                 );
             }
             
@@ -434,7 +439,7 @@ class PhantomWallet {
             
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    'https://solana-mainnet.rpc.extrnode.com'
+                    'https://api.mainnet-beta.solana.com'
                 );
             }
             
@@ -758,7 +763,7 @@ class PhantomWallet {
                     this.publicKey = resp.publicKey.toString();
                     this.connected = true;
                     this.connection = new window.solanaWeb3.Connection(
-                        'https://solana-mainnet.rpc.extrnode.com'
+                        'https://api.mainnet-beta.solana.com'
                     );
                     
                     // Sync balance
