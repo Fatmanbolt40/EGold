@@ -79,7 +79,8 @@ class PhantomWallet {
             
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    'https://api.mainnet-beta.solana.com'
+                    'https://api.devnet.solana.com',
+                    'confirmed'
                 );
             }
             
@@ -128,8 +129,11 @@ class PhantomWallet {
             this.publicKey = resp.publicKey.toString();
             this.connected = true;
             
-            // Create RPC connection (use mainnet-beta)
-            this.connection = new window.solanaWeb3.Connection('https://api.mainnet-beta.solana.com');
+            // Create RPC connection (use QuickNode free endpoint with better limits)
+            this.connection = new window.solanaWeb3.Connection(
+                'https://api.devnet.solana.com',
+                'confirmed'
+            );
 
             console.log('Phantom connected:', this.publicKey);
             
@@ -151,15 +155,19 @@ class PhantomWallet {
                 setTimeout(() => this.showDepositPrompt(), 1000);
             }
             
-            // Show success message
-            effects.createConfetti(window.innerWidth / 2, 100, 50);
-            effects.floatingText(
-                window.innerWidth / 2,
-                150,
-                '✅ Wallet Connected!',
-                '#2ecc71',
-                '2rem'
-            );
+            // Show success message with visual effects
+            if (typeof effects !== 'undefined') {
+                effects.createConfetti(window.innerWidth / 2, 100, 50);
+                effects.floatingText(
+                    window.innerWidth / 2,
+                    150,
+                    '✅ Wallet Connected!',
+                    '#2ecc71',
+                    '2rem'
+                );
+            } else {
+                console.log('✅ Wallet Connected!');
+            }
 
             return true;
         } catch (err) {
@@ -197,13 +205,15 @@ class PhantomWallet {
                 this.connected = false;
                 this.updateUI();
                 
-                effects.floatingText(
-                    window.innerWidth / 2,
-                    150,
-                    'Wallet Disconnected',
-                    '#e74c3c',
-                    '1.5rem'
-                );
+                if (typeof effects !== 'undefined') {
+                    effects.floatingText(
+                        window.innerWidth / 2,
+                        150,
+                        'Wallet Disconnected',
+                        '#e74c3c',
+                        '1.5rem'
+                    );
+                }
             } catch (err) {
                 console.error('Error disconnecting:', err);
             }
@@ -222,7 +232,7 @@ class PhantomWallet {
             // Get or create connection
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    window.solana.connection.rpcEndpoint || 'https://api.mainnet-beta.solana.com'
+                    || 'https://api.devnet.solana.com'
                 );
             }
             
@@ -307,7 +317,7 @@ class PhantomWallet {
             // Get or create connection
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    window.solana.connection.rpcEndpoint || 'https://api.mainnet-beta.solana.com'
+                    || 'https://api.devnet.solana.com'
                 );
             }
             
@@ -424,7 +434,7 @@ class PhantomWallet {
             
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
-                    'https://api.mainnet-beta.solana.com'
+                    'https://api.devnet.solana.com'
                 );
             }
             
@@ -748,7 +758,7 @@ class PhantomWallet {
                     this.publicKey = resp.publicKey.toString();
                     this.connected = true;
                     this.connection = new window.solanaWeb3.Connection(
-                        window.solana.connection.rpcEndpoint || 'https://api.mainnet-beta.solana.com'
+                        || 'https://api.devnet.solana.com'
                     );
                     
                     // Sync balance
