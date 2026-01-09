@@ -76,6 +76,8 @@ class PhantomWallet {
         try {
             const { PublicKey } = window.solanaWeb3;
             const mintPublicKey = new PublicKey(this.eGoldMint);
+            // eGold uses Token-2022!
+            const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
             
             if (!this.connection) {
                 this.connection = new window.solanaWeb3.Connection(
@@ -87,7 +89,9 @@ class PhantomWallet {
             const { getAssociatedTokenAddress } = window.splToken;
             const tokenAccount = await getAssociatedTokenAddress(
                 mintPublicKey,
-                this.siteWallet.publicKey
+                this.siteWallet.publicKey,
+                false,
+                TOKEN_2022_PROGRAM_ID
             );
             
             console.log('🔍 Checking token account:', tokenAccount.toString());
@@ -329,6 +333,9 @@ class PhantomWallet {
                 ASSOCIATED_TOKEN_PROGRAM_ID
             } = window.splToken;
             
+            // eGold uses Token-2022 with extensions!
+            const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
+            
             const mintPublicKey = new PublicKey(this.eGoldMint);
             const fromPubkey = new PublicKey(this.publicKey);
             const toPubkey = this.siteWallet.publicKey;
@@ -340,15 +347,19 @@ class PhantomWallet {
                 );
             }
             
-            // Get token accounts
+            // Get token accounts (using Token-2022 program)
             const fromTokenAccount = await getAssociatedTokenAddress(
                 mintPublicKey,
-                fromPubkey
+                fromPubkey,
+                false,
+                TOKEN_2022_PROGRAM_ID
             );
             
             const toTokenAccount = await getAssociatedTokenAddress(
                 mintPublicKey,
-                toPubkey
+                toPubkey,
+                false,
+                TOKEN_2022_PROGRAM_ID
             );
             
             // Get token decimals
@@ -372,21 +383,21 @@ class PhantomWallet {
             }
             
             if (!accountExists) {
-                console.log('🔨 Creating associated token account...');
-                // Create associated token account
+                console.log('🔨 Creating associated token account for Token-2022...');
+                // Create associated token account for Token-2022
                 transaction.add(
                     createAssociatedTokenAccountInstruction(
                         fromPubkey,
                         toTokenAccount,
                         toPubkey,
                         mintPublicKey,
-                        TOKEN_PROGRAM_ID,
+                        TOKEN_2022_PROGRAM_ID,
                         ASSOCIATED_TOKEN_PROGRAM_ID
                     )
                 );
             }
             
-            // Add transfer instruction
+            // Add transfer instruction (Token-2022)
             transaction.add(
                 createTransferInstruction(
                     fromTokenAccount,
@@ -394,7 +405,7 @@ class PhantomWallet {
                     fromPubkey,
                     transferAmount,
                     [],
-                    TOKEN_PROGRAM_ID
+                    TOKEN_2022_PROGRAM_ID
                 )
             );
             
@@ -477,6 +488,9 @@ class PhantomWallet {
                 ASSOCIATED_TOKEN_PROGRAM_ID
             } = window.splToken;
             
+            // eGold uses Token-2022 with extensions!
+            const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
+            
             const mintPublicKey = new PublicKey(this.eGoldMint);
             const fromPubkey = this.siteWallet.publicKey;
             const toPubkey = new PublicKey(this.publicKey);
@@ -487,15 +501,19 @@ class PhantomWallet {
                 );
             }
             
-            // Get token accounts
+            // Get token accounts (using Token-2022 program)
             const fromTokenAccount = await getAssociatedTokenAddress(
                 mintPublicKey,
-                fromPubkey
+                fromPubkey,
+                false,
+                TOKEN_2022_PROGRAM_ID
             );
             
             const toTokenAccount = await getAssociatedTokenAddress(
                 mintPublicKey,
-                toPubkey
+                toPubkey,
+                false,
+                TOKEN_2022_PROGRAM_ID
             );
             
             // Get token decimals
@@ -516,13 +534,13 @@ class PhantomWallet {
                         toTokenAccount,
                         toPubkey,
                         mintPublicKey,
-                        TOKEN_PROGRAM_ID,
+                        TOKEN_2022_PROGRAM_ID,
                         ASSOCIATED_TOKEN_PROGRAM_ID
                     )
                 );
             }
             
-            // Add transfer instruction
+            // Add transfer instruction (Token-2022)
             transaction.add(
                 createTransferInstruction(
                     fromTokenAccount,
@@ -530,7 +548,7 @@ class PhantomWallet {
                     fromPubkey,
                     transferAmount,
                     [],
-                    TOKEN_PROGRAM_ID
+                    TOKEN_2022_PROGRAM_ID
                 )
             );
             
