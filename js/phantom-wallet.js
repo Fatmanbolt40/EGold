@@ -359,13 +359,20 @@ class PhantomWallet {
             // Build transaction
             const transaction = new Transaction();
             
-            // Check if destination token account exists
+            // Check if destination token account exists using getTokenAccountBalance
             console.log('🔍 Checking if token account exists:', toTokenAccount.toString());
-            const toAccountInfo = await this.connection.getAccountInfo(toTokenAccount);
-            console.log('📋 Account info:', toAccountInfo);
+            let accountExists = false;
+            try {
+                const balance = await this.connection.getTokenAccountBalance(toTokenAccount);
+                console.log('✅ Token account already exists with balance:', balance.value.uiAmount);
+                accountExists = true;
+            } catch (err) {
+                console.log('⚠️ Token account does not exist:', err.message);
+                accountExists = false;
+            }
             
-            if (!toAccountInfo) {
-                console.log('⚠️ Token account does not exist, will create it');
+            if (!accountExists) {
+                console.log('🔨 Creating associated token account...');
                 // Create associated token account
                 transaction.add(
                     createAssociatedTokenAccountInstruction(
@@ -377,8 +384,6 @@ class PhantomWallet {
                         ASSOCIATED_TOKEN_PROGRAM_ID
                     )
                 );
-            } else {
-                console.log('✅ Token account already exists, skipping creation');
             }
             
             // Add transfer instruction
